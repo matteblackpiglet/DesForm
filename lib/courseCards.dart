@@ -46,7 +46,7 @@ class CourseCards extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            course.difficulty,
+                            course.description,
                             style: TextStyle(
                               fontFamily: 'Montserrat',
                               fontSize: scaler.getTextSize(6.0),
