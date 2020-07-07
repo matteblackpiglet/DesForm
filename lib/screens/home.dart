@@ -21,7 +21,12 @@ class Home extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget{
+class HomePage extends StatefulWidget{
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final double mainCurve = 25.0;
 
   @override
@@ -64,7 +69,12 @@ class HomePage extends StatelessWidget{
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
-                        ProfilePhoto(url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQM--hVamcJhFyQcqARua0LV9c-opvPKdxCZw&usqp=CAU'),
+                        Container(
+                          margin: EdgeInsets.only(right: 10.0),
+                          child: ProfilePhoto(
+                            url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQM--hVamcJhFyQcqARua0LV9c-opvPKdxCZw&usqp=CAU'
+                          ),
+                        ),
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 36.0),
                           child: Column(
@@ -108,16 +118,34 @@ class HomePage extends StatelessWidget{
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Heading(text: 'Your Courses',),
-                SmallButton(text: 'See All',),
+                Container(
+                  margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 40.0),
+                  child: Heading(
+                    text: 'Your Courses',
+                    color: Theme.of(context).primaryColor,
+                    weight: FontWeight.w900,
+                  ),
+                ),
+                SmallButton(
+                  text: 'See All',
+                ),
               ],
             ),
             CourseCards(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Heading(text: 'All Courses',),
-                SmallButton(text: 'See All',),
+                Container(
+                  margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 40.0),
+                  child: Heading(
+                    text: 'All Courses',
+                    color: Theme.of(context).primaryColor,
+                    weight: FontWeight.w900,
+                  ),
+                ),
+                SmallButton(
+                  text: 'See All',
+                ),
               ],
             ),
             CourseCards(),

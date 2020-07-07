@@ -24,13 +24,13 @@ class SearchBar extends StatelessWidget {
           decoration: InputDecoration(
             fillColor: Theme.of(context).accentColor,
             filled: true,
-            labelStyle: TextStyle(
+            hintStyle: TextStyle(
               color: Colors.grey[700],
               fontFamily: 'Montserrat',
               fontWeight: FontWeight.w400,
             ),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(curve)),
-            labelText: textInside,
+            hintText: textInside,
             suffixIcon: Icon(Icons.search, color: Theme.of(context).primaryColor),
           ),
         ),
