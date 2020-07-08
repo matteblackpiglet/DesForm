@@ -10,14 +10,13 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
 
-        if(!currentFocus.hasPrimaryFocus)
-          currentFocus.unfocus();
+        if (!currentFocus.hasPrimaryFocus) currentFocus.unfocus();
       },
       child: HomePage(),
-      );
+    );
   }
 }
 
@@ -30,7 +29,7 @@ class _HomePageState extends State<HomePage> {
   final double mainCurve = 25.0;
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     ScreenScaler scaler = new ScreenScaler();
 
     return Scaffold(
@@ -43,22 +42,25 @@ class _HomePageState extends State<HomePage> {
             Container(
               margin: EdgeInsets.only(bottom: 15.0),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(mainCurve), bottomRight: Radius.circular(mainCurve)),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(mainCurve),
+                  bottomRight: Radius.circular(mainCurve),
+                ),
                 gradient: LinearGradient(
                   begin: FractionalOffset.topCenter,
                   end: FractionalOffset.bottomCenter,
                   colors: [
                     Theme.of(context).primaryColorLight,
                     Theme.of(context).primaryColor
-                  ]
+                  ],
                 ),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black54,
-                    blurRadius: 25.0, 
-                    spreadRadius: 1.0, 
+                    blurRadius: 25.0,
+                    spreadRadius: 1.0,
                   ),
-                ]
+                ],
               ),
               child: SafeArea(
                 child: SizedBox(
@@ -92,7 +94,9 @@ class _HomePageState extends State<HomePage> {
                               ),
                               Row(
                                 children: <Widget>[
-                                  SizedBox(width: 2.0,),
+                                  SizedBox(
+                                    width: 2.0,
+                                  ),
                                   Text(
                                     'Live to Create',
                                     style: TextStyle(
@@ -149,7 +153,9 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
             CourseCards(),
-            SizedBox(height: 50.0,)
+            SizedBox(
+              height: 50.0,
+            )
           ],
         ),
       ),
