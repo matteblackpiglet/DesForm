@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
+import '../models/profileModel.dart';
 import '../heading.dart';
 import '../profilePhotoPlain.dart';
 import '../statusCard.dart';
@@ -8,14 +9,13 @@ class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
 
-        if(!currentFocus.hasPrimaryFocus)
-          currentFocus.unfocus();
+        if (!currentFocus.hasPrimaryFocus) currentFocus.unfocus();
       },
       child: ProfilePage(),
-      );
+    );
   }
 }
 
@@ -41,33 +41,38 @@ class _ProfilePageState extends State<ProfilePage> {
             margin: EdgeInsets.only(bottom: 30.0),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                begin: FractionalOffset.topCenter,
-                end: FractionalOffset.bottomCenter,
-                colors: [
-                  Theme.of(context).primaryColorLight,
-                  Theme.of(context).primaryColor
-                ]
-              ),
+                  begin: FractionalOffset.topCenter,
+                  end: FractionalOffset.bottomCenter,
+                  colors: [
+                    Theme.of(context).primaryColorLight,
+                    Theme.of(context).primaryColor
+                  ]),
             ),
             child: SafeArea(
               child: SizedBox(
-                height: scaler.getHeight(10.0),
+                height: scaler.getHeight(11.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    IconButton(
+                      icon: Icon(Icons.arrow_back),
+                      iconSize: 30.0,
+                      color: Colors.grey,
+                      onPressed: () => Navigator.pop(context),
+                    ),
                     Container(
                       margin: EdgeInsets.only(left: 30.0, bottom: 16.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           ProfilePhotoPlain(
-                            url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQM--hVamcJhFyQcqARua0LV9c-opvPKdxCZw&usqp=CAU'
-                          ),
+                              url:
+                                  'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQM--hVamcJhFyQcqARua0LV9c-opvPKdxCZw&usqp=CAU'),
                           Container(
                             margin: EdgeInsets.only(left: 16.0),
                             child: Heading(
-                              text: 'X Æ A-12',
+                              text: profile.name,
                               color: Color(0xffffffff),
                               weight: FontWeight.w700,
                             ),
@@ -80,11 +85,11 @@ class _ProfilePageState extends State<ProfilePage> {
                       children: <Widget>[
                         StatusCard(
                           text: 'Ongoing Courses',
-                          count: '3',
+                          count: profile.ongoingCourse,
                         ),
                         StatusCard(
                           text: 'Courses Finished',
-                          count: '1',
+                          count: profile.completedCourse,
                         ),
                       ],
                     ),
@@ -96,61 +101,58 @@ class _ProfilePageState extends State<ProfilePage> {
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(mainCurve), topRight: Radius.circular(mainCurve)),
-                color: Color(0xffffffff),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 25.0, 
-                    spreadRadius: 1.0, 
-                  ),
-                ]
-              ),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(mainCurve),
+                      topRight: Radius.circular(mainCurve)),
+                  color: Color(0xffffffff),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 25.0,
+                      spreadRadius: 1.0,
+                    ),
+                  ]),
               child: Column(
                 children: <Widget>[
                   Container(
                     margin: EdgeInsets.only(top: 20.0),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          'ABOUT',
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.w600,
-                            fontSize: scaler.getTextSize(8.0)
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            'ABOUT',
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.w600,
+                                fontSize: scaler.getTextSize(8.0)),
                           ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 30.0),
-                          child: Column(
-                            children: <Widget>[
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal: 30.0),
+                            child: Column(children: <Widget>[
                               Tag(
                                 title: 'Name:',
-                                value: 'X Æ A-12',
+                                value: profile.name,
                               ),
                               Tag(
                                 title: 'User ID:',
-                                value: 'xaea12',
+                                value: profile.username,
                               ),
                               Tag(
                                 title: 'DOB:',
-                                value: '12-2-1994',
+                                value: profile.dob,
                               ),
                               Tag(
                                 title: 'Sex:',
-                                value: 'Male',
+                                value: profile.gender,
                               ),
                               Tag(
                                 title: 'Email:',
-                                value: 'XÆA12@gmail.com',
+                                value: profile.email,
                               ),
-                            ]
+                            ]),
                           ),
-                        ),
-                      ]
-                    ),
+                        ]),
                   ),
                 ],
               ),
@@ -190,11 +192,10 @@ class Tag extends StatelessWidget {
               value,
               textAlign: TextAlign.end,
               style: TextStyle(
-                color: Theme.of(context).primaryColor,
-                fontFamily: 'Montserrat',
-                fontWeight: FontWeight.w900,
-                fontSize: scaler.getTextSize(8.0)
-              ),
+                  color: Theme.of(context).primaryColor,
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.w900,
+                  fontSize: scaler.getTextSize(8.0)),
             ),
           ),
         ],
