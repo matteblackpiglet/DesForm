@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'screens/home.dart';
+import 'screens/profile.dart';
 
 void main() { 
   Paint.enableDithering = true;
@@ -12,8 +13,11 @@ void main() {
                 accentColor: Color(0xffe6e5f5),
                 scaffoldBackgroundColor: Color(0xffffffff),
               ),
-              home: Home(),
               debugShowCheckedModeBanner: false,
+              routes: {
+                '/home' : (context) => Home(),
+              },
+              initialRoute: '/home',
             )
           );
 }

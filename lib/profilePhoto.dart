@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
+import './screens/profile.dart';
 
 class ProfilePhoto extends StatelessWidget {
   ProfilePhoto({this.url});
 
-  final double buttonCurve = 90.0;
+  final double buttonCurve = 16.0;
   final String url;
 
   @override
@@ -20,7 +21,9 @@ class ProfilePhoto extends StatelessWidget {
         height: size,
         minWidth: size,
         child: RaisedButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).push(_createRoute());
+          },
           padding: EdgeInsets.all(0.0),
           splashColor: Color.fromARGB(30, 200, 200, 200),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(buttonCurve)),
@@ -42,4 +45,22 @@ class ProfilePhoto extends StatelessWidget {
       ),
     );
   }
+}
+
+Route _createRoute() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => Profile(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(0.0, 1.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
 }
