@@ -56,9 +56,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     IconButton(
-                      icon: Icon(Icons.arrow_back),
+                      icon: Icon(Icons.chevron_left),
                       iconSize: 30.0,
-                      color: Colors.grey,
+                      color: Theme.of(context).accentColor,
                       onPressed: () => Navigator.pop(context),
                     ),
                     Container(
@@ -68,7 +68,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         children: <Widget>[
                           ProfilePhotoPlain(
                               url:
-                                  'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQM--hVamcJhFyQcqARua0LV9c-opvPKdxCZw&usqp=CAU'),
+                                  profile.profileUrl),
                           Container(
                             margin: EdgeInsets.only(left: 16.0),
                             child: Heading(
@@ -113,6 +113,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ]),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Container(
                     margin: EdgeInsets.only(top: 20.0),
@@ -153,6 +154,30 @@ class _ProfilePageState extends State<ProfilePage> {
                             ]),
                           ),
                         ]),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(bottom: 30.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        IconButton(
+                            icon: Icon(Icons.exit_to_app),
+                            iconSize: 40.0,
+                            color: Theme.of(context).primaryColorLight,
+                            onPressed: () {},
+                          ),
+                          Text(
+                            'Sign Out',
+                            style: TextStyle(
+                              color: Colors.grey[700],
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: -1.0,
+                              fontSize: scaler.getTextSize(8.0)),
+                          ),
+                      ],
+                    ),
                   ),
                 ],
               ),

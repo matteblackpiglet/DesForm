@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
+import '../models/profileModel.dart';
 import '../heading.dart';
 import '../smallButton.dart';
 import '../profilePhoto.dart';
@@ -74,7 +75,7 @@ class _HomePageState extends State<HomePage> {
                         Container(
                           margin: EdgeInsets.only(right: 10.0),
                           child: ProfilePhoto(
-                            url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQM--hVamcJhFyQcqARua0LV9c-opvPKdxCZw&usqp=CAU'
+                            url: profile.profileUrl
                           ),
                         ),
                         Container(

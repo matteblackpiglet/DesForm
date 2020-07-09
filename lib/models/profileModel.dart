@@ -24,7 +24,7 @@ Profile profile = Profile(
   name: 'X Æ A-12',
   username: 'xaea12',
   dob: '12-2-1994',
-  gender: 'male',
+  gender: 'Male',
   ongoingCourse: '3',
   completedCourse: '1',
   profileUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQM--hVamcJhFyQcqARua0LV9c-opvPKdxCZw&usqp=CAU',

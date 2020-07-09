@@ -16,7 +16,6 @@ void main() {
               debugShowCheckedModeBanner: false,
               routes: {
                 '/home' : (context) => Home(),
-                '/profile' : (context) => Profile(),
               },
               initialRoute: '/home',
             )
