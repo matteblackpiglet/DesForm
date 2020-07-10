@@ -6,7 +6,7 @@ import '../models/courseModel.dart';
 
 class CourseVideos extends StatelessWidget {
   CourseVideos({this.courseCode});
-  
+
   final String courseCode;
 
   @override
@@ -47,19 +47,23 @@ class CourseVideos extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Container(
-                                    color: Color(0xfffccc86),
-                                    padding: EdgeInsets.only(left: 10.0, top: 5.0, right: 10, bottom: 5),
-                                    child: Text(
-                                      "DesForm".toUpperCase(),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontFamily: 'Montserrat',
-                                      ),
-                                    )
-                                  ),
+                                      color: Color(0xfffccc86),
+                                      padding: EdgeInsets.only(
+                                          left: 10.0,
+                                          top: 5.0,
+                                          right: 10,
+                                          bottom: 5),
+                                      child: Text(
+                                        "DesForm".toUpperCase(),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontFamily: 'Montserrat',
+                                        ),
+                                      )),
                                   SizedBox(height: scaler.getHeight(0.5)),
                                   Heading(
-                                    text: courses[int.parse(courseCode)-1].name,
+                                    text:
+                                        courses[int.parse(courseCode) - 1].name,
                                     color: Colors.grey[900],
                                     weight: FontWeight.w700,
                                   ),
@@ -101,13 +105,14 @@ class CourseVideos extends StatelessWidget {
                         ),
                       ],
                     ),
-                  )
-                ),
+                  )),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 20.0),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(25.0), topRight: Radius.circular(25.0)),
-                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(25.0),
+                      topRight: Radius.circular(25.0)),
+                  color: Colors.grey[100],
                 ),
                 child: Column(
                   children: <Widget>[
@@ -140,18 +145,16 @@ class CourseVideos extends StatelessWidget {
                       itemBuilder: (context, index) {
                         CourseVideo video = videos[index];
                         print(index);
-                        if(video.courseCode == courseCode){
-                          return Stack(
-                            children: <Widget>[
-                              VideoBar(
-                                lessonNo: video.videoNo,
-                                lessonTitle: video.videoTitle,
-                                dur: video.dur,
-                              ),
-                            ]
-                          );
-                        }
-                        else if(int.parse(video.courseCode) < int.parse(courseCode)){
+                        if (video.courseCode == courseCode) {
+                          return Stack(children: <Widget>[
+                            VideoBar(
+                              lessonNo: video.videoNo,
+                              lessonTitle: video.videoTitle,
+                              dur: video.dur,
+                            ),
+                          ]);
+                        } else if (int.parse(video.courseCode) <
+                            int.parse(courseCode)) {
                           return Container(width: 0, height: 0);
                         }
                       },
@@ -177,78 +180,105 @@ class VideoBar extends StatelessWidget {
   Widget build(BuildContext context) {
     ScreenScaler scaler = ScreenScaler();
 
-    return Column(
+    return Stack(
       children: <Widget>[
-        SizedBox(
-          height: scaler.getHeight(0.8),
+        Container(
+          margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+          height: scaler.getHeight(3.5),
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.white70,
+            borderRadius: BorderRadius.circular(10.0),
+          ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  constraints: BoxConstraints(
-                    maxHeight: 40,
-                    minHeight: 40,
-                    maxWidth: 40,
-                    minWidth: 40,
-                  ),
-                  child: RaisedButton(
-                    color: Colors.grey[200],
-                    onPressed: () {},
-                    padding: EdgeInsets.all(0.0),
-                    splashColor: Color(0xffe6e5f5),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)
-                    ),
-                    animationDuration: Duration(milliseconds: 200),
-                    child: Icon(
-                      Icons.play_arrow,
-                      color: Colors.grey[600],
-                    ),
-                  )
-                ),
-                SizedBox(
-                width: scaler.getWidth(1.0),
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      "Lesson $lessonNo",
-                      style: TextStyle(
-                        color: Colors.grey[900],
-                        fontFamily: 'Montserrat',
-                        fontSize: scaler.getTextSize(6.0),
-                        fontWeight: FontWeight.w600,
+        Positioned(
+          left: 10,
+          child: Column(
+            children: <Widget>[
+              SizedBox(
+                height: scaler.getHeight(0.8),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Container(
+                          constraints: BoxConstraints(
+                            maxHeight: 40,
+                            minHeight: 40,
+                            maxWidth: 40,
+                            minWidth: 40,
+                          ),
+                          child: RaisedButton(
+                            color: Colors.grey[200],
+                            onPressed: () {},
+                            padding: EdgeInsets.all(0.0),
+                            splashColor: Color(0xffe6e5f5),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            animationDuration: Duration(milliseconds: 200),
+                            child: Icon(
+                              Icons.play_arrow,
+                              color: Colors.grey[600],
+                            ),
+                          )),
+                      SizedBox(
+                        width: scaler.getWidth(1.0),
                       ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            "Lesson $lessonNo",
+                            style: TextStyle(
+                              color: Colors.grey[900],
+                              fontFamily: 'Montserrat',
+                              fontSize: scaler.getTextSize(6.0),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(
+                            width: scaler.getWidth(16.0),
+                            child: Text(
+                              lessonTitle,
+                              style: TextStyle(
+                                  color: Colors.grey[900],
+                                  fontFamily: 'Montserrat',
+                                  fontSize: scaler.getTextSize(7.0)),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    width: scaler.getWidth(4.0),
+                  ),
+                  Container(
+                    width: scaler.getWidth(6.5),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).accentColor,
+                      borderRadius: BorderRadius.circular(10.0)
                     ),
-                    SizedBox(
-                      width: scaler.getWidth(16.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
                       child: Text(
-                        lessonTitle,
+                        "$dur mins",
                         style: TextStyle(
-                          color: Colors.grey[900],
+                          fontSize: 12.0,
+                          color: Colors.grey[600],
                           fontFamily: 'Montserrat',
-                          fontSize: scaler.getTextSize(7.0)
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ],
-            ),
-            Text(
-              "$dur mins",
-              style: TextStyle(
-                color: Colors.grey[600],
-                fontFamily: 'Montserrat',
+                  ),
+                ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ],
     );
