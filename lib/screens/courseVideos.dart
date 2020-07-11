@@ -137,9 +137,9 @@ class CourseVideos extends StatelessWidget {
                       primary: false,
                       shrinkWrap: true,
                       itemCount: videos.length,
+                      // ignore: missing_return
                       itemBuilder: (context, index) {
                         CourseVideo video = videos[index];
-                        print(index);
                         if(video.courseCode == courseCode){
                           return Stack(
                             children: <Widget>[

@@ -133,10 +133,11 @@ class _HomePageState extends State<HomePage> {
                 ),
                 SmallButton(
                   text: 'See All',
+                  p: profile,
                 ),
               ],
             ),
-            CourseCards(),
+            CourseCards(all: false, p: profile),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -153,7 +154,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-            CourseCards(),
+            CourseCards(all: true),
             SizedBox(
               height: 50.0,
             )
