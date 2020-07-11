@@ -145,7 +145,6 @@ class CourseVideos extends StatelessWidget {
                       // ignore: missing_return
                       itemBuilder: (context, index) {
                         CourseVideo video = videos[index];
-                        print(index);
                         if (video.courseCode == courseCode) {
                           return Stack(children: <Widget>[
                             VideoBar(
@@ -256,7 +255,7 @@ class VideoBar extends StatelessWidget {
                     ],
                   ),
                   SizedBox(
-                    width: scaler.getWidth(4.0),
+                    width: scaler.getWidth(1.0),
                   ),
                   Container(
                     width: scaler.getWidth(6.5),
