@@ -25,7 +25,7 @@ class SCCard extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(_createRoute(course.code));
               },
-              splashColor: Color.fromARGB(0, 0, 0, 0),
+              highlightColor: Color.fromARGB(0, 0, 0, 0),
               child: Container(
                 height: scaler.getHeight(5.6),
                 width: scaler.getWidth(15.0),
