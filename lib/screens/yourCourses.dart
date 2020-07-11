@@ -31,7 +31,6 @@ class YourCourses extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              alignment: Alignment.center,
               padding: EdgeInsets.only(top: 40.0, bottom: 20.0),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
@@ -54,11 +53,21 @@ class YourCourses extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Heading(
-                text: 'Your Courses',
-                color: Color(0xffffffff),
-                weight: FontWeight.w900,
-                fontSize: scaler.getTextSize(9.0),
+              child: Row(
+                children: <Widget>[
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: Icon(Icons.chevron_left),
+                    color: Color(0xffffffff),
+                    iconSize: scaler.getWidth(3.0),
+                  ),
+                  Heading(
+                    text: 'Your Courses',
+                    color: Color(0xffffffff),
+                    weight: FontWeight.w900,
+                    fontSize: scaler.getTextSize(8.5),
+                  ),
+                ],
               ),
             ),
             GridView.builder(
