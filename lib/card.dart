@@ -19,21 +19,21 @@ class CCard extends StatelessWidget {
         alignment: Alignment.topCenter,
         children: <Widget>[
           Positioned(
-            bottom: scaler.getHeight(0.6),
-            child: FlatButton(
-              onPressed: () {
-                Navigator.of(context).push(_createRoute(course.code));
-              },
-              highlightColor: Color.fromARGB(0, 255, 255, 255),
-              child: Container(
-                height: scaler.getHeight(7.0),
-                width: scaler.getWidth(18.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                  color: Theme.of(context).accentColor,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(10.0, 20.0, 20.0, 20.0),
+            bottom: scaler.getHeight(1.0),
+            child: Container(
+              height: scaler.getHeight(6.0),
+              width: scaler.getWidth(18.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+                color: Theme.of(context).accentColor,
+              ),
+              child: FlatButton(
+                onPressed: () {
+                  Navigator.of(context).push(_createRoute(course.code));
+                },
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: 15.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,

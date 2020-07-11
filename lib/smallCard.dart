@@ -20,21 +20,21 @@ class SCCard extends StatelessWidget {
         alignment: Alignment.topCenter,
         children: <Widget>[
           Positioned(
-            bottom: scaler.getHeight(0),
-            child: FlatButton(
-              onPressed: () {
-                Navigator.of(context).push(_createRoute(course.code));
-              },
-              highlightColor: Color.fromARGB(0, 0, 0, 0),
-              child: Container(
-                height: scaler.getHeight(5.6),
-                width: scaler.getWidth(15.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                  color: Theme.of(context).accentColor,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(10.0, 20.0, 20.0, 10.0),
+            bottom: scaler.getHeight(0.0),
+            child: Container(
+              height: scaler.getHeight(5.6),
+              width: scaler.getWidth(15.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+                color: Theme.of(context).accentColor,
+              ),
+              child: FlatButton(
+                onPressed: (){
+                  Navigator.of(context).push(_createRoute(course.code));
+                },
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 10.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
