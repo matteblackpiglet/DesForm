@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
-import '../models/courseModel.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/profileModel.dart';
 import '../heading.dart';
 import '../smallCard.dart';
@@ -8,22 +8,14 @@ import '../smallCard.dart';
 // ignore: must_be_immutable
 class YourCourses extends StatelessWidget {
   Profile p;
-  List<Course> filteredCourses = [];
+  List<DocumentSnapshot> filteredCourses = [];
 
   YourCourses({this.p});
-
-  void _filterCourses(){
-    for(int i=0; i<courses.length; i++){
-      if(p.courses.contains(courses[i].code))
-        filteredCourses.add(courses[i]);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     ScreenScaler scaler = ScreenScaler();
     final double mainCurve = 20.0;
-    _filterCourses();
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -70,16 +62,32 @@ class YourCourses extends StatelessWidget {
                 ],
               ),
             ),
-            GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-              primary: false,
-              shrinkWrap: true,
-              itemCount: filteredCourses.length,
-              itemBuilder: (context, index){
-                Course course = filteredCourses[index];
-                return SCCard(course: course);
+            StreamBuilder(
+              stream: Firestore.instance.collection('courses').snapshots(),
+              builder: (context, snapshot){
+                if(!snapshot.hasData)
+                  return Text('');
+
+                for(int i=0; i<snapshot.data.documents.length; i++){
+                  DocumentSnapshot course = snapshot.data.documents[i];
+                  if(p.courses.contains(course.documentID)){
+                    filteredCourses.add(course);
+                  }
+                }
+
+                return GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                  primary: false,
+                  shrinkWrap: true,
+                  itemCount: filteredCourses.length,
+                  itemBuilder: (context, index){
+                    var course = filteredCourses[index];
+                    return SCCard(course: course);
+                  },
+                );
               },
             ),
+            
           ],
         ),
       ),

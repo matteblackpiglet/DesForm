@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
-import 'package:uiPractice/models/profileModel.dart';
+import 'package:DesForm/models/profileModel.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'card.dart';
-import 'models/courseModel.dart';
 
 // ignore: must_be_immutable
 class CourseCards extends StatelessWidget {
@@ -20,28 +20,37 @@ class CourseCards extends StatelessWidget {
 
     return Container(
       height: scaler.getHeight(15.0),
-      child: ListView.builder(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemCount: courses.length,
-        // ignore: missing_return
-        itemBuilder: (context, index) {
-          Course course = courses[index];
-          try{
-            if(all == true && count<limit){
-              count++;
-              return CCard(course: course);
-            }
-            else if(p.courses.contains(course.code) && count<limit){
-              count++;
-              return CCard(course: course);
-            }
-            else{
-              return Container(width: 0, height: 0);
-            }
-          }catch(e){}
+      child: StreamBuilder(
+        stream: Firestore.instance.collection('courses').snapshots(),
+        builder: (context, snapshot){
+          if(!snapshot.hasData)
+            return const Text('');
+          
+          return ListView.builder(
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            itemCount: snapshot.data.documents.length,
+            // ignore: missing_return
+            itemBuilder: (context, index) {
+              var course = snapshot.data.documents[index];
+              try{
+                if(all == true && count<limit){
+                  count++;
+                  return CCard(course: course);
+                }
+                else if(p.courses.contains(course.documentID) && count<limit){
+                  count++;
+                  return CCard(course: course);
+                }
+                else{
+                  return Container(width: 0, height: 0);
+                }
+              }catch(e){}
+            },
+          );
         },
-      ),
+      )
+      
     );
   }
 }

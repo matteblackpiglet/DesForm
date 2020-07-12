@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
-import 'package:uiPractice/screens/courseVideos.dart';
-import 'models/courseModel.dart';
+import 'package:DesForm/screens/courseVideos.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
+// ignore: must_be_immutable
 class SCCard extends StatelessWidget {
-  const SCCard({this.course});
+  SCCard({this.course});
 
-  final Course course;
+  DocumentSnapshot course;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class SCCard extends StatelessWidget {
               ),
               child: FlatButton(
                 onPressed: (){
-                  Navigator.of(context).push(_createRoute(course.code));
+                  Navigator.of(context).push(_createRoute(course));
                 },
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
                 child: Container(
@@ -40,7 +42,7 @@ class SCCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        course.duration,
+                        course['dur'],
                         style: TextStyle(
                           fontSize: scaler.getTextSize(7.0),
                           fontWeight: FontWeight.bold,
@@ -49,7 +51,7 @@ class SCCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        course.description,
+                        course['desc'],
                         style: TextStyle(
                           fontFamily: 'Montserrat',
                           fontSize: scaler.getTextSize(5.8),
@@ -88,14 +90,28 @@ class SCCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20.0),
                   child: FlatButton(
                     onPressed: () {
-                      Navigator.of(context).push(_createRoute(course.code));
+                      Navigator.of(context).push(_createRoute(course));
                     },
                     child: Container(
                       height: scaler.getHeight(4.6),
                       width: scaler.getWidth(8.0),
-                      child: Image(
-                        image: AssetImage(course.imgUrl),
-                        fit: BoxFit.fitWidth,
+                      child: FutureBuilder(
+                        future: _loadUrl(course['image']),
+                        builder: (context, snapshot) {
+                          if(snapshot.hasData){
+                            return Image(
+                              image: NetworkImage(snapshot.data),
+                              fit: BoxFit.fitWidth,
+                            );
+                          }
+                          return Center(
+                            child: SizedBox(
+                              height: 30,
+                              width: 30,
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ),
@@ -107,7 +123,7 @@ class SCCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        course.name,
+                        course['name'],
                         style: TextStyle(
                           fontFamily: 'Montserrat',
                           fontSize: scaler.getTextSize(6.4),
@@ -127,9 +143,14 @@ class SCCard extends StatelessWidget {
   }
 }
 
-Route _createRoute(String c) {
+_loadUrl(String loc) async{
+  var ref = FirebaseStorage.instance.ref().child(loc);
+  return (await ref.getDownloadURL()).toString();
+}
+
+Route _createRoute(DocumentSnapshot c) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => CourseVideos(courseCode: c),
+    pageBuilder: (context, animation, secondaryAnimation) => CourseVideos(course: c),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(0.0, 1.0);
       var end = Offset.zero;

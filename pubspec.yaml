@@ -1,5 +1,5 @@
-name: uiPractice
-description: A new Flutter project.
+name: DesForm
+description: This a mobile app for the online learning platform DesForm.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -21,6 +21,10 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  cloud_firestore: ^0.11.0+2
+  firebase: ^5.0.4
+  firebase_core: ^0.4.0+9
+  firebase_storage: ^3.1.6
   flutter:
     sdk: flutter
   flutter_screen_scaler: ^0.0.1

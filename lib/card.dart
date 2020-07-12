@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
-import 'package:uiPractice/screens/courseVideos.dart';
-import 'models/courseModel.dart';
+import 'package:DesForm/screens/courseVideos.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
+// ignore: must_be_immutable
 class CCard extends StatelessWidget {
-  const CCard({this.course});
+  CCard({this.course});
 
-  final Course course;
+  DocumentSnapshot course;
 
   @override
   Widget build(BuildContext context) {
@@ -29,17 +31,17 @@ class CCard extends StatelessWidget {
               ),
               child: FlatButton(
                 onPressed: () {
-                  Navigator.of(context).push(_createRoute(course.code));
+                  Navigator.of(context).push(_createRoute(course));
                 },
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
                 child: Container(
-                  margin: const EdgeInsets.only(bottom: 15.0),
+                  margin: EdgeInsets.only(bottom: 15.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        course.duration,
+                        course['dur'],
                         style: TextStyle(
                           fontSize: scaler.getTextSize(8.0),
                           fontWeight: FontWeight.bold,
@@ -48,7 +50,7 @@ class CCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        course.description,
+                        course['desc'],
                         style: TextStyle(
                           fontFamily: 'Montserrat',
                           fontSize: scaler.getTextSize(6.0),
@@ -87,14 +89,28 @@ class CCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20.0),
                   child: FlatButton(
                     onPressed: () {
-                      Navigator.of(context).push(_createRoute(course.code));
+                      Navigator.of(context).push(_createRoute(course));
                     },
                     child: Container(
                       height: scaler.getHeight(8.6),
                       width: scaler.getWidth(12.0),
-                      child: Image(
-                        image: AssetImage(course.imgUrl),
-                        fit: BoxFit.fitWidth,
+                      child: FutureBuilder(
+                        future: _loadUrl(course['image']),
+                        builder: (context, snapshot) {
+                          if(snapshot.hasData){
+                            return Image(
+                              image: NetworkImage(snapshot.data),
+                              fit: BoxFit.fitWidth,
+                            );
+                          }
+                          return Center(
+                            child: SizedBox(
+                              height: 30,
+                              width: 30,
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ),
@@ -106,7 +122,7 @@ class CCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        course.name,
+                        course['name'],
                         style: TextStyle(
                           fontFamily: 'Montserrat',
                           fontSize: scaler.getTextSize(8.4),
@@ -126,9 +142,14 @@ class CCard extends StatelessWidget {
   }
 }
 
-Route _createRoute(String c) {
+_loadUrl(String loc) async{
+  var ref = FirebaseStorage.instance.ref().child(loc);
+  return (await ref.getDownloadURL()).toString();
+}
+
+Route _createRoute(DocumentSnapshot c) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => CourseVideos(courseCode: c),
+    pageBuilder: (context, animation, secondaryAnimation) => CourseVideos(course: c),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(0.0, 1.0);
       var end = Offset.zero;

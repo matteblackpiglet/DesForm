@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
-import '../models/courseModel.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../heading.dart';
 import '../smallCard.dart';
 
@@ -55,14 +55,22 @@ class AllCourses extends StatelessWidget {
                 ],
               ),
             ),
-            GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-              primary: false,
-              shrinkWrap: true,
-              itemCount: courses.length,
-              itemBuilder: (context, index){
-                Course course = courses[index];
-                return SCCard(course: course);
+            StreamBuilder(
+              stream: Firestore.instance.collection('courses').snapshots(),
+              builder: (context, snapshot){
+                if(!snapshot.hasData)
+                  return const Text('');
+
+                return GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                  primary: false,
+                  shrinkWrap: true,
+                  itemCount: snapshot.data.documents.length,
+                  itemBuilder: (context, index){
+                    var course = snapshot.data.documents[index];
+                    return SCCard(course: course);
+                  },
+                );
               },
             ),
           ],

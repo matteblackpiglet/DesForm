@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
-import 'package:uiPractice/models/profileModel.dart';
-import 'package:uiPractice/screens/yourCourses.dart';
+import 'package:DesForm/models/profileModel.dart';
+import 'package:DesForm/screens/yourCourses.dart';
 import 'screens/allCourses.dart';
 
 class SmallButton extends StatelessWidget {

@@ -1,13 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
-import 'package:uiPractice/heading.dart';
-import '../models/courseVideoModel.dart';
-import '../models/courseModel.dart';
+import 'package:DesForm/heading.dart';
 
+// ignore: must_be_immutable
 class CourseVideos extends StatelessWidget {
-  CourseVideos({this.courseCode});
+  CourseVideos({this.course});
 
-  final String courseCode;
+  DocumentSnapshot course;
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +63,7 @@ class CourseVideos extends StatelessWidget {
                                   SizedBox(height: scaler.getHeight(0.5)),
                                   Heading(
                                     text:
-                                        courses[int.parse(courseCode) - 1].name,
+                                        course['name'],
                                     color: Colors.grey[900],
                                     weight: FontWeight.w700,
                                   ),
@@ -138,27 +138,30 @@ class CourseVideos extends StatelessWidget {
                         ],
                       ),
                     ),
-                    ListView.builder(
-                      primary: false,
-                      shrinkWrap: true,
-                      itemCount: videos.length,
-                      // ignore: missing_return
-                      itemBuilder: (context, index) {
-                        CourseVideo video = videos[index];
-                        if (video.courseCode == courseCode) {
-                          return Stack(children: <Widget>[
-                            VideoBar(
-                              lessonNo: video.videoNo,
-                              lessonTitle: video.videoTitle,
-                              dur: video.dur,
-                            ),
-                          ]);
-                        } else if (int.parse(video.courseCode) <
-                            int.parse(courseCode)) {
-                          return Container(width: 0, height: 0);
-                        }
+                    StreamBuilder(
+                      stream: course.reference.collection('videos').orderBy('lesson').snapshots(),
+                      builder: (context, snapshot){
+                        if(!snapshot.hasData)
+                          return const Text('');
+
+                        return ListView.builder(
+                          primary: false,
+                          shrinkWrap: true,
+                          itemCount: snapshot.data.documents.length,
+                          // ignore: missing_return
+                          itemBuilder: (context, index) {
+                            var video = snapshot.data.documents[index];
+                            return Stack(children: <Widget>[
+                              VideoBar(
+                                lessonNo: video['lesson'].toString(),
+                                lessonTitle: video['title'],
+                                dur: video['dur'],
+                              ),
+                            ]);
+                          },
+                        );
                       },
-                    ),
+                    ),                    
                     SizedBox(height: scaler.getHeight(1.0))
                   ],
                 ),
@@ -278,7 +281,6 @@ class VideoBar extends StatelessWidget {
                       ),
                     ],
                   ),
-                  
                 ],
               ),
             ],
