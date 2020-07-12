@@ -13,7 +13,7 @@ class SCCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ScreenScaler scaler = ScreenScaler();
-    
+
     return Container(
       margin: EdgeInsets.only(bottom: 10.0),
       width: scaler.getWidth(14.0),
@@ -31,10 +31,11 @@ class SCCard extends StatelessWidget {
                 color: Theme.of(context).accentColor,
               ),
               child: FlatButton(
-                onPressed: (){
+                onPressed: () {
                   Navigator.of(context).push(_createRoute(course));
                 },
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0)),
                 child: Container(
                   margin: EdgeInsets.only(bottom: 10.0),
                   child: Column(
@@ -66,16 +67,17 @@ class SCCard extends StatelessWidget {
             ),
           ),
           Container(
+            width: scaler.getWidth(12.0),
+            height: scaler.getHeight(6.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20.0),
               gradient: LinearGradient(
-                begin: FractionalOffset.topCenter,
-                end: FractionalOffset.bottomCenter,
-                colors: [
-                  Theme.of(context).primaryColorLight,
-                  Theme.of(context).primaryColor
-                ]
-              ),
+                  begin: FractionalOffset.topCenter,
+                  end: FractionalOffset.bottomCenter,
+                  colors: [
+                    Theme.of(context).primaryColorLight,
+                    Theme.of(context).primaryColor
+                  ]),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black26,
@@ -98,7 +100,7 @@ class SCCard extends StatelessWidget {
                       child: FutureBuilder(
                         future: _loadUrl(course['image']),
                         builder: (context, snapshot) {
-                          if(snapshot.hasData){
+                          if (snapshot.hasData) {
                             return Image(
                               image: NetworkImage(snapshot.data),
                               fit: BoxFit.fitWidth,
@@ -143,14 +145,15 @@ class SCCard extends StatelessWidget {
   }
 }
 
-_loadUrl(String loc) async{
+_loadUrl(String loc) async {
   var ref = FirebaseStorage.instance.ref().child(loc);
   return (await ref.getDownloadURL()).toString();
 }
 
 Route _createRoute(DocumentSnapshot c) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => CourseVideos(course: c),
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        CourseVideos(course: c),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(0.0, 1.0);
       var end = Offset.zero;
