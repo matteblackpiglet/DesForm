@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "858458914321",
+    "firebase_url": "https://desform-b50a9.firebaseio.com",
+    "project_id": "desform-b50a9",
+    "storage_bucket": "desform-b50a9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:858458914321:android:61c16e45e654ceaebabbb0",
+        "android_client_info": {
+          "package_name": "com.desform.DesForm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "858458914321-gv06u931lornau1m5t06b1rlb5rbumtn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHpCFq97NW7oqS2SHlGEQH-mKT9qH9W1Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "858458914321-gv06u931lornau1m5t06b1rlb5rbumtn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

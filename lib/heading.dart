@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 
+// ignore: must_be_immutable
 class Heading extends StatelessWidget {
-  const Heading({this.text, this.color, this.weight});
+  Heading({this.text, this.color, this.weight, this.fontSize});
 
+  var fontSize;
   final String text;
   final Color color;
   final FontWeight weight;
@@ -12,7 +14,9 @@ class Heading extends StatelessWidget {
   Widget build(BuildContext context) {
     ScreenScaler scaler = new ScreenScaler();
 
-    final double fontSize = scaler.getTextSize(8.2);
+    if(fontSize == null){
+      fontSize = scaler.getTextSize(8.2);
+    }
 
     return Container(
       child: Text(

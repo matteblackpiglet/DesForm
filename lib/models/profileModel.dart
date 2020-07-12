@@ -3,20 +3,22 @@ class Profile {
   String username;
   String dob;
   String gender;
-  String ongoingCourse;
-  String completedCourse;
+  String ongoingCourses;
+  String completedCourses;
   String profileUrl;
   String email;
+  List<String> courses;
 
     Profile({
     this.name,
     this.username,
     this.dob,
     this.gender,
-    this.ongoingCourse,
-    this.completedCourse,
+    this.ongoingCourses,
+    this.completedCourses,
     this.profileUrl,
     this.email,
+    this.courses,
   });
 }
 
@@ -25,8 +27,9 @@ Profile profile = Profile(
   username: 'xaea12',
   dob: '12-2-1994',
   gender: 'Male',
-  ongoingCourse: '3',
-  completedCourse: '1',
+  ongoingCourses: '1',
+  completedCourses: '1',
   profileUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQM--hVamcJhFyQcqARua0LV9c-opvPKdxCZw&usqp=CAU',
   email: 'XÆA12@gmail.com',
+  courses: ['1', '3'],
 );

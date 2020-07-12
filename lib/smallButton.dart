@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
+import 'package:DesForm/models/profileModel.dart';
+import 'package:DesForm/screens/yourCourses.dart';
+import 'screens/allCourses.dart';
 
 class SmallButton extends StatelessWidget {
-  SmallButton({this.text});
+  SmallButton({this.text, this.p});
 
   final double buttonCurve = 6.0;
   final String text;
+  final Profile p;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +26,12 @@ class SmallButton extends StatelessWidget {
         height: height,
         minWidth: width,
         child: RaisedButton(
-          onPressed: () {},
+          onPressed: () {
+            if(p == null)
+              Navigator.of(context).push(_createRoute1());
+            else
+              Navigator.of(context).push(_createRoute2(p));
+          },
           padding: EdgeInsets.all(0.0),
           splashColor: Colors.grey[200],
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(buttonCurve)),
@@ -45,4 +54,40 @@ class SmallButton extends StatelessWidget {
       ),
     );
   }
+}
+
+Route _createRoute1() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => AllCourses(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(0.0, 1.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
+}
+
+Route _createRoute2(Profile pr) {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => YourCourses(p: pr),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(0.0, 1.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
 }

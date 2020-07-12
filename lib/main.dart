@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'screens/home.dart';
-import 'screens/profile.dart';
 
 void main() { 
   Paint.enableDithering = true;

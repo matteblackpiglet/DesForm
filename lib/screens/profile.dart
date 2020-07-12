@@ -85,11 +85,11 @@ class _ProfilePageState extends State<ProfilePage> {
                       children: <Widget>[
                         StatusCard(
                           text: 'Ongoing Courses',
-                          count: profile.ongoingCourse,
+                          count: profile.ongoingCourses,
                         ),
                         StatusCard(
                           text: 'Courses Finished',
-                          count: profile.completedCourse,
+                          count: profile.completedCourses,
                         ),
                       ],
                     ),
