@@ -98,18 +98,13 @@ class CCard extends StatelessWidget {
                         future: _loadUrl(course['image']),
                         builder: (context, snapshot) {
                           if(snapshot.hasData){
-                            return Image(
-                              image: NetworkImage(snapshot.data),
-                              fit: BoxFit.fitWidth,
-                            );
+                            return FadeInImage.assetNetwork(
+                                placeholder: 'assets/images/loading.gif',
+                                image: snapshot.data,
+                                fit: BoxFit.fitWidth,
+                              );
                           }
-                          return Center(
-                            child: SizedBox(
-                              height: 30,
-                              width: 30,
-                              child: CircularProgressIndicator(),
-                            ),
-                          );
+                          return const Text('');
                         },
                       ),
                     ),

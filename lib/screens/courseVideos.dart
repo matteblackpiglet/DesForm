@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/animation.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:DesForm/heading.dart';
 
@@ -14,6 +15,7 @@ class CourseVideos extends StatelessWidget {
     ScreenScaler scaler = new ScreenScaler();
 
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       body: SingleChildScrollView(
         child: Container(
           decoration: (BoxDecoration(color: Theme.of(context).accentColor)),
@@ -175,102 +177,141 @@ class CourseVideos extends StatelessWidget {
   }
 }
 
-class VideoBar extends StatelessWidget {
+class VideoBar extends StatefulWidget {
   const VideoBar({this.lessonNo, this.lessonTitle, this.dur});
 
   final String lessonNo, lessonTitle, dur;
 
   @override
+  _VideoBarState createState() => _VideoBarState();
+}
+
+class _VideoBarState extends State<VideoBar> with SingleTickerProviderStateMixin {
+  Animation animation;
+  AnimationController animationController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    animationController = AnimationController(
+      duration: Duration(seconds: 1),
+      vsync: this,
+    );
+
+    animation = Tween(
+      begin: -1.0,
+      end: 0.0
+    ).animate(
+      CurvedAnimation(
+        parent: animationController,
+        curve: Curves.fastOutSlowIn,
+      )
+    );
+
+    animationController.forward();
+  }
+
+  @override
   Widget build(BuildContext context) {
     ScreenScaler scaler = ScreenScaler();
+    final double width = MediaQuery.of(context).size.width;
 
-    return Stack(
-      children: <Widget>[
-        Container(
-          margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
-          height: scaler.getHeight(3.5),
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: Colors.white70,
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(5.0, 15.0, 5.0, 20.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+    return AnimatedBuilder(
+      animation: animationController,
+      builder: (context, child){
+        return Transform(
+          transform: Matrix4.translationValues(animation.value*width, 0.0, 0.0),
+          child: Stack(
             children: <Widget>[
               Container(
-                constraints: BoxConstraints(
-                  maxHeight: 40,
-                  minHeight: 40,
-                  maxWidth: 40,
-                  minWidth: 40,
-                ),
-                child: RaisedButton(
-                  color: Colors.grey[200],
-                  onPressed: () {},
-                  padding: EdgeInsets.all(0.0),
-                  splashColor: Color(0xffe6e5f5),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  animationDuration: Duration(milliseconds: 200),
-                  child: Icon(
-                    Icons.play_arrow,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Lesson $lessonNo",
-                    style: TextStyle(
-                      color: Colors.grey[900],
-                      fontFamily: 'Montserrat',
-                      fontSize: scaler.getTextSize(6.0),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  SizedBox(
-                    width: scaler.getWidth(16.0),
-                    child: Text(
-                      lessonTitle,
-                      style: TextStyle(
-                        color: Colors.grey[900],
-                        fontFamily: 'Montserrat',
-                        fontSize: scaler.getTextSize(7.0),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                width: scaler.getWidth(6.5),
-                margin: EdgeInsets.only(right: 5.0),
+                margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                height: scaler.getHeight(3.5),
+                width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).accentColor,
+                  color: Colors.white70,
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Text(
-                    "$dur mins",
-                    style: TextStyle(
-                      fontSize: 12.0,
-                      color: Colors.grey[600],
-                      fontFamily: 'Montserrat',
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(5.0, 15.0, 5.0, 20.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Container(
+                      constraints: BoxConstraints(
+                        maxHeight: 40,
+                        minHeight: 40,
+                        maxWidth: 40,
+                        minWidth: 40,
+                      ),
+                      child: RaisedButton(
+                        color: Colors.grey[200],
+                        onPressed: () {},
+                        padding: EdgeInsets.all(0.0),
+                        splashColor: Color(0xffe6e5f5),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        animationDuration: Duration(milliseconds: 200),
+                        child: Icon(
+                          Icons.play_arrow,
+                          color: Colors.grey[600],
+                        ),
+                      ),
                     ),
-                  ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          "Lesson ${widget.lessonNo}",
+                          style: TextStyle(
+                            color: Colors.grey[900],
+                            fontFamily: 'Montserrat',
+                            fontSize: scaler.getTextSize(6.0),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(
+                          width: scaler.getWidth(16.0),
+                          child: Text(
+                            widget.lessonTitle,
+                            style: TextStyle(
+                              color: Colors.grey[900],
+                              fontFamily: 'Montserrat',
+                              fontSize: scaler.getTextSize(7.0),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      width: scaler.getWidth(6.5),
+                      margin: EdgeInsets.only(right: 5.0),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).accentColor,
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(
+                          "${widget.dur} mins",
+                          style: TextStyle(
+                            fontSize: 12.0,
+                            color: Colors.grey[600],
+                            fontFamily: 'Montserrat',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-        ),
-      ],
+        );
+      }
     );
   }
 }
