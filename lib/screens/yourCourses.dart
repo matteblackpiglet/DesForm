@@ -62,30 +62,33 @@ class YourCourses extends StatelessWidget {
                 ],
               ),
             ),
-            StreamBuilder(
-              stream: Firestore.instance.collection('courses').snapshots(),
-              builder: (context, snapshot){
-                if(!snapshot.hasData)
-                  return Text('');
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 10.0),
+              child: StreamBuilder(
+                stream: Firestore.instance.collection('courses').snapshots(),
+                builder: (context, snapshot){
+                  if(!snapshot.hasData)
+                    return Text('');
 
-                for(int i=0; i<snapshot.data.documents.length; i++){
-                  DocumentSnapshot course = snapshot.data.documents[i];
-                  if(p.courses.contains(course.documentID)){
-                    filteredCourses.add(course);
+                  for(int i=0; i<snapshot.data.documents.length; i++){
+                    DocumentSnapshot course = snapshot.data.documents[i];
+                    if(p.courses.contains(course['code'].toString())){
+                      filteredCourses.add(course);
+                    }
                   }
-                }
 
-                return GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-                  primary: false,
-                  shrinkWrap: true,
-                  itemCount: filteredCourses.length,
-                  itemBuilder: (context, index){
-                    var course = filteredCourses[index];
-                    return SCCard(course: course);
-                  },
-                );
-              },
+                  return GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                    primary: false,
+                    shrinkWrap: true,
+                    itemCount: filteredCourses.length,
+                    itemBuilder: (context, index){
+                      var course = filteredCourses[index];
+                      return SCCard(course: course);
+                    },
+                  );
+                },
+              ),
             ),
             
           ],
