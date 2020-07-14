@@ -124,36 +124,6 @@ class _HomePageState extends State<HomePage> {
                                       letterSpacing: -0.5,
                                     ),
                                   ),
-                                  ButtonTheme(
-                                    buttonColor: Colors.grey[300],
-                                    height: 5.0,
-                                    minWidth: 7.0,
-                                    child: RaisedButton(
-                                      onPressed: signOut,
-                                      padding: EdgeInsets.all(0.0),
-                                      splashColor: Colors.grey[200],
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(6.0),
-                                      ),
-                                      elevation: 4.0,
-                                      animationDuration:
-                                          Duration(milliseconds: 200),
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          'Sign Out',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: Colors.grey[900],
-                                            fontSize: 10.0,
-                                            fontFamily: 'Montserrat',
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
                                 ],
                               ),
                               SizedBox(height: scaler.getHeight(0.2)),
