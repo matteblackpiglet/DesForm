@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
-import 'screens/home.dart';
+import 'services/authentication.dart';
+import 'screens/root_page.dart';
 
-void main() { 
-  Paint.enableDithering = true;
+void main() {
+  runApp(new MyApp());
+}
 
-  return  runApp(
-            MaterialApp(
-              theme: ThemeData(
-                primaryColor: Color(0xff2f2ea6),
-                primaryColorLight: Color(0xff4241a6),
-                accentColor: Color(0xffe6e5f5),
-                scaffoldBackgroundColor: Color(0xffffffff),
-              ),
-              debugShowCheckedModeBanner: false,
-              routes: {
-                '/home' : (context) => Home(),
-              },
-              initialRoute: '/home',
-            )
-          );
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return new MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: new ThemeData(
+          primaryColor: Color(0xff2f2ea6),
+          primaryColorLight: Color(0xff4241a6),
+          accentColor: Color(0xffe6e5f5),
+          scaffoldBackgroundColor: Color(0xffffffff),
+        ),
+        home: new RootPage(auth: new Auth()));
+  }
 }
