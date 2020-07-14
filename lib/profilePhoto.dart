@@ -5,10 +5,12 @@ import './screens/profile.dart';
 class ProfilePhoto extends StatelessWidget {
   ProfilePhoto({
     this.url,
+    this.signOut,
   });
 
   final double buttonCurve = 16.0;
   final String url;
+  final Function signOut;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,7 @@ class ProfilePhoto extends StatelessWidget {
         minWidth: size,
         child: RaisedButton(
           onPressed: () {
-            Navigator.of(context).push(_createRoute());
+            Navigator.of(context).push(_createRoute(signOut));
           },
           padding: EdgeInsets.all(0.0),
           splashColor: Color.fromARGB(30, 200, 200, 200),
@@ -54,9 +56,9 @@ class ProfilePhoto extends StatelessWidget {
   }
 }
 
-Route _createRoute() {
+Route _createRoute(Function f) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => Profile(),
+    pageBuilder: (context, animation, secondaryAnimation) => Profile(so: f,),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(0.0, 1.0);
       var end = Offset.zero;

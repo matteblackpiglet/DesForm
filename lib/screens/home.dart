@@ -1,3 +1,4 @@
+import 'package:DesForm/screens/login_signup_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import '../models/profileModel.dart';
@@ -45,6 +46,7 @@ class _HomePageState extends State<HomePage> {
       try {
         await widget.auth.signOut();
         widget.logoutCallback();
+        Navigator.pop(context, CustomNavRoute(builder: (context) => LoginSignupPage()));
       } catch (e) {
         print(e);
       }
@@ -93,6 +95,7 @@ class _HomePageState extends State<HomePage> {
                           margin: EdgeInsets.only(right: 10.0),
                           child: ProfilePhoto(
                             url: profile.profileUrl,
+                            signOut: signOut,
                           ),
                         ),
                         Container(
@@ -180,6 +183,26 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class CustomNavRoute<T> extends MaterialPageRoute<T> {
+  CustomNavRoute({WidgetBuilder builder, RouteSettings settings})
+      : super(builder: builder, settings: settings);
+
+  @override
+  Widget buildTransitions(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child) {
+    return new SlideTransition(
+      position: Tween<Offset>(
+        begin: const Offset(0.0, 1.0),
+        end: Offset.zero,
+      ).animate(animation),
+      child: child,
     );
   }
 }
