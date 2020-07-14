@@ -55,23 +55,26 @@ class AllCourses extends StatelessWidget {
                 ],
               ),
             ),
-            StreamBuilder(
-              stream: Firestore.instance.collection('courses').snapshots(),
-              builder: (context, snapshot){
-                if(!snapshot.hasData)
-                  return const Text('');
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 10.0),
+              child: StreamBuilder(
+                stream: Firestore.instance.collection('courses').snapshots(),
+                builder: (context, snapshot){
+                  if(!snapshot.hasData)
+                    return const Text('');
 
-                return GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-                  primary: false,
-                  shrinkWrap: true,
-                  itemCount: snapshot.data.documents.length,
-                  itemBuilder: (context, index){
-                    var course = snapshot.data.documents[index];
-                    return SCCard(course: course);
-                  },
-                );
-              },
+                  return GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                    primary: false,
+                    shrinkWrap: true,
+                    itemCount: snapshot.data.documents.length,
+                    itemBuilder: (context, index){
+                      var course = snapshot.data.documents[index];
+                      return SCCard(course: course);
+                    },
+                  );
+                },
+              ),
             ),
           ],
         ),

@@ -38,7 +38,7 @@ class CourseCards extends StatelessWidget {
                   count++;
                   return CCard(course: course);
                 }
-                else if(p.courses.contains(course.documentID) && count<limit){
+                else if(p.courses.contains(course['code'].toString()) && count<limit){
                   count++;
                   return CCard(course: course);
                 }

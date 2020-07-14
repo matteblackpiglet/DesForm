@@ -14,68 +14,64 @@ class SCCard extends StatelessWidget {
   Widget build(BuildContext context) {
     ScreenScaler scaler = ScreenScaler();
 
-    return Stack(
+    return Container(
       alignment: Alignment.center,
-      children: <Widget>[
-        Container(
-          height: 170.0,
-          width: 170.0,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20.0),
-            gradient: LinearGradient(
-              begin: FractionalOffset.topCenter,
-              end: FractionalOffset.bottomCenter,
-              colors: [
-                Theme.of(context).primaryColorLight,
-                Theme.of(context).primaryColor
-              ],
-            ),
+      child: Container(
+        height: scaler.getWidth(14.0),
+        width: scaler.getWidth(14.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20.0),
+          gradient: LinearGradient(
+            begin: FractionalOffset.topCenter,
+            end: FractionalOffset.bottomCenter,
+            colors: [
+              Theme.of(context).primaryColorLight,
+              Theme.of(context).primaryColor
+            ],
           ),
         ),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(20.0),
-          child: FlatButton(
-            onPressed: () {
-              Navigator.of(context).push(_createRoute(course));
-            },
-            child: Container(
-              height: 130.0,
-              width: 130.0,
-              child: FutureBuilder(
-                future: _loadUrl(course['image']),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Image(
-                      image: NetworkImage(snapshot.data),
-                      fit: BoxFit.contain,
-                    );
-                  }
-                  return Center(
-                    child: SizedBox(
-                      height: 30,
-                      width: 30,
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            ClipRRect(
+              borderRadius: BorderRadius.circular(20.0),
+              child: FlatButton(
+                onPressed: () {
+                  Navigator.of(context).push(_createRoute(course));
                 },
+                child: Container(
+                  height: scaler.getWidth(10.0),
+                  width: scaler.getWidth(10.0),
+                  child: FutureBuilder(
+                    future: _loadUrl(course['image']),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return FadeInImage.assetNetwork(
+                          placeholder: 'assets/images/loading.gif',
+                          image: snapshot.data,
+                          fit: BoxFit.fitWidth,
+                        );
+                      }
+                      return const Text('');
+                    },
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-        Positioned(
-          bottom: 35.0,
-          left: 40.0,
-          child: Text(
-            course['name'],
-            style: TextStyle(
-              fontFamily: 'Montserrat',
-              fontSize: scaler.getTextSize(8.4),
-              fontWeight: FontWeight.w700,
-              color: Theme.of(context).accentColor,
+            Text(
+              course['name'],
+              textAlign: TextAlign.justify,
+              style: TextStyle(
+                fontFamily: 'Montserrat',
+                fontSize: scaler.getTextSize(7.8),
+                fontWeight: FontWeight.w700,
+                color: Theme.of(context).accentColor,
+              ),
             ),
-          ),
+          ]
         ),
-      ],
+      ),
     );
   }
 }
