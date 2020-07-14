@@ -6,6 +6,10 @@ import '../profilePhotoPlain.dart';
 import '../statusCard.dart';
 
 class Profile extends StatelessWidget {
+  Profile({this.so});
+
+  final Function so;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -14,18 +18,24 @@ class Profile extends StatelessWidget {
 
         if (!currentFocus.hasPrimaryFocus) currentFocus.unfocus();
       },
-      child: ProfilePage(),
+      child: ProfilePage(sOut: so),
     );
   }
 }
 
 class ProfilePage extends StatefulWidget {
+  ProfilePage({this.sOut});
+
+  final Function sOut;
+
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  _ProfilePageState createState() => _ProfilePageState(signOut: sOut);
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  _ProfilePageState({this.signOut});
   final double mainCurve = 25.0;
+  final Function signOut;
 
   @override
   Widget build(BuildContext context) {
@@ -165,7 +175,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           icon: Icon(Icons.exit_to_app),
                           iconSize: 40.0,
                           color: Theme.of(context).primaryColorLight,
-                          onPressed: () {},
+                          onPressed: signOut,
                         ),
                         Text(
                           'Sign Out',
