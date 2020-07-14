@@ -67,8 +67,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           ProfilePhotoPlain(
-                              url:
-                                  profile.profileUrl),
+                            url: profile.profileUrl,
+                          ),
                           Container(
                             margin: EdgeInsets.only(left: 16.0),
                             child: Heading(
@@ -162,20 +162,20 @@ class _ProfilePageState extends State<ProfilePage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         IconButton(
-                            icon: Icon(Icons.exit_to_app),
-                            iconSize: 40.0,
-                            color: Theme.of(context).primaryColorLight,
-                            onPressed: () {},
-                          ),
-                          Text(
-                            'Sign Out',
-                            style: TextStyle(
+                          icon: Icon(Icons.exit_to_app),
+                          iconSize: 40.0,
+                          color: Theme.of(context).primaryColorLight,
+                          onPressed: () {},
+                        ),
+                        Text(
+                          'Sign Out',
+                          style: TextStyle(
                               color: Colors.grey[700],
                               fontFamily: 'Montserrat',
                               fontWeight: FontWeight.w600,
                               letterSpacing: -1.0,
                               fontSize: scaler.getTextSize(8.0)),
-                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -228,3 +228,4 @@ class Tag extends StatelessWidget {
     );
   }
 }
+

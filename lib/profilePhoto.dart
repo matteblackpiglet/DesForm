@@ -3,7 +3,9 @@ import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import './screens/profile.dart';
 
 class ProfilePhoto extends StatelessWidget {
-  ProfilePhoto({this.url});
+  ProfilePhoto({
+    this.url,
+  });
 
   final double buttonCurve = 16.0;
   final String url;
@@ -11,7 +13,7 @@ class ProfilePhoto extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ScreenScaler scaler = new ScreenScaler();
-    
+
     final double size = scaler.getHeight(3);
 
     return Container(
@@ -26,7 +28,8 @@ class ProfilePhoto extends StatelessWidget {
           },
           padding: EdgeInsets.all(0.0),
           splashColor: Color.fromARGB(30, 200, 200, 200),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(buttonCurve)),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(buttonCurve)),
           animationDuration: Duration(milliseconds: 200),
           child: Ink(
             decoration: BoxDecoration(
@@ -37,7 +40,11 @@ class ProfilePhoto extends StatelessWidget {
               borderRadius: BorderRadius.circular(buttonCurve),
             ),
             child: Container(
-              constraints: BoxConstraints(maxHeight: size, minHeight: size, maxWidth: size, minWidth: size),
+              constraints: BoxConstraints(
+                  maxHeight: size,
+                  minHeight: size,
+                  maxWidth: size,
+                  minWidth: size),
               alignment: Alignment.center,
             ),
           ),
