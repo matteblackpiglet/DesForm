@@ -18,7 +18,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
   String _password;
   String _errorMessage;
 
-    bool _isLoginForm;
+  bool _isLoginForm;
   bool _isLoading;
 
   // Check if form is valid before perform login or signup
@@ -53,7 +53,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
           _isLoading = false;
         });
 
-        if (userId.length > 0 && userId != null && _isLoginForm) {
+        if (userId.length > 0 && userId != null) {
           widget.loginCallback();
         }
       } catch (e) {
@@ -90,9 +90,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        appBar: new AppBar(
-          title: new Text('Flutter login demo'),
-        ),
+        resizeToAvoidBottomInset: false,
         body: Stack(
           children: <Widget>[
             _showForm(),
@@ -139,15 +137,39 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
         padding: EdgeInsets.all(16.0),
         child: new Form(
           key: _formKey,
-          child: new ListView(
-            shrinkWrap: true,
+          child: Stack(
             children: <Widget>[
-              showLogo(),
-              showEmailInput(),
-              showPasswordInput(),
-              showPrimaryButton(),
-              showSecondaryButton(),
-              showErrorMessage(),
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  height: 300.0,
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey[400],
+                        blurRadius: 6.0,
+                        offset: Offset(0.0, 8.0),
+                      ),
+                    ],
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
+                child: ListView(
+                  shrinkWrap: true,
+                  children: <Widget>[
+                    showLogo(),
+                    showEmailInput(),
+                    showPasswordInput(),
+                    showPrimaryButton(),
+                    showSecondaryButton(),
+                    showErrorMessage(),
+                  ],
+                ),
+              ),
             ],
           ),
         ));
@@ -223,27 +245,43 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
   }
 
   Widget showSecondaryButton() {
-    return new FlatButton(
-        child: new Text(
-            _isLoginForm ? 'Create an account' : 'Have an account? Sign in',
-            style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300)),
-        onPressed: toggleFormMode);
+    return Align(
+      child: SizedBox(
+        width: 250.0,
+        child: new FlatButton(
+            child: new Text(
+                _isLoginForm ? 'Create an account' : 'Have an account? Sign in',
+                style:
+                    new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300)),
+            onPressed: toggleFormMode),
+      ),
+    );
   }
 
   Widget showPrimaryButton() {
-    return new Padding(
-        padding: EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 0.0),
-        child: SizedBox(
-          height: 40.0,
-          child: new RaisedButton(
-            elevation: 5.0,
-            shape: new RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(30.0)),
-            color: Colors.blue,
-            child: new Text(_isLoginForm ? 'Login' : 'Create account',
-                style: new TextStyle(fontSize: 20.0, color: Colors.white)),
-            onPressed: validateAndSubmit,
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 0.0),
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 20.0),
+        child: Align(
+          child: SizedBox(
+            width: 250.0,
+            child: new RaisedButton(
+              elevation: 5.0,
+              shape: new RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(30.0),
+              ),
+              color: Theme.of(context).primaryColor,
+              child: new Text(
+                _isLoginForm ? 'Login' : 'Create Account',
+                style: new TextStyle(
+                    fontSize: 20.0, color: Theme.of(context).accentColor),
+              ),
+              onPressed: validateAndSubmit,
+            ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
