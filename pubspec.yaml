@@ -30,6 +30,9 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_screen_scaler: ^0.0.1
+  sa_multi_tween: ^1.1.1
+  sa_stateless_animation: ^1.0.1
+  supercharged: ^1.6.0
 
 
   # The following adds the Cupertino Icons font to your application.

@@ -1,39 +1,18 @@
+import 'package:DesForm/dynBackground.dart';
 import 'package:flutter/material.dart';
 import '../services/authentication.dart';
-import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 
-var h = 15.0;
-
-class LoginSignupPage extends StatelessWidget {
+class LoginSignupPage extends StatefulWidget {
   LoginSignupPage({this.auth, this.loginCallback});
 
   final BaseAuth auth;
   final VoidCallback loginCallback;
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScopeNode currentFocus = FocusScope.of(context);
-
-        if (!currentFocus.hasPrimaryFocus) currentFocus.unfocus();
-      },
-      child: LoginSignUpPage(auth: auth, loginCallback: loginCallback,),
-    );
-  }
+  State<StatefulWidget> createState() => new _LoginSignupPageState();
 }
 
-class LoginSignUpPage extends StatefulWidget {
-  LoginSignUpPage({this.auth, this.loginCallback});
-
-  final BaseAuth auth;
-  final VoidCallback loginCallback;
-
-  @override
-  State<StatefulWidget> createState() => new LoginSignUpPageState();
-}
-
-class LoginSignUpPageState extends State<LoginSignUpPage> {
+class _LoginSignupPageState extends State<LoginSignupPage> {
   final _formKey = new GlobalKey<FormState>();
 
   String _email;
@@ -115,6 +94,7 @@ class LoginSignUpPageState extends State<LoginSignUpPage> {
         resizeToAvoidBottomInset: false,
         body: Stack(
           children: <Widget>[
+            Positioned.fill(child: AnimatedBackground()),
             _showForm(),
             _showCircularProgress(),
           ],
@@ -122,7 +102,7 @@ class LoginSignUpPageState extends State<LoginSignUpPage> {
   }
 
   Widget _showCircularProgress() {
-    if (_isLoading && _errorMessage == null) {
+    if (_isLoading) {
       return Center(child: CircularProgressIndicator());
     }
     return Container(
@@ -155,83 +135,57 @@ class LoginSignUpPageState extends State<LoginSignUpPage> {
 //  }
 
   Widget _showForm() {
-    ScreenScaler scaler = ScreenScaler();
-
     return new Container(
         padding: EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: FractionalOffset.topCenter,
-            end: FractionalOffset.bottomCenter,
-            colors: [
-              Color(0xff2426a6),
-              Theme.of(context).primaryColor
+        child: new Form(
+          key: _formKey,
+          child: Stack(
+            children: <Widget>[
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  height: 300.0,
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 6.0,
+                        offset: Offset(0.0, 3.0),
+                      ),
+                    ],
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
+                child: ListView(
+                  shrinkWrap: true,
+                  children: <Widget>[
+                    showLogo(),
+                    showEmailInput(),
+                    showPasswordInput(),
+                    showPrimaryButton(),
+                    showSecondaryButton(),
+                    showErrorMessage(),
+                  ],
+                ),
+              ),
             ],
           ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            showLogo(),
-            new Form(
-              key: _formKey,
-              child: Stack(
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                      height: scaler.getHeight(h),
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 20.0,
-                            spreadRadius: 1.0,
-                            offset: Offset(0.0, 8.0),
-                          ),
-                        ],
-                        borderRadius: BorderRadius.circular(20.0),
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
-                      child: ListView(
-                        shrinkWrap: true,
-                        children: <Widget>[
-                          showEmailInput(),
-                          showPasswordInput(),
-                          showErrorMessage(),
-                          showPrimaryButton(),
-                          showSecondaryButton(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
         ));
   }
 
   Widget showErrorMessage() {
     if (_errorMessage.length > 0 && _errorMessage != null) {
-      h = 16.5;
-      return Container(
-        alignment: Alignment.center,
-        margin: EdgeInsets.only(top: 5.0),
-        child: new Text(
-          _errorMessage,
-          style: TextStyle(
+      return new Text(
+        _errorMessage,
+        style: TextStyle(
             fontSize: 13.0,
             color: Colors.red,
-            fontFamily: 'Montserrat',
             height: 1.0,
-          ),
-        ),
+            fontWeight: FontWeight.w300),
       );
     } else {
       return new Container(
@@ -241,42 +195,14 @@ class LoginSignUpPageState extends State<LoginSignUpPage> {
   }
 
   Widget showLogo() {
-    ScreenScaler scaler = ScreenScaler();
     return new Hero(
       tag: 'hero',
-      child: Container(
-        margin: EdgeInsets.only(left: 10.0, bottom: 20.0),
-        alignment: Alignment.centerLeft,
-        padding: EdgeInsets.fromLTRB(0.0, 0, 0.0, 0.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              'DesForm',
-              style: TextStyle(
-                color: Color(0xffffffff),
-                fontSize: scaler.getTextSize(10.6),
-                fontFamily: 'Montserrat',
-                fontWeight: FontWeight.w900,
-              ),
-            ),
-            Row(
-              children: <Widget>[
-                SizedBox(
-                  width: 2.0,
-                ),
-                Text(
-                  'Live to Create',
-                  style: TextStyle(
-                    color: Color(0xffffffff),
-                    fontSize: scaler.getTextSize(7.0),
-                    fontFamily: 'Montserrat',
-                    letterSpacing: -0.5,
-                  ),
-                ),
-              ],
-            ),
-          ],
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(0.0, 70.0, 0.0, 0.0),
+        child: CircleAvatar(
+          backgroundColor: Colors.transparent,
+          radius: 48.0,
+          child: Image.asset('assets/flutter-icon.png'),
         ),
       ),
     );
@@ -284,54 +210,32 @@ class LoginSignUpPageState extends State<LoginSignUpPage> {
 
   Widget showEmailInput() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+      padding: const EdgeInsets.fromLTRB(0.0, 100.0, 0.0, 0.0),
       child: new TextFormField(
         maxLines: 1,
         keyboardType: TextInputType.emailAddress,
         autofocus: false,
-        style: TextStyle(
-          fontFamily: 'Montserrat'
-        ),
         decoration: new InputDecoration(
             hintText: 'Email',
-            hintStyle: TextStyle(
-              fontFamily: 'Montserrat'
-            ),
             icon: new Icon(
               Icons.mail,
               color: Colors.grey,
             )),
-        //validator: (value) => value.isEmpty ? 'Email can\'t be empty' : null,
-        validator: (value) {
-          if(value.isEmpty){
-            h=16.5;
-            return 'Email can\'t be empty';
-          }
-          else{
-            return null;
-          }
-        },
+        validator: (value) => value.isEmpty ? 'Email can\'t be empty' : null,
         onSaved: (value) => _email = value.trim(),
       ),
     );
   }
 
   Widget showPasswordInput() {
-    return Container(
+    return Padding(
       padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
-      margin: EdgeInsets.only(bottom: 10.0),
       child: new TextFormField(
         maxLines: 1,
         obscureText: true,
         autofocus: false,
-        style: TextStyle(
-          fontFamily: 'Montserrat'
-        ),
         decoration: new InputDecoration(
             hintText: 'Password',
-            hintStyle: TextStyle(
-              fontFamily: 'Montserrat'
-            ),
             icon: new Icon(
               Icons.lock,
               color: Colors.grey,
@@ -343,51 +247,41 @@ class LoginSignUpPageState extends State<LoginSignUpPage> {
   }
 
   Widget showSecondaryButton() {
-    ScreenScaler scaler = ScreenScaler();
-    return Container(
-      margin: EdgeInsets.only(bottom: 10.0),
-      child: Align(
-        child: SizedBox(
-          width: scaler.getWidth(22.0),
-          child: new FlatButton(
-              child: new Text(
-                _isLoginForm ? 'Create an account' : 'Have an account?  Sign in',
-                style: new TextStyle(
-                  fontSize: scaler.getTextSize(7.0),
-                  fontWeight: FontWeight.w400,
-                  fontFamily: 'Montserrat'
-                )
-              ),
-              onPressed: toggleFormMode
-          ),
-        ),
+    return Align(
+      child: SizedBox(
+        width: 250.0,
+        child: new FlatButton(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+            child: new Text(
+                _isLoginForm ? 'Create an account' : 'Have an account? Sign in',
+                style:
+                    new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300)),
+            onPressed: toggleFormMode),
       ),
     );
   }
 
   Widget showPrimaryButton() {
-    ScreenScaler scaler = ScreenScaler();
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 0.0),
-      child: Align(
-        child: SizedBox(
-          width: scaler.getWidth(18.0),
-          child: new RaisedButton(
-            elevation: 4.0,
-            shape: new RoundedRectangleBorder(
-              borderRadius: new BorderRadius.circular(10.0),
-            ),
-            color: Theme.of(context).primaryColor,
-            child: new Text(
-              _isLoginForm ? 'Login' : 'Create Account',
-              style: new TextStyle(
-                fontSize: scaler.getTextSize(8.0),
-                color: Theme.of(context).accentColor,
-                fontWeight: FontWeight.w500,
-                fontFamily: 'Montserrat'
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 0.0),
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 20.0),
+        child: Align(
+          child: SizedBox(
+            width: 250.0,
+            child: new RaisedButton(
+              elevation: 1.0,
+              shape: new RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(30.0),
               ),
+              color: Theme.of(context).primaryColor,
+              child: new Text(
+                _isLoginForm ? 'Login' : 'Create Account',
+                style: new TextStyle(
+                    fontSize: 20.0, color: Theme.of(context).accentColor),
+              ),
+              onPressed: validateAndSubmit,
             ),
-            onPressed: validateAndSubmit,
           ),
         ),
       ),
