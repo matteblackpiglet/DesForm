@@ -10,8 +10,8 @@ class AnimatedBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     final tween = MultiTween<AniProps>()
       ..add(AniProps.color1,
-          Color(0xffD38312).tweenTo(Colors.lightBlue.shade900), 3.seconds)
-      ..add(AniProps.color2, Color(0xffA83279).tweenTo(Colors.blue.shade600),
+          Theme.of(context).primaryColor.tweenTo(Theme.of(context).accentColor), 3.seconds)
+      ..add(AniProps.color2, Theme.of(context).accentColor.tweenTo(Theme.of(context).primaryColor),
           3.seconds);
 
     return CustomAnimation<MultiTweenValues<AniProps>>(
