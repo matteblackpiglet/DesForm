@@ -1,3 +1,4 @@
+import 'package:DesForm/dynBackground.dart';
 import 'package:flutter/material.dart';
 import '../services/authentication.dart';
 
@@ -93,6 +94,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
         resizeToAvoidBottomInset: false,
         body: Stack(
           children: <Widget>[
+            Positioned.fill(child: AnimatedBackground()),
             _showForm(),
             _showCircularProgress(),
           ],
@@ -146,9 +148,9 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey[400],
+                        color: Colors.black26,
                         blurRadius: 6.0,
-                        offset: Offset(0.0, 8.0),
+                        offset: Offset(0.0, 3.0),
                       ),
                     ],
                     borderRadius: BorderRadius.circular(20.0),
@@ -249,6 +251,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
       child: SizedBox(
         width: 250.0,
         child: new FlatButton(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
             child: new Text(
                 _isLoginForm ? 'Create an account' : 'Have an account? Sign in',
                 style:
@@ -267,7 +270,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
           child: SizedBox(
             width: 250.0,
             child: new RaisedButton(
-              elevation: 5.0,
+              elevation: 1.0,
               shape: new RoundedRectangleBorder(
                 borderRadius: new BorderRadius.circular(30.0),
               ),
