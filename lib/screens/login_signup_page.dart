@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../services/authentication.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 
+var h = 15.0;
+
 class LoginSignupPage extends StatelessWidget {
   LoginSignupPage({this.auth, this.loginCallback});
 
@@ -178,7 +180,7 @@ class LoginSignUpPageState extends State<LoginSignUpPage> {
                   Align(
                     alignment: Alignment.center,
                     child: Container(
-                      height: scaler.getHeight(15.0),
+                      height: scaler.getHeight(h),
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
@@ -201,9 +203,9 @@ class LoginSignUpPageState extends State<LoginSignUpPage> {
                         children: <Widget>[
                           showEmailInput(),
                           showPasswordInput(),
+                          showErrorMessage(),
                           showPrimaryButton(),
                           showSecondaryButton(),
-                          showErrorMessage(),
                         ],
                       ),
                     ),
@@ -217,13 +219,18 @@ class LoginSignUpPageState extends State<LoginSignUpPage> {
 
   Widget showErrorMessage() {
     if (_errorMessage.length > 0 && _errorMessage != null) {
-      return new Text(
-        _errorMessage,
-        style: TextStyle(
-          fontSize: 13.0,
-          color: Colors.red,
-          fontFamily: 'Montserrat',
-          height: 1.0,
+      h = 16.5;
+      return Container(
+        alignment: Alignment.center,
+        margin: EdgeInsets.only(top: 5.0),
+        child: new Text(
+          _errorMessage,
+          style: TextStyle(
+            fontSize: 13.0,
+            color: Colors.red,
+            fontFamily: 'Montserrat',
+            height: 1.0,
+          ),
         ),
       );
     } else {
@@ -294,15 +301,25 @@ class LoginSignUpPageState extends State<LoginSignUpPage> {
               Icons.mail,
               color: Colors.grey,
             )),
-        validator: (value) => value.isEmpty ? 'Email can\'t be empty' : null,
+        //validator: (value) => value.isEmpty ? 'Email can\'t be empty' : null,
+        validator: (value) {
+          if(value.isEmpty){
+            h=16.5;
+            return 'Email can\'t be empty';
+          }
+          else{
+            return null;
+          }
+        },
         onSaved: (value) => _email = value.trim(),
       ),
     );
   }
 
   Widget showPasswordInput() {
-    return Padding(
+    return Container(
       padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+      margin: EdgeInsets.only(bottom: 10.0),
       child: new TextFormField(
         maxLines: 1,
         obscureText: true,
@@ -327,19 +344,22 @@ class LoginSignUpPageState extends State<LoginSignUpPage> {
 
   Widget showSecondaryButton() {
     ScreenScaler scaler = ScreenScaler();
-    return Align(
-      child: SizedBox(
-        width: scaler.getWidth(22.0),
-        child: new FlatButton(
-            child: new Text(
-              _isLoginForm ? 'Create an account' : 'Have an account?  Sign in',
-              style: new TextStyle(
-                fontSize: scaler.getTextSize(7.0),
-                fontWeight: FontWeight.w400,
-                fontFamily: 'Montserrat'
-              )
-            ),
-            onPressed: toggleFormMode
+    return Container(
+      margin: EdgeInsets.only(bottom: 10.0),
+      child: Align(
+        child: SizedBox(
+          width: scaler.getWidth(22.0),
+          child: new FlatButton(
+              child: new Text(
+                _isLoginForm ? 'Create an account' : 'Have an account?  Sign in',
+                style: new TextStyle(
+                  fontSize: scaler.getTextSize(7.0),
+                  fontWeight: FontWeight.w400,
+                  fontFamily: 'Montserrat'
+                )
+              ),
+              onPressed: toggleFormMode
+          ),
         ),
       ),
     );
@@ -347,30 +367,27 @@ class LoginSignUpPageState extends State<LoginSignUpPage> {
 
   Widget showPrimaryButton() {
     ScreenScaler scaler = ScreenScaler();
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 20.0),
-        child: Align(
-          child: SizedBox(
-            width: scaler.getWidth(18.0),
-            child: new RaisedButton(
-              elevation: 4.0,
-              shape: new RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(10.0),
-              ),
-              color: Theme.of(context).primaryColor,
-              child: new Text(
-                _isLoginForm ? 'Login' : 'Create Account',
-                style: new TextStyle(
-                  fontSize: scaler.getTextSize(8.0),
-                  color: Theme.of(context).accentColor,
-                  fontWeight: FontWeight.w500,
-                  fontFamily: 'Montserrat'
-                ),
-              ),
-              onPressed: validateAndSubmit,
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 0.0),
+      child: Align(
+        child: SizedBox(
+          width: scaler.getWidth(18.0),
+          child: new RaisedButton(
+            elevation: 4.0,
+            shape: new RoundedRectangleBorder(
+              borderRadius: new BorderRadius.circular(10.0),
             ),
+            color: Theme.of(context).primaryColor,
+            child: new Text(
+              _isLoginForm ? 'Login' : 'Create Account',
+              style: new TextStyle(
+                fontSize: scaler.getTextSize(8.0),
+                color: Theme.of(context).accentColor,
+                fontWeight: FontWeight.w500,
+                fontFamily: 'Montserrat'
+              ),
+            ),
+            onPressed: validateAndSubmit,
           ),
         ),
       ),
