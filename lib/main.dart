@@ -3,6 +3,7 @@ import 'services/authentication.dart';
 import 'screens/root_page.dart';
 
 void main() {
+  Paint.enableDithering = true;
   runApp(new MyApp());
 }
 
