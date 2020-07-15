@@ -65,7 +65,7 @@ class YourCourses extends StatelessWidget {
             Container(
               margin: EdgeInsets.symmetric(horizontal: 10.0),
               child: StreamBuilder(
-                stream: Firestore.instance.collection('courses').snapshots(),
+                stream: Firestore.instance.collection('courses').orderBy('code').snapshots(),
                 builder: (context, snapshot){
                   if(!snapshot.hasData)
                     return Text('');

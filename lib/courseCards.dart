@@ -21,7 +21,7 @@ class CourseCards extends StatelessWidget {
     return Container(
       height: scaler.getHeight(15.0),
       child: StreamBuilder(
-        stream: Firestore.instance.collection('courses').snapshots(),
+        stream: Firestore.instance.collection('courses').orderBy('code').snapshots(),
         builder: (context, snapshot){
           if(!snapshot.hasData)
             return const Text('');
