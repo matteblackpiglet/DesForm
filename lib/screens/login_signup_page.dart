@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import '../services/authentication.dart';
 
-var h = 15.0;
+var h = 20.0;
 
 class LoginSignupPage extends StatefulWidget {
   LoginSignupPage({this.auth, this.loginCallback});
 
   final BaseAuth auth;
   final VoidCallback loginCallback;
-
   @override
   State<StatefulWidget> createState() => new _LoginSignupPageState();
 }
@@ -21,6 +20,8 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
   String _email;
   String _password;
   String _errorMessage;
+  String _name;
+  String _dob;
 
   bool _isLoginForm;
   bool _isLoading;
@@ -94,14 +95,15 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Stack(
-          children: <Widget>[
-            Positioned.fill(child: AnimatedBackground()),
-            _showForm(),
-            _showCircularProgress(),
-          ],
-        ));
+      resizeToAvoidBottomInset: false,
+      body: Stack(
+        children: <Widget>[
+          Positioned.fill(child: AnimatedBackground()),
+          _showForm(),
+          _showCircularProgress(),
+        ],
+      ),
+    );
   }
 
   Widget _showCircularProgress() {
@@ -137,7 +139,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
 //    );
 //  }
 
-Widget _showForm() {
+  Widget _showForm() {
     ScreenScaler scaler = ScreenScaler();
 
     return new Container(
@@ -174,6 +176,8 @@ Widget _showForm() {
                       child: ListView(
                         shrinkWrap: true,
                         children: <Widget>[
+                          showNameInput(),
+                          showDobInput(),
                           showEmailInput(),
                           showPasswordInput(),
                           showErrorMessage(),
@@ -189,7 +193,6 @@ Widget _showForm() {
           ],
         ));
   }
-
 
   Widget showErrorMessage() {
     if (_errorMessage.length > 0 && _errorMessage != null) {
@@ -214,8 +217,7 @@ Widget _showForm() {
     }
   }
 
-
-Widget showLogo() {
+  Widget showLogo() {
     ScreenScaler scaler = ScreenScaler();
     return new Hero(
       tag: 'hero',
@@ -257,6 +259,86 @@ Widget showLogo() {
     );
   }
 
+  Widget showNameInput() {
+    if (!_isLoginForm) {
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+        child: new TextFormField(
+          maxLines: 1,
+          keyboardType: TextInputType.text,
+          autofocus: false,
+          style: TextStyle(fontFamily: 'Montserrat'),
+          decoration: new InputDecoration(
+              hintText: 'Name',
+              hintStyle: TextStyle(fontFamily: 'Montserrat'),
+              icon: new Icon(
+                Icons.face,
+                color: Colors.grey,
+              )),
+          validator: (value) {
+            if (value.isEmpty) {
+              h = 16.5;
+              return 'Name can\'t be empty';
+            } else {
+              return null;
+            }
+          },
+          onSaved: (value) => _name = value,
+        ),
+      );
+    } else {
+      return new Container(
+        height: 0.0,
+      );
+    }
+  }
+
+  Widget showDobInput() {
+    if (!_isLoginForm) {
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+        child: new TextFormField(
+          maxLines: 1,
+          keyboardType: TextInputType.datetime,
+          autofocus: false,
+          style: TextStyle(fontFamily: 'Montserrat'),
+          decoration: new InputDecoration(
+              hintText: 'dd/mm/yyyy',
+              hintStyle: TextStyle(fontFamily: 'Montserrat'),
+              icon: new Icon(
+                Icons.calendar_today,
+                color: Colors.grey,
+              )),
+          validator: (value) {
+            if (value.isEmpty) {
+              h = 16.5;
+              return 'DOB can\'t be empty';
+            } else {
+              return null;
+            }
+          },
+          onSaved: (value) => _dob = value,
+        ),
+      );
+    } else {
+      return new Container(
+        height: 0.0,
+      );
+    }
+  }
+
+  Widget showPadding() {
+    if (_isLoginForm) {
+      return Container(
+        height: 5.0,
+      );
+    } else {
+      return new Container(
+        height: 0.0,
+      );
+    }
+  }
+
   Widget showEmailInput() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
@@ -264,24 +346,19 @@ Widget showLogo() {
         maxLines: 1,
         keyboardType: TextInputType.emailAddress,
         autofocus: false,
-        style: TextStyle(
-          fontFamily: 'Montserrat'
-        ),
+        style: TextStyle(fontFamily: 'Montserrat'),
         decoration: new InputDecoration(
             hintText: 'Email',
-            hintStyle: TextStyle(
-              fontFamily: 'Montserrat'
-            ),
+            hintStyle: TextStyle(fontFamily: 'Montserrat'),
             icon: new Icon(
               Icons.mail,
               color: Colors.grey,
             )),
         validator: (value) {
-          if(value.isEmpty){
-            h=16.5;
+          if (value.isEmpty) {
+            h = 16.5;
             return 'Email can\'t be empty';
-          }
-          else{
+          } else {
             return null;
           }
         },
@@ -298,14 +375,10 @@ Widget showLogo() {
         maxLines: 1,
         obscureText: true,
         autofocus: false,
-        style: TextStyle(
-          fontFamily: 'Montserrat'
-        ),
+        style: TextStyle(fontFamily: 'Montserrat'),
         decoration: new InputDecoration(
             hintText: 'Password',
-            hintStyle: TextStyle(
-              fontFamily: 'Montserrat'
-            ),
+            hintStyle: TextStyle(fontFamily: 'Montserrat'),
             icon: new Icon(
               Icons.lock,
               color: Colors.grey,
@@ -325,15 +398,14 @@ Widget showLogo() {
           width: scaler.getWidth(22.0),
           child: new FlatButton(
               child: new Text(
-                _isLoginForm ? 'Create an account' : 'Have an account?  Sign in',
-                style: new TextStyle(
-                  fontSize: scaler.getTextSize(7.0),
-                  fontWeight: FontWeight.w400,
-                  fontFamily: 'Montserrat'
-                )
-              ),
-              onPressed: toggleFormMode
-          ),
+                  _isLoginForm
+                      ? 'Create an account'
+                      : 'Have an account?  Sign in',
+                  style: new TextStyle(
+                      fontSize: scaler.getTextSize(7.0),
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Montserrat')),
+              onPressed: toggleFormMode),
         ),
       ),
     );
@@ -355,11 +427,10 @@ Widget showLogo() {
             child: new Text(
               _isLoginForm ? 'Login' : 'Create Account',
               style: new TextStyle(
-                fontSize: scaler.getTextSize(8.0),
-                color: Theme.of(context).accentColor,
-                fontWeight: FontWeight.w500,
-                fontFamily: 'Montserrat'
-              ),
+                  fontSize: scaler.getTextSize(8.0),
+                  color: Theme.of(context).accentColor,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: 'Montserrat'),
             ),
             onPressed: validateAndSubmit,
           ),
