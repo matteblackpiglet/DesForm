@@ -2,8 +2,9 @@ import 'package:DesForm/dynBackground.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import '../services/authentication.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-var h = 20.0;
+var h = 15.0;
 
 class LoginSignupPage extends StatefulWidget {
   LoginSignupPage({this.auth, this.loginCallback});
@@ -49,6 +50,13 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
           userId = await widget.auth.signIn(_email, _password);
           print('Signed in: $userId');
         } else {
+          Firestore.instance.collection('users').document().setData({
+            'name': _name,
+            'dob': _dob,
+            'email': _email,
+            'courses':[],
+          });
+
           userId = await widget.auth.signUp(_email, _password);
           //widget.auth.sendEmailVerification();
           //_showVerifyEmailSentDialog();
@@ -89,6 +97,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
     resetForm();
     setState(() {
       _isLoginForm = !_isLoginForm;
+      h = (_isLoginForm)? 15.0 : 20.0;
     });
   }
 
@@ -196,7 +205,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
 
   Widget showErrorMessage() {
     if (_errorMessage.length > 0 && _errorMessage != null) {
-      h = 16.5;
+      h += 2.0;
       return Container(
         alignment: Alignment.center,
         margin: EdgeInsets.only(top: 5.0),
@@ -277,7 +286,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
               )),
           validator: (value) {
             if (value.isEmpty) {
-              h = 16.5;
+              h += 1.0;
               return 'Name can\'t be empty';
             } else {
               return null;
@@ -311,7 +320,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
               )),
           validator: (value) {
             if (value.isEmpty) {
-              h = 16.5;
+              h += 1.0;
               return 'DOB can\'t be empty';
             } else {
               return null;
@@ -356,7 +365,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
             )),
         validator: (value) {
           if (value.isEmpty) {
-            h = 16.5;
+            h += 1.0;
             return 'Email can\'t be empty';
           } else {
             return null;
@@ -383,7 +392,14 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
               Icons.lock,
               color: Colors.grey,
             )),
-        validator: (value) => value.isEmpty ? 'Password can\'t be empty' : null,
+        validator: (value) {
+          if (value.isEmpty) {
+            h += 1.0;
+            return 'Passwords can\'t be empty';
+          } else {
+            return null;
+          }
+        },
         onSaved: (value) => _password = value.trim(),
       ),
     );
