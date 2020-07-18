@@ -50,17 +50,17 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
           userId = await widget.auth.signIn(_email, _password);
           print('Signed in: $userId');
         } else {
+          userId = await widget.auth.signUp(_email, _password);
+          //widget.auth.sendEmailVerification();
+          //_showVerifyEmailSentDialog();
+          print('Signed up user: $userId');
+          
           Firestore.instance.collection('users').document().setData({
             'name': _name,
             'dob': _dob,
             'email': _email,
             'courses':[],
           });
-
-          userId = await widget.auth.signUp(_email, _password);
-          //widget.auth.sendEmailVerification();
-          //_showVerifyEmailSentDialog();
-          print('Signed up user: $userId');
         }
         setState(() {
           _isLoading = false;
