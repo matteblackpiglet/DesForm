@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/profileModel.dart';
 import '../heading.dart';
 import '../smallCard.dart';
+import '../services/authentication.dart';
 
 // ignore: must_be_immutable
 class YourCourses extends StatelessWidget {
-  Profile p;
-  List<DocumentSnapshot> filteredCourses = [];
 
-  YourCourses({this.p});
+  List<DocumentSnapshot> filteredCourses = [];
 
   @override
   Widget build(BuildContext context) {
@@ -66,26 +64,36 @@ class YourCourses extends StatelessWidget {
               margin: EdgeInsets.symmetric(horizontal: 10.0),
               child: StreamBuilder(
                 stream: Firestore.instance.collection('courses').orderBy('code').snapshots(),
+                // ignore: missing_return
                 builder: (context, snapshot){
                   if(!snapshot.hasData)
                     return Text('');
-
-                  for(int i=0; i<snapshot.data.documents.length; i++){
-                    DocumentSnapshot course = snapshot.data.documents[i];
-                    if(p.courses.contains(course['code'].toString())){
-                      filteredCourses.add(course);
+                  
+                  return StreamBuilder(
+                    stream: Firestore.instance.collection('users').where('email', isEqualTo: emailAdd).snapshots(),
+                    // ignore: missing_return
+                    builder: (context, snapshoT){
+                      if(snapshoT.hasData){
+                        var user = snapshoT.data.documents[0];
+                        for(int i=0; i<snapshot.data.documents.length; i++){
+                          DocumentSnapshot course = snapshot.data.documents[i];
+                          if(user['courses'].contains(course['code'].toString())){
+                            filteredCourses.add(course);
+                          }
+                        }
+                        return GridView.builder(
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                          primary: false,
+                          shrinkWrap: true,
+                          itemCount: filteredCourses.length,
+                          itemBuilder: (context, index){
+                            var course = filteredCourses[index];
+                            return SCCard(course: course);
+                          },
+                        );
+                      }
+                      return Container(height: 0.0, width: 0.0,);
                     }
-                  }
-
-                  return GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-                    primary: false,
-                    shrinkWrap: true,
-                    itemCount: filteredCourses.length,
-                    itemBuilder: (context, index){
-                      var course = filteredCourses[index];
-                      return SCCard(course: course);
-                    },
                   );
                 },
               ),

@@ -1,6 +1,7 @@
 import 'package:DesForm/screens/login_signup_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/profileModel.dart';
 import '../heading.dart';
 import '../smallButton.dart';
@@ -140,25 +141,43 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Container(
-                  margin: const EdgeInsets.symmetric(
-                      vertical: 10.0, horizontal: 40.0),
-                  child: Heading(
-                    text: 'Your Courses',
-                    color: Theme.of(context).primaryColor,
-                    weight: FontWeight.w900,
-                  ),
-                ),
-                SmallButton(
-                  text: 'See All',
-                  p: profile,
-                ),
-              ],
+            StreamBuilder(
+              stream: Firestore.instance.collection('users').where('email', isEqualTo: emailAdd).snapshots(),
+              // ignore: missing_return
+              builder: (context, snapshoT){
+                if(snapshoT.hasData){
+                  var user = snapshoT.data.documents[0];
+                  
+                  if(user['courses'].length != 0){
+                    return Column(
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Container(
+                              margin: const EdgeInsets.symmetric(
+                                  vertical: 10.0, horizontal: 40.0),
+                              child: Heading(
+                                text: 'Your Courses',
+                                color: Theme.of(context).primaryColor,
+                                weight: FontWeight.w900,
+                              ),
+                            ),
+                            SmallButton(
+                              text: 'See All',
+                              p: profile,
+                            ),
+                          ],
+                        ),
+                        CourseCards(all: false),
+                      ],
+                    );
+                  }
+                  return Container(height: 0.0, width: 0.0,);
+                }
+                return Container(height: 0.0, width: 0.0,);
+              }
             ),
-            CourseCards(all: false, p: profile),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
