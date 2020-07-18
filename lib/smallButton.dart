@@ -30,7 +30,7 @@ class SmallButton extends StatelessWidget {
             if(p == null)
               Navigator.of(context).push(_createRoute1());
             else
-              Navigator.of(context).push(_createRoute2(p));
+              Navigator.of(context).push(_createRoute2());
           },
           padding: EdgeInsets.all(0.0),
           splashColor: Colors.grey[200],
@@ -74,9 +74,9 @@ Route _createRoute1() {
   );
 }
 
-Route _createRoute2(Profile pr) {
+Route _createRoute2() {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => YourCourses(p: pr),
+    pageBuilder: (context, animation, secondaryAnimation) => YourCourses(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(0.0, 1.0);
       var end = Offset.zero;
