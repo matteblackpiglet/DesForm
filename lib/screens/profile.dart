@@ -42,16 +42,19 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     ScreenScaler scaler = ScreenScaler();
-    
+
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       body: StreamBuilder(
-        stream: Firestore.instance.collection('users').where('email', isEqualTo: emailAdd).snapshots(),
+        stream: Firestore.instance
+            .collection('users')
+            .where('email', isEqualTo: emailAdd)
+            .snapshots(),
         // ignore: missing_return
         builder: (context, snapshot) {
-          if(snapshot.hasData){
+          if (snapshot.hasData) {
             var user = snapshot.data.documents[0];
-            
+
             return Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -148,7 +151,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                       fontSize: scaler.getTextSize(8.0)),
                                 ),
                                 Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 30.0),
+                                  margin:
+                                      EdgeInsets.symmetric(horizontal: 30.0),
                                   child: Column(children: <Widget>[
                                     Tag(
                                       title: 'Name:',
@@ -166,28 +170,31 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                               ]),
                         ),
-                        Container(
-                          margin: EdgeInsets.only(bottom: 30.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              IconButton(
-                                icon: Icon(Icons.exit_to_app),
-                                iconSize: 40.0,
-                                color: Theme.of(context).primaryColorLight,
-                                onPressed: signOut,
-                              ),
-                              Text(
-                                'Sign Out',
-                                style: TextStyle(
-                                    color: Colors.grey[700],
-                                    fontFamily: 'Montserrat',
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: -1.0,
-                                    fontSize: scaler.getTextSize(8.0)),
-                              ),
-                            ],
+                        GestureDetector(
+                          onTap: signOut,
+                          child: Container(
+                            margin: EdgeInsets.only(bottom: 30.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                IconButton(
+                                  icon: Icon(Icons.exit_to_app),
+                                  iconSize: 40.0,
+                                  color: Theme.of(context).primaryColorLight,
+                                  onPressed: signOut,
+                                ),
+                                Text(
+                                  'Sign Out',
+                                  style: TextStyle(
+                                      color: Colors.grey[700],
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: -1.0,
+                                      fontSize: scaler.getTextSize(8.0)),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
@@ -243,4 +250,3 @@ class Tag extends StatelessWidget {
     );
   }
 }
-
