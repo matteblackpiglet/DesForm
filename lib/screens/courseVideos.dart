@@ -1,3 +1,4 @@
+import 'package:DesForm/screens/videoPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
@@ -158,9 +159,7 @@ class CourseVideos extends StatelessWidget {
 
                             return Stack(children: <Widget>[
                               VideoBar(
-                                lessonNo: video['lesson'].toString(),
-                                lessonTitle: video['title'],
-                                dur: video['dur'],
+                                video: video,
                               ),
                             ]);
                           },
@@ -181,9 +180,9 @@ class CourseVideos extends StatelessWidget {
 
 //build the vid bar
 class VideoBar extends StatefulWidget {
-  const VideoBar({this.lessonNo, this.lessonTitle, this.dur});
+  const VideoBar({this.video});
 
-  final String lessonNo, lessonTitle, dur;
+  final DocumentSnapshot video;
 
   @override
   _VideoBarState createState() => _VideoBarState();
@@ -193,6 +192,7 @@ class _VideoBarState extends State<VideoBar>
     with SingleTickerProviderStateMixin {
   Animation animation;
   AnimationController animationController;
+
 
   @override
   void initState() {
@@ -247,7 +247,9 @@ class _VideoBarState extends State<VideoBar>
                         ),
                         child: RaisedButton(
                           color: Colors.grey[200],
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.of(context).push(_createRoute(widget.video));
+                          },
                           padding: EdgeInsets.all(0.0),
                           splashColor: Color(0xffe6e5f5),
                           shape: RoundedRectangleBorder(
@@ -265,7 +267,7 @@ class _VideoBarState extends State<VideoBar>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            "Lesson ${widget.lessonNo}",
+                            "Lesson ${widget.video['lesson']}",
                             style: TextStyle(
                               color: Colors.grey[900],
                               fontFamily: 'Montserrat',
@@ -276,7 +278,7 @@ class _VideoBarState extends State<VideoBar>
                           SizedBox(
                             width: scaler.getWidth(16.0),
                             child: Text(
-                              widget.lessonTitle,
+                              widget.video['title'],
                               style: TextStyle(
                                 color: Colors.grey[900],
                                 fontFamily: 'Montserrat',
@@ -296,7 +298,7 @@ class _VideoBarState extends State<VideoBar>
                         child: Padding(
                           padding: const EdgeInsets.all(5.0),
                           child: Text(
-                            "${widget.dur} mins",
+                            "${widget.video['dur']} mins",
                             style: TextStyle(
                               fontSize: 12.0,
                               color: Colors.grey[600],
@@ -313,4 +315,22 @@ class _VideoBarState extends State<VideoBar>
           );
         });
   }
+}
+
+Route _createRoute(DocumentSnapshot vid) {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => VideoPage(video: vid),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(0.0, 1.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
 }
