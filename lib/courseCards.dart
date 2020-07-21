@@ -22,7 +22,7 @@ class CourseCards extends StatelessWidget {
       child: StreamBuilder(
         stream: Firestore.instance.collection('courses').orderBy('code').snapshots(),
         // ignore: missing_return
-        builder: (context, snapshot){
+        builder: (context, snapshot){ // stream containing course details.
           try{
           if(!snapshot.hasData)
             return const Text('');
@@ -30,7 +30,7 @@ class CourseCards extends StatelessWidget {
           return StreamBuilder(
             stream: Firestore.instance.collection('users').where('email', isEqualTo: emailAdd).snapshots(),
             // ignore: missing_return
-            builder: (context, snapshoT){
+            builder: (context, snapshoT){ // stream containing user details.
               if(snapshoT.hasData){
                 var user = snapshoT.data.documents[0];
                 return  ListView.builder(
@@ -45,7 +45,8 @@ class CourseCards extends StatelessWidget {
                         count++;
                         return CCard(course: course);
                       }
-                      else if(user['courses'].contains(course['code'].toString()) && count<limit){
+                      // return only cards containing courses the user has subscribed to.
+                      else if(user['courses'].contains(course['code'].toString()) && count<limit){ 
                         count++;
                         return CCard(course: course);
                       }

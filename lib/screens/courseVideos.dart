@@ -1,3 +1,4 @@
+import 'package:DesForm/screens/videoPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
@@ -145,6 +146,7 @@ class CourseVideos extends StatelessWidget {
                           .orderBy('lesson')
                           .snapshots(),
                       builder: (context, snapshot) {
+                        // stream to access course vids directory.
                         if (!snapshot.hasData) return const Text('');
 
                         return ListView.builder(
@@ -154,11 +156,10 @@ class CourseVideos extends StatelessWidget {
                           // ignore: missing_return
                           itemBuilder: (context, index) {
                             var video = snapshot.data.documents[index];
+
                             return Stack(children: <Widget>[
                               VideoBar(
-                                lessonNo: video['lesson'].toString(),
-                                lessonTitle: video['title'],
-                                dur: video['dur'],
+                                video: video,
                               ),
                             ]);
                           },
@@ -177,18 +178,21 @@ class CourseVideos extends StatelessWidget {
   }
 }
 
+//build the vid bar
 class VideoBar extends StatefulWidget {
-  const VideoBar({this.lessonNo, this.lessonTitle, this.dur});
+  const VideoBar({this.video});
 
-  final String lessonNo, lessonTitle, dur;
+  final DocumentSnapshot video;
 
   @override
   _VideoBarState createState() => _VideoBarState();
 }
 
-class _VideoBarState extends State<VideoBar> with SingleTickerProviderStateMixin {
+class _VideoBarState extends State<VideoBar>
+    with SingleTickerProviderStateMixin {
   Animation animation;
   AnimationController animationController;
+
 
   @override
   void initState() {
@@ -199,15 +203,10 @@ class _VideoBarState extends State<VideoBar> with SingleTickerProviderStateMixin
       vsync: this,
     );
 
-    animation = Tween(
-      begin: -1.0,
-      end: 0.0
-    ).animate(
-      CurvedAnimation(
-        parent: animationController,
-        curve: Curves.fastOutSlowIn,
-      )
-    );
+    animation = Tween(begin: -1.0, end: 0.0).animate(CurvedAnimation(
+      parent: animationController,
+      curve: Curves.fastOutSlowIn,
+    ));
 
     animationController.forward();
   }
@@ -218,100 +217,120 @@ class _VideoBarState extends State<VideoBar> with SingleTickerProviderStateMixin
     final double width = MediaQuery.of(context).size.width;
 
     return AnimatedBuilder(
-      animation: animationController,
-      builder: (context, child){
-        return Transform(
-          transform: Matrix4.translationValues(animation.value*width, 0.0, 0.0),
-          child: Stack(
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
-                height: scaler.getHeight(3.5),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.white70,
-                  borderRadius: BorderRadius.circular(10.0),
+        animation: animationController,
+        builder: (context, child) {
+          return Transform(
+            transform:
+                Matrix4.translationValues(animation.value * width, 0.0, 0.0),
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                  height: scaler.getHeight(3.5),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.white70,
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(5.0, 15.0, 5.0, 20.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    Container(
-                      constraints: BoxConstraints(
-                        maxHeight: 40,
-                        minHeight: 40,
-                        maxWidth: 40,
-                        minWidth: 40,
-                      ),
-                      child: RaisedButton(
-                        color: Colors.grey[200],
-                        onPressed: () {},
-                        padding: EdgeInsets.all(0.0),
-                        splashColor: Color(0xffe6e5f5),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(5.0, 15.0, 5.0, 20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Container(
+                        constraints: BoxConstraints(
+                          maxHeight: 40,
+                          minHeight: 40,
+                          maxWidth: 40,
+                          minWidth: 40,
                         ),
-                        animationDuration: Duration(milliseconds: 200),
-                        child: Icon(
-                          Icons.play_arrow,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          "Lesson ${widget.lessonNo}",
-                          style: TextStyle(
-                            color: Colors.grey[900],
-                            fontFamily: 'Montserrat',
-                            fontSize: scaler.getTextSize(6.0),
-                            fontWeight: FontWeight.w600,
+                        child: RaisedButton(
+                          color: Colors.grey[200],
+                          onPressed: () {
+                            Navigator.of(context).push(_createRoute(widget.video));
+                          },
+                          padding: EdgeInsets.all(0.0),
+                          splashColor: Color(0xffe6e5f5),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          animationDuration: Duration(milliseconds: 200),
+                          child: Icon(
+                            Icons.play_arrow,
+                            color: Colors.grey[600],
                           ),
                         ),
-                        SizedBox(
-                          width: scaler.getWidth(16.0),
-                          child: Text(
-                            widget.lessonTitle,
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            "Lesson ${widget.video['lesson']}",
                             style: TextStyle(
                               color: Colors.grey[900],
                               fontFamily: 'Montserrat',
-                              fontSize: scaler.getTextSize(7.0),
+                              fontSize: scaler.getTextSize(6.0),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(
+                            width: scaler.getWidth(16.0),
+                            child: Text(
+                              widget.video['title'],
+                              style: TextStyle(
+                                color: Colors.grey[900],
+                                fontFamily: 'Montserrat',
+                                fontSize: scaler.getTextSize(7.0),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        width: scaler.getWidth(6.5),
+                        margin: EdgeInsets.only(right: 5.0),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).accentColor,
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Text(
+                            "${widget.video['dur']} mins",
+                            style: TextStyle(
+                              fontSize: 12.0,
+                              color: Colors.grey[600],
+                              fontFamily: 'Montserrat',
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                    Container(
-                      width: scaler.getWidth(6.5),
-                      margin: EdgeInsets.only(right: 5.0),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).accentColor,
-                        borderRadius: BorderRadius.circular(10.0),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Text(
-                          "${widget.dur} mins",
-                          style: TextStyle(
-                            fontSize: 12.0,
-                            color: Colors.grey[600],
-                            fontFamily: 'Montserrat',
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        );
-      }
-    );
+              ],
+            ),
+          );
+        });
   }
+}
+
+Route _createRoute(DocumentSnapshot vid) {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => VideoPage(video: vid),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(0.0, 1.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
 }

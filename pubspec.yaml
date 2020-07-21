@@ -33,6 +33,7 @@ dependencies:
   sa_multi_tween: ^1.1.1
   sa_stateless_animation: ^1.0.1
   supercharged: ^1.6.0
+  flick_video_player: ^0.1.1
 
 
   # The following adds the Cupertino Icons font to your application.
