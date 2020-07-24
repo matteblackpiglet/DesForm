@@ -3,17 +3,25 @@ import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../heading.dart';
 import '../smallCard.dart';
-import '../services/authentication.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 // ignore: must_be_immutable
 class YourCourses extends StatelessWidget {
 
   List<DocumentSnapshot> filteredCourses = [];
+  FirebaseUser user;
+  String userEmail;
+
+  _loadUser() async{
+    user = await FirebaseAuth.instance.currentUser();
+    userEmail = user.email;
+  }
 
   @override
   Widget build(BuildContext context) {
     ScreenScaler scaler = ScreenScaler();
     final double mainCurve = 20.0;
+    _loadUser();
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -70,7 +78,7 @@ class YourCourses extends StatelessWidget {
                     return Text('');
                   
                   return StreamBuilder(
-                    stream: Firestore.instance.collection('users').where('email', isEqualTo: emailAdd).snapshots(),
+                    stream: Firestore.instance.collection('users').where('email', isEqualTo: userEmail).snapshots(),
                     // ignore: missing_return
                     builder: (context, snapshoT){
                       if(snapshoT.hasData){

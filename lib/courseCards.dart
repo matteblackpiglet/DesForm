@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'card.dart';
-import 'package:DesForm/services/authentication.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 // ignore: must_be_immutable
 class CourseCards extends StatelessWidget {
@@ -12,10 +12,18 @@ class CourseCards extends StatelessWidget {
 
   var count = 0;
   final int limit = 3;
+  FirebaseUser user;
+  String userEmail;
+
+  _loadUser() async{
+    user = await FirebaseAuth.instance.currentUser();
+    userEmail = user.email;
+  }
 
   @override
   Widget build(BuildContext context) {
     ScreenScaler scaler = new ScreenScaler();
+    _loadUser();
 
     return Container(
       height: scaler.getHeight(15.0),
@@ -28,7 +36,7 @@ class CourseCards extends StatelessWidget {
             return const Text('');
           
           return StreamBuilder(
-            stream: Firestore.instance.collection('users').where('email', isEqualTo: emailAdd).snapshots(),
+            stream: Firestore.instance.collection('users').where('email', isEqualTo: user.email).snapshots(),
             // ignore: missing_return
             builder: (context, snapshoT){ // stream containing user details.
               if(snapshoT.hasData){
