@@ -2,6 +2,7 @@ import 'package:DesForm/screens/login_signup_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../models/profileModel.dart';
 import '../heading.dart';
 import '../smallButton.dart';
@@ -38,6 +39,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final double mainCurve = 25.0;
+  FirebaseUser user;
+  String userEmail;
+
+  _loadUser() async{
+    user = await FirebaseAuth.instance.currentUser();
+    userEmail = user.email;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +60,8 @@ class _HomePageState extends State<HomePage> {
         print(e);
       }
     }
+
+    _loadUser();
 
     return Scaffold(
       backgroundColor: Color(0xffffffff),
@@ -142,7 +152,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             StreamBuilder(
-              stream: Firestore.instance.collection('users').where('email', isEqualTo: emailAdd).snapshots(),
+              stream: Firestore.instance.collection('users').where('email', isEqualTo: userEmail).snapshots(),
               // ignore: missing_return
               builder: (context, snapshoT){
                 if(snapshoT.hasData){

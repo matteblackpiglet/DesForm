@@ -24,15 +24,10 @@ class CourseVideos extends StatelessWidget {
             primary: false,
             shrinkWrap: true,
             children: <Widget>[
-              Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).accentColor,
-                    image: DecorationImage(
-                      image: AssetImage('assets/images/coursePage.png'),
-                      alignment: Alignment.topRight,
-                    ),
-                  ),
-                  child: Padding(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Padding(
                     padding: EdgeInsets.only(left: 8.0),
                     child: Column(
                       children: <Widget>[
@@ -72,31 +67,31 @@ class CourseVideos extends StatelessWidget {
                                   SizedBox(
                                     height: scaler.getHeight(0.5),
                                   ),
-                                  Row(
-                                    children: <Widget>[
-                                      Icon(Icons.group),
-                                      SizedBox(width: scaler.getWidth(0.3)),
-                                      Text(
-                                        "1.5K",
-                                        style: TextStyle(
-                                          fontFamily: 'Montserrat',
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: scaler.getWidth(1),
-                                      ),
-                                      Icon(Icons.star),
-                                      SizedBox(
-                                        width: scaler.getWidth(0.3),
-                                      ),
-                                      Text(
-                                        "4.8",
-                                        style: TextStyle(
-                                          fontFamily: 'Montserrat',
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                  // Row(
+                                  //   children: <Widget>[
+                                  //     Icon(Icons.group),
+                                  //     SizedBox(width: scaler.getWidth(0.3)),
+                                  //     Text(
+                                  //       "1.5K",
+                                  //       style: TextStyle(
+                                  //         fontFamily: 'Montserrat',
+                                  //       ),
+                                  //     ),
+                                  //     SizedBox(
+                                  //       width: scaler.getWidth(1),
+                                  //     ),
+                                  //     Icon(Icons.star),
+                                  //     SizedBox(
+                                  //       width: scaler.getWidth(0.3),
+                                  //     ),
+                                  //     Text(
+                                  //       "4.8",
+                                  //       style: TextStyle(
+                                  //         fontFamily: 'Montserrat',
+                                  //       ),
+                                  //     ),
+                                  //   ],
+                                  // ),
                                 ],
                               ),
                             ),
@@ -107,7 +102,16 @@ class CourseVideos extends StatelessWidget {
                         ),
                       ],
                     ),
-                  )),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(right: 10.0),
+                    child: Image.asset(
+                      'assets/images/coursePage.png',
+                      scale: scaler.getWidth(0.56),
+                    ),
+                  ),
+                ],
+              ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 20.0),
                 decoration: BoxDecoration(
