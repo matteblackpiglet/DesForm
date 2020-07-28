@@ -13,7 +13,7 @@ class CCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ScreenScaler scaler = ScreenScaler();
-    
+
     return Container(
       margin: EdgeInsets.fromLTRB(8.0, 10.0, 0.0, 10.0),
       width: scaler.getWidth(19.0),
@@ -33,7 +33,8 @@ class CCard extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).push(_createRoute(course));
                 },
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0)),
                 child: Container(
                   margin: EdgeInsets.only(bottom: 15.0),
                   child: Column(
@@ -65,16 +66,17 @@ class CCard extends StatelessWidget {
             ),
           ),
           Container(
+            width: scaler.getWidth(15.0),
+            height: scaler.getHeight(8.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20.0),
               gradient: LinearGradient(
-                begin: FractionalOffset.topCenter,
-                end: FractionalOffset.bottomCenter,
-                colors: [
-                  Theme.of(context).primaryColorLight,
-                  Theme.of(context).primaryColor
-                ]
-              ),
+                  begin: FractionalOffset.topCenter,
+                  end: FractionalOffset.bottomCenter,
+                  colors: [
+                    Theme.of(context).primaryColorLight,
+                    Theme.of(context).primaryColor
+                  ]),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black26,
@@ -84,6 +86,7 @@ class CCard extends StatelessWidget {
               ],
             ),
             child: Stack(
+              fit: StackFit.loose,
               children: <Widget>[
                 ClipRRect(
                   borderRadius: BorderRadius.circular(20.0),
@@ -97,12 +100,12 @@ class CCard extends StatelessWidget {
                       child: FutureBuilder(
                         future: _loadUrl(course['image']),
                         builder: (context, snapshot) {
-                          if(snapshot.hasData){
+                          if (snapshot.hasData) {
                             return FadeInImage.assetNetwork(
-                                placeholder: 'assets/images/loading.gif',
-                                image: snapshot.data,
-                                fit: BoxFit.fitWidth,
-                              );
+                              placeholder: 'assets/images/loading.gif',
+                              image: snapshot.data,
+                              fit: BoxFit.fitWidth,
+                            );
                           }
                           return const Text('');
                         },
@@ -137,14 +140,15 @@ class CCard extends StatelessWidget {
   }
 }
 
-_loadUrl(String loc) async{
+_loadUrl(String loc) async {
   var ref = FirebaseStorage.instance.ref().child(loc);
   return (await ref.getDownloadURL()).toString();
 }
 
 Route _createRoute(DocumentSnapshot c) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => CourseVideos(course: c),
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        CourseVideos(course: c),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(0.0, 1.0);
       var end = Offset.zero;
