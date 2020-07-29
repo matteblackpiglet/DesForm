@@ -8,7 +8,7 @@ class AllCourses extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ScreenScaler scaler = ScreenScaler();
-    final double mainCurve = 20.0;
+    final double mainCurve = 8.0;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -32,7 +32,7 @@ class AllCourses extends StatelessWidget {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black54,
+                    color: Colors.grey[400],
                     blurRadius: 25.0,
                     spreadRadius: 1.0,
                   ),
