@@ -7,7 +7,6 @@ import '../models/profileModel.dart';
 import '../heading.dart';
 import '../smallButton.dart';
 import '../profilePhoto.dart';
-import '../searchBar.dart';
 import '../courseCards.dart';
 import '../services/authentication.dart';
 
@@ -42,7 +41,7 @@ class _HomePageState extends State<HomePage> {
   FirebaseUser user;
   String userEmail;
 
-  _loadUser() async{
+  _loadUser() async {
     user = await FirebaseAuth.instance.currentUser();
     userEmail = user.email;
   }
@@ -55,7 +54,8 @@ class _HomePageState extends State<HomePage> {
       try {
         await widget.auth.signOut();
         widget.logoutCallback();
-        Navigator.pop(context, CustomNavRoute(builder: (context) => LoginSignupPage()));
+        Navigator.pop(
+            context, CustomNavRoute(builder: (context) => LoginSignupPage()));
       } catch (e) {
         print(e);
       }
@@ -87,19 +87,19 @@ class _HomePageState extends State<HomePage> {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black54,
-                    blurRadius: 25.0,
+                    color: Colors.grey[400],
+                    blurRadius: 10.0,
                     spreadRadius: 1.0,
                   ),
                 ],
               ),
               child: SafeArea(
                 child: SizedBox(
-                  height: scaler.getHeight(12.0),
+                  height: scaler.getHeight(9.0),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 22.0),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
                         Container(
@@ -112,7 +112,7 @@ class _HomePageState extends State<HomePage> {
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 36.0),
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
@@ -141,7 +141,6 @@ class _HomePageState extends State<HomePage> {
                                 ],
                               ),
                               SizedBox(height: scaler.getHeight(0.2)),
-                              SearchBar(textInside: 'Search Courses'),
                             ],
                           ),
                         ),
@@ -152,51 +151,66 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             FutureBuilder(
-              future: Firestore.instance.collection('users').where('email', isEqualTo: userEmail).getDocuments(),
-              builder: (context, snapshOT){
-                if(snapshOT.hasData){
-                  return StreamBuilder(
-                    stream: Firestore.instance.collection('users').where('email', isEqualTo: userEmail).getDocuments().asStream(),
-                    // ignore: missing_return
-                    builder: (context, snapshoT){
-                      if(snapshoT.hasData){
-                        var user = snapshoT.data.documents[0];
-                        
-                        if(user['courses'].length != 0){
-                          print(user['email']);
-                          return Column(
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                future: Firestore.instance
+                    .collection('users')
+                    .where('email', isEqualTo: userEmail)
+                    .getDocuments(),
+                builder: (context, snapshOT) {
+                  if (snapshOT.hasData) {
+                    return StreamBuilder(
+                        stream: Firestore.instance
+                            .collection('users')
+                            .where('email', isEqualTo: userEmail)
+                            .getDocuments()
+                            .asStream(),
+                        // ignore: missing_return
+                        builder: (context, snapshoT) {
+                          if (snapshoT.hasData) {
+                            var user = snapshoT.data.documents[0];
+
+                            if (user['courses'].length != 0) {
+                              print(user['email']);
+                              return Column(
                                 children: <Widget>[
-                                  Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        vertical: 10.0, horizontal: 40.0),
-                                    child: Heading(
-                                      text: 'Your Courses',
-                                      color: Theme.of(context).primaryColor,
-                                      weight: FontWeight.w900,
-                                    ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Container(
+                                        margin: const EdgeInsets.symmetric(
+                                            vertical: 10.0, horizontal: 40.0),
+                                        child: Heading(
+                                          text: 'Your Courses',
+                                          color: Theme.of(context).primaryColor,
+                                          weight: FontWeight.w900,
+                                        ),
+                                      ),
+                                      SmallButton(
+                                        text: 'See All',
+                                        p: profile,
+                                      ),
+                                    ],
                                   ),
-                                  SmallButton(
-                                    text: 'See All',
-                                    p: profile,
-                                  ),
+                                  CourseCards(all: false),
                                 ],
-                              ),
-                              CourseCards(all: false),
-                            ],
+                              );
+                            }
+                            return Container(
+                              height: 0.0,
+                              width: 0.0,
+                            );
+                          }
+                          return Container(
+                            height: 0.0,
+                            width: 0.0,
                           );
-                        }
-                        return Container(height: 0.0, width: 0.0,);
-                      }
-                      return Container(height: 0.0, width: 0.0,);
-                    }
+                        });
+                  }
+                  return Container(
+                    height: 0.0,
+                    width: 0.0,
                   );
-                }
-                return Container(height: 0.0, width: 0.0,);
-              }
-            ),
+                }),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -230,11 +244,8 @@ class CustomNavRoute<T> extends MaterialPageRoute<T> {
       : super(builder: builder, settings: settings);
 
   @override
-  Widget buildTransitions(
-    BuildContext context,
-    Animation<double> animation,
-    Animation<double> secondaryAnimation,
-    Widget child) {
+  Widget buildTransitions(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation, Widget child) {
     return new SlideTransition(
       position: Tween<Offset>(
         begin: const Offset(0.0, 1.0),

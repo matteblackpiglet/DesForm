@@ -20,7 +20,7 @@ class YourCourses extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ScreenScaler scaler = ScreenScaler();
-    final double mainCurve = 20.0;
+    final double mainCurve = 8.0;
     _loadUser();
 
     return Scaffold(
@@ -45,8 +45,8 @@ class YourCourses extends StatelessWidget {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black54,
-                    blurRadius: 25.0,
+                    color: Colors.grey[400],
+                    blurRadius: 10.0,
                     spreadRadius: 1.0,
                   ),
                 ],
