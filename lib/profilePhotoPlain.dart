@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 
 class ProfilePhotoPlain extends StatelessWidget {
-  ProfilePhotoPlain({this.url});
+  ProfilePhotoPlain();
 
   final double buttonCurve = 16.0;
-  final String url;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +24,7 @@ class ProfilePhotoPlain extends StatelessWidget {
         child: Ink(
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: NetworkImage(url),
+              image: AssetImage('assets/images/dp.png'),
               fit: BoxFit.cover,
             ),
             borderRadius: BorderRadius.circular(buttonCurve),

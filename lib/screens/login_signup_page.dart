@@ -205,7 +205,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
 
   Widget showErrorMessage() {
     if (_errorMessage.length > 0 && _errorMessage != null) {
-      h += 2.0;
+      h += 4.0;
       return Container(
         alignment: Alignment.center,
         margin: EdgeInsets.only(top: 5.0),

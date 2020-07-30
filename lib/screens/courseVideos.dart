@@ -1,4 +1,5 @@
 import 'package:DesForm/screens/videoPage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
@@ -10,6 +11,7 @@ class CourseVideos extends StatelessWidget {
   CourseVideos({this.course});
 
   DocumentSnapshot course;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,14 @@ class CourseVideos extends StatelessWidget {
       backgroundColor: Colors.grey[100],
       body: SingleChildScrollView(
         child: Container(
-          decoration: (BoxDecoration(color: Theme.of(context).accentColor)),
+          decoration: (BoxDecoration(gradient: LinearGradient(
+            begin: FractionalOffset.topCenter,
+            end: FractionalOffset.bottomCenter,
+            colors: [
+              Theme.of(context).primaryColor,
+              Theme.of(context).primaryColorLight
+            ],
+          ),)),
           child: ListView(
             primary: false,
             shrinkWrap: true,
@@ -35,6 +44,7 @@ class CourseVideos extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             IconButton(
+                              color: Colors.white,
                               icon: Icon(Icons.chevron_left),
                               onPressed: () => Navigator.pop(context),
                             ),
@@ -56,42 +66,18 @@ class CourseVideos extends StatelessWidget {
                                         style: TextStyle(
                                           fontWeight: FontWeight.w600,
                                           fontFamily: 'Montserrat',
+                                          color: Theme.of(context).primaryColor,
                                         ),
                                       )),
                                   SizedBox(height: scaler.getHeight(0.5)),
                                   Heading(
                                     text: course['name'],
-                                    color: Colors.grey[900],
+                                    color: Colors.white,
                                     weight: FontWeight.w700,
                                   ),
                                   SizedBox(
                                     height: scaler.getHeight(0.5),
                                   ),
-                                  // Row(
-                                  //   children: <Widget>[
-                                  //     Icon(Icons.group),
-                                  //     SizedBox(width: scaler.getWidth(0.3)),
-                                  //     Text(
-                                  //       "1.5K",
-                                  //       style: TextStyle(
-                                  //         fontFamily: 'Montserrat',
-                                  //       ),
-                                  //     ),
-                                  //     SizedBox(
-                                  //       width: scaler.getWidth(1),
-                                  //     ),
-                                  //     Icon(Icons.star),
-                                  //     SizedBox(
-                                  //       width: scaler.getWidth(0.3),
-                                  //     ),
-                                  //     Text(
-                                  //       "4.8",
-                                  //       style: TextStyle(
-                                  //         fontFamily: 'Montserrat',
-                                  //       ),
-                                  //     ),
-                                  //   ],
-                                  // ),
                                 ],
                               ),
                             ),
@@ -164,6 +150,7 @@ class CourseVideos extends StatelessWidget {
                             return Stack(children: <Widget>[
                               VideoBar(
                                 video: video,
+                                course: course,
                               ),
                             ]);
                           },
@@ -184,9 +171,10 @@ class CourseVideos extends StatelessWidget {
 
 //build the vid bar
 class VideoBar extends StatefulWidget {
-  const VideoBar({this.video});
+  const VideoBar({this.video, this.course});
 
   final DocumentSnapshot video;
+  final DocumentSnapshot course;
 
   @override
   _VideoBarState createState() => _VideoBarState();
@@ -196,7 +184,13 @@ class _VideoBarState extends State<VideoBar>
     with SingleTickerProviderStateMixin {
   Animation animation;
   AnimationController animationController;
+  FirebaseUser user;
+  String userEmail;
 
+  _loadUser() async{
+    user = await FirebaseAuth.instance.currentUser();
+    userEmail = user.email;
+  }
 
   @override
   void initState() {
@@ -219,6 +213,7 @@ class _VideoBarState extends State<VideoBar>
   Widget build(BuildContext context) {
     ScreenScaler scaler = ScreenScaler();
     final double width = MediaQuery.of(context).size.width;
+    _loadUser();
 
     return AnimatedBuilder(
         animation: animationController,
@@ -249,21 +244,34 @@ class _VideoBarState extends State<VideoBar>
                           maxWidth: 40,
                           minWidth: 40,
                         ),
-                        child: RaisedButton(
-                          color: Colors.grey[200],
-                          onPressed: () {
-                            Navigator.of(context).push(_createRoute(widget.video));
-                          },
-                          padding: EdgeInsets.all(0.0),
-                          splashColor: Color(0xffe6e5f5),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          animationDuration: Duration(milliseconds: 200),
-                          child: Icon(
-                            Icons.play_arrow,
-                            color: Colors.grey[600],
-                          ),
+                        child: StreamBuilder(
+                          stream: Firestore.instance
+                            .collection('users')
+                            .where('email', isEqualTo: userEmail)
+                            .getDocuments()
+                            .asStream(),
+                          builder: (context, snapshot) {
+                            if(snapshot.hasData){
+                              var user = snapshot.data.documents[0];
+
+                              return RaisedButton(
+                                color: Colors.grey[200],
+                                disabledColor: Colors.grey[400],
+                                onPressed: (widget.video['lesson']==0||user['courses'].contains(widget.course['code'].toString()))?()=>Navigator.of(context).push(_createRoute(widget.video)):null,
+                                padding: EdgeInsets.all(0.0),
+                                splashColor: Color(0xffe6e5f5),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                animationDuration: Duration(milliseconds: 200),
+                                child: Icon(
+                                  Icons.play_arrow,
+                                  color: Colors.grey[600],
+                                ),
+                              );
+                            }
+                            return Container(height: 0.0, width: 0.0);
+                          }
                         ),
                       ),
                       Column(
