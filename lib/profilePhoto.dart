@@ -4,12 +4,10 @@ import './screens/profile.dart';
 
 class ProfilePhoto extends StatelessWidget {
   ProfilePhoto({
-    this.url,
     this.signOut,
   });
 
   final double buttonCurve = 16.0;
-  final String url;
   final Function signOut;
 
   @override
@@ -36,7 +34,7 @@ class ProfilePhoto extends StatelessWidget {
           child: Ink(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: NetworkImage(url),
+                image: AssetImage('assets/images/dp.png'),
                 fit: BoxFit.cover,
               ),
               borderRadius: BorderRadius.circular(buttonCurve),

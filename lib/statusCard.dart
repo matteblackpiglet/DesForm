@@ -12,7 +12,7 @@ class StatusCard extends StatelessWidget {
 
     return Container(
       height: scaler.getHeight(4.0),
-      width: scaler.getWidth(13.0),
+      width: scaler.getWidth(18.0),
       decoration: BoxDecoration(
         color: Theme.of(context).accentColor,
         borderRadius: BorderRadius.circular(14.0),

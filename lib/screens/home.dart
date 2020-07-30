@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../models/profileModel.dart';
 import '../heading.dart';
 import '../smallButton.dart';
 import '../profilePhoto.dart';
@@ -105,7 +104,6 @@ class _HomePageState extends State<HomePage> {
                         Container(
                           margin: EdgeInsets.only(right: 10.0),
                           child: ProfilePhoto(
-                            url: profile.profileUrl,
                             signOut: signOut,
                           ),
                         ),
@@ -169,7 +167,6 @@ class _HomePageState extends State<HomePage> {
                             var user = snapshoT.data.documents[0];
 
                             if (user['courses'].length != 0) {
-                              print(user['email']);
                               return Column(
                                 children: <Widget>[
                                   Row(
@@ -187,7 +184,7 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                       SmallButton(
                                         text: 'See All',
-                                        p: profile,
+                                        all: false,
                                       ),
                                     ],
                                   ),
@@ -225,6 +222,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 SmallButton(
                   text: 'See All',
+                  all: true
                 ),
               ],
             ),

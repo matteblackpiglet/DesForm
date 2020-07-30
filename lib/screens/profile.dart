@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
-import '../models/profileModel.dart';
 import '../heading.dart';
 import '../profilePhotoPlain.dart';
 import '../statusCard.dart';
@@ -71,9 +70,7 @@ class _ProfilePageState extends State<ProfilePage> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 var user = snapshot.data.documents[0];
-                print(user['email']);
-                print(userEmail);
-
+                
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -96,20 +93,21 @@ class _ProfilePageState extends State<ProfilePage> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              IconButton(
-                                icon: Icon(Icons.chevron_left),
-                                iconSize: 30.0,
-                                color: Theme.of(context).accentColor,
-                                onPressed: () => Navigator.pop(context),
+                              Container(
+                                margin: EdgeInsets.only(left: 10.0),
+                                child: IconButton(
+                                  icon: Icon(Icons.chevron_left),
+                                  iconSize: 30.0,
+                                  color: Theme.of(context).accentColor,
+                                  onPressed: () => Navigator.pop(context),
+                                ),
                               ),
                               Container(
-                                margin: EdgeInsets.only(left: 30.0, bottom: 16.0),
+                                margin: EdgeInsets.only(bottom: 16.0),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
-                                    ProfilePhotoPlain(
-                                      url: profile.profileUrl,
-                                    ),
+                                    ProfilePhotoPlain(),
                                     Container(
                                       margin: EdgeInsets.only(left: 16.0),
                                       child: Heading(
@@ -122,15 +120,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                               ),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   StatusCard(
-                                    text: 'Ongoing Courses',
-                                    count: profile.ongoingCourses,
-                                  ),
-                                  StatusCard(
-                                    text: 'Courses Finished',
-                                    count: profile.completedCourses,
+                                    text: 'Courses Enrolled',
+                                    count: user['courses'].length.toString(),
                                   ),
                                 ],
                               ),

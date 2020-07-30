@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
-import 'package:DesForm/models/profileModel.dart';
 import 'package:DesForm/screens/yourCourses.dart';
 import 'screens/allCourses.dart';
 
 class SmallButton extends StatelessWidget {
-  SmallButton({this.text, this.p});
+  SmallButton({this.text, this.all});
 
   final double buttonCurve = 6.0;
   final String text;
-  final Profile p;
+  final bool all;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +26,7 @@ class SmallButton extends StatelessWidget {
         minWidth: width,
         child: RaisedButton(
           onPressed: () {
-            if(p == null)
+            if(all)
               Navigator.of(context).push(_createRoute1());
             else
               Navigator.of(context).push(_createRoute2());
