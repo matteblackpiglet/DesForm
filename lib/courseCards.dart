@@ -33,7 +33,7 @@ class CourseCards extends StatelessWidget {
         builder: (context, snapshot){ // stream containing course details.
           try{
           if(!snapshot.hasData)
-            return const Text('');
+            return Container(height: 0.0, width: 0.0,);
           
           return StreamBuilder(
             stream: Firestore.instance.collection('users').where('email', isEqualTo: user.email).snapshots(),
@@ -61,14 +61,18 @@ class CourseCards extends StatelessWidget {
                       else{
                         return Container(width: 0, height: 0);
                       }
-                    }catch(e){}
+                    }catch(e){
+                      return Container(height: 0.0, width: 0.0,);
+                    }
                   },
                 );
               }
               return Container(height: 0.0, width: 0.0,);
             },
           );
-          } catch(e){}
+          } catch(e){
+            return Container(height: 0.0, width: 0.0,);
+          }
         },
       )
       

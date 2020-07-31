@@ -179,6 +179,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                           title: 'Email:',
                                           value: user['email'],
                                         ),
+                                        Tag(
+                                          title: 'Email:',
+                                          value: user['mobno'],
+                                        ),
                                       ]),
                                     ),
                                   ]),

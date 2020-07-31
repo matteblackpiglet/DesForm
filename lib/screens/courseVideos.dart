@@ -7,11 +7,16 @@ import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:DesForm/heading.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
+FirebaseUser _user;
+String _userEmail;
+DocumentSnapshot _course;
+
 // ignore: must_be_immutable
 class CourseVideos extends StatefulWidget {
   CourseVideos({this.course});
 
   DocumentSnapshot course;
+  var cUser;
 
   @override
   _CourseVideosState createState() => _CourseVideosState();
@@ -20,9 +25,17 @@ class CourseVideos extends StatefulWidget {
 class _CourseVideosState extends State<CourseVideos> {
   Razorpay _razorpay;
   FirebaseUser user;
+
+  _loadUserAndCourse() async {
+    _user = await FirebaseAuth.instance.currentUser();
+    _userEmail = _user.email;
+    _course = widget.course;
+  }
+
   @override
   Widget build(BuildContext context) {
     ScreenScaler scaler = new ScreenScaler();
+    _loadUserAndCourse();
 
     return Scaffold(
       backgroundColor: Colors.grey[100],
@@ -80,30 +93,50 @@ class _CourseVideosState extends State<CourseVideos> {
                                     ),
                                   ),
                                   SizedBox(height: scaler.getHeight(0.5)),
-                                  Heading(
-                                    text: widget.course['name'],
-                                    color: Colors.white,
-                                    weight: FontWeight.w700,
+                                  SizedBox(
+                                    width: scaler.getWidth(11.0),
+                                    child: Heading(
+                                      text: widget.course['name'],
+                                      color: Colors.white,
+                                      weight: FontWeight.w700,
+                                    ),
                                   ),
                                   SizedBox(
                                     height: scaler.getHeight(0.5),
                                   ),
-                                  RaisedButton(
-                                    onPressed: openCheckout,
-                                    color: Theme.of(context).accentColor,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0)),
-                                    padding: EdgeInsets.fromLTRB(
-                                        10.0, 5.0, 10.0, 5.0),
-                                    child: Text(
-                                      "Enroll Now".toUpperCase(),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontFamily: 'Montserrat',
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                    ),
+                                  StreamBuilder(
+                                    stream: Firestore.instance
+                                      .collection('users')
+                                      .where('email', isEqualTo: _userEmail)
+                                      .getDocuments()
+                                      .asStream(),
+                                    builder: (context, snapshot) {
+                                      if(snapshot.hasData){
+                                        var user = widget.cUser = snapshot.data.documents[0];
+
+                                        if(!user['courses'].contains(widget.course['code'].toString())){
+                                          return RaisedButton(
+                                            onPressed: openCheckout,
+                                            color: Theme.of(context).accentColor,
+                                            shape: RoundedRectangleBorder(
+                                            borderRadius:BorderRadius.circular(12.0)),
+                                            padding: EdgeInsets.fromLTRB(
+                                              10.0, 5.0, 10.0, 5.0),
+                                            child: Text(
+                                              "Enroll\nNow\n₹${widget.course['price']}".toUpperCase(),
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontFamily: 'Montserrat',
+                                                color: Theme.of(context).primaryColor,
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                        return Container(width: 0.0, height: 0.0);
+                                      }
+                                      return Container(width: 0.0, height: 0.0);
+                                    }
                                   ),
                                 ],
                               ),
@@ -216,9 +249,9 @@ class _CourseVideosState extends State<CourseVideos> {
       'amount': widget.course['price'] * 100,
       'name': 'DesForm',
       'description': 'Enrollment fee for ${widget.course['name']} course',
-      'prefill': {'contact': '8888888888', 'email': 'test@razorpay.com'},
+      'prefill': {'contact': '${widget.cUser['mobno']}', 'email': 'test@razorpay.com'},
       'external': {
-        'wallets': ['paytm']
+      'wallets': ['paytm']
       }
     };
 
@@ -229,8 +262,20 @@ class _CourseVideosState extends State<CourseVideos> {
     }
   }
 
-  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+  void _handlePaymentSuccess(PaymentSuccessResponse response) async {
+    Firestore.instance
+    .collection('users')
+    .where('email', isEqualTo: _userEmail)
+    .getDocuments()
+    .then(
+      (element) => element.documents[0].reference.updateData(
+        {
+          'courses': FieldValue.arrayUnion([_course['code'].toString()])
+        }
+      )
+    );
     print("Success");
+    Navigator.of(context).pushNamed('/home');
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
@@ -259,13 +304,6 @@ class _VideoBarState extends State<VideoBar>
     with SingleTickerProviderStateMixin {
   Animation animation;
   AnimationController animationController;
-  FirebaseUser user;
-  String userEmail;
-
-  _loadUser() async {
-    user = await FirebaseAuth.instance.currentUser();
-    userEmail = user.email;
-  }
 
   @override
   void initState() {
@@ -288,7 +326,6 @@ class _VideoBarState extends State<VideoBar>
   Widget build(BuildContext context) {
     ScreenScaler scaler = ScreenScaler();
     final double width = MediaQuery.of(context).size.width;
-    _loadUser();
 
     return AnimatedBuilder(
         animation: animationController,
@@ -322,7 +359,7 @@ class _VideoBarState extends State<VideoBar>
                         child: StreamBuilder(
                             stream: Firestore.instance
                                 .collection('users')
-                                .where('email', isEqualTo: userEmail)
+                                .where('email', isEqualTo: _userEmail)
                                 .getDocuments()
                                 .asStream(),
                             builder: (context, snapshot) {
