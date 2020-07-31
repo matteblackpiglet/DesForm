@@ -1,5 +1,6 @@
 import 'package:DesForm/dynBackground.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import '../services/authentication.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -23,6 +24,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
   String _errorMessage;
   String _name;
   String _dob;
+  String _mobNo;
 
   bool _isLoginForm;
   bool _isLoading;
@@ -60,6 +62,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
             'dob': _dob,
             'email': _email,
             'courses':[],
+            'mobno':_mobNo,
           });
         }
         setState(() {
@@ -97,7 +100,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
     resetForm();
     setState(() {
       _isLoginForm = !_isLoginForm;
-      h = (_isLoginForm)? 15.0 : 20.0;
+      h = (_isLoginForm)? 15.0 : 24.0;
     });
   }
 
@@ -187,6 +190,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                         children: <Widget>[
                           showNameInput(),
                           showDobInput(),
+                          showMobNoInput(),
                           showEmailInput(),
                           showPasswordInput(),
                           showErrorMessage(),
@@ -327,6 +331,44 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
             }
           },
           onSaved: (value) => _dob = value,
+        ),
+      );
+    } else {
+      return new Container(
+        height: 0.0,
+      );
+    }
+  }
+
+  Widget showMobNoInput() {
+    if (!_isLoginForm) {
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+        child: new TextFormField(
+          maxLines: 1,
+          keyboardType: TextInputType.phone,
+          autofocus: false,
+          style: TextStyle(fontFamily: 'Montserrat'),
+          inputFormatters:[
+            LengthLimitingTextInputFormatter(10),
+          ],
+          decoration: new InputDecoration(
+              hintText: 'Mobile Number',
+              hintStyle: TextStyle(fontFamily: 'Montserrat'),
+              icon: new Icon(
+                Icons.call,
+                color: Colors.grey,
+              )
+          ),
+          validator: (value) {
+            if (value.isEmpty) {
+              h += 1.0;
+              return 'Mobile number can\'t be empty';
+            } else {
+              return null;
+            }
+          },
+          onSaved: (value) => _mobNo = value,
         ),
       );
     } else {
