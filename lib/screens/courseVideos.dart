@@ -125,7 +125,7 @@ class _CourseVideosState extends State<CourseVideos> {
                                               shape: RoundedRectangleBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(
-                                                          12.0)),
+                                                          6.0)),
                                               padding: EdgeInsets.fromLTRB(
                                                   10.0, 5.0, 10.0, 5.0),
                                               child: Text(
@@ -141,8 +141,28 @@ class _CourseVideosState extends State<CourseVideos> {
                                               ),
                                             );
                                           }
-                                          return Container(
-                                              width: 0.0, height: 0.0);
+                                          return RaisedButton(
+                                            onPressed: null,
+                                            disabledColor:
+                                                Theme.of(context).accentColor,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        3.0)),
+                                            padding: EdgeInsets.fromLTRB(
+                                                10.0, 5.0, 10.0, 5.0),
+                                            child: Text(
+                                              "Enrolled"
+                                                  .toUpperCase(),
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontFamily: 'Montserrat',
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                              ),
+                                            ),
+                                          );
                                         }
                                         return Container(
                                             width: 0.0, height: 0.0);
