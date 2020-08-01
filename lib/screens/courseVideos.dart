@@ -105,39 +105,48 @@ class _CourseVideosState extends State<CourseVideos> {
                                     height: scaler.getHeight(0.5),
                                   ),
                                   StreamBuilder(
-                                    stream: Firestore.instance
-                                      .collection('users')
-                                      .where('email', isEqualTo: _userEmail)
-                                      .getDocuments()
-                                      .asStream(),
-                                    builder: (context, snapshot) {
-                                      if(snapshot.hasData){
-                                        var user = widget.cUser = snapshot.data.documents[0];
+                                      stream: Firestore.instance
+                                          .collection('users')
+                                          .where('email', isEqualTo: _userEmail)
+                                          .getDocuments()
+                                          .asStream(),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData) {
+                                          var user = widget.cUser =
+                                              snapshot.data.documents[0];
 
-                                        if(!user['courses'].contains(widget.course['code'].toString())){
-                                          return RaisedButton(
-                                            onPressed: openCheckout,
-                                            color: Theme.of(context).accentColor,
-                                            shape: RoundedRectangleBorder(
-                                            borderRadius:BorderRadius.circular(12.0)),
-                                            padding: EdgeInsets.fromLTRB(
-                                              10.0, 5.0, 10.0, 5.0),
-                                            child: Text(
-                                              "Enroll\nNow\n₹${widget.course['price']}".toUpperCase(),
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                fontFamily: 'Montserrat',
-                                                color: Theme.of(context).primaryColor,
+                                          if (!user['courses'].contains(widget
+                                              .course['code']
+                                              .toString())) {
+                                            return RaisedButton(
+                                              onPressed: openCheckout,
+                                              color:
+                                                  Theme.of(context).accentColor,
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          12.0)),
+                                              padding: EdgeInsets.fromLTRB(
+                                                  10.0, 5.0, 10.0, 5.0),
+                                              child: Text(
+                                                "Enroll\nNow\n₹${widget.course['price']}"
+                                                    .toUpperCase(),
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontFamily: 'Montserrat',
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                ),
                                               ),
-                                            ),
-                                          );
+                                            );
+                                          }
+                                          return Container(
+                                              width: 0.0, height: 0.0);
                                         }
-                                        return Container(width: 0.0, height: 0.0);
-                                      }
-                                      return Container(width: 0.0, height: 0.0);
-                                    }
-                                  ),
+                                        return Container(
+                                            width: 0.0, height: 0.0);
+                                      }),
                                 ],
                               ),
                             ),
@@ -168,27 +177,50 @@ class _CourseVideosState extends State<CourseVideos> {
                 ),
                 child: Column(
                   children: <Widget>[
-                    Container(
-                      padding: EdgeInsets.only(top: 10.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          SizedBox(
-                            height: scaler.getHeight(0.5),
+                    SizedBox(
+                      height: scaler.getHeight(0.5),
+                    ),
+                    Stack(
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                          height: scaler.getHeight(6.0),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white70,
+                            borderRadius: BorderRadius.circular(10.0),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Heading(
-                                text: 'Course Videos',
-                                color: Theme.of(context).primaryColor,
-                                weight: FontWeight.w900,
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(12.0, 8.0, 8.0, 4.0),
+                              child: Text(
+                                'Introduction to ${widget.course['name']}',
+                                style: TextStyle(
+                                  color: Colors.grey[900],
+                                  fontFamily: 'Montserrat',
+                                  fontSize: scaler.getTextSize(8.0),
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(12.0, 4.0, 8.0, 8.0),
+                              child: Text(
+                                widget.course['desc'],
+                                style: TextStyle(
+                                  color: Colors.grey[900],
+                                  fontFamily: 'Montserrat',
+                                  fontSize: scaler.getTextSize(7.5),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                     StreamBuilder(
                       stream: widget.course.reference
@@ -249,9 +281,12 @@ class _CourseVideosState extends State<CourseVideos> {
       'amount': widget.course['price'] * 100,
       'name': 'DesForm',
       'description': 'Enrollment fee for ${widget.course['name']} course',
-      'prefill': {'contact': '${widget.cUser['mobno']}', 'email': 'test@razorpay.com'},
+      'prefill': {
+        'contact': '${widget.cUser['mobno']}',
+        'email': 'test@razorpay.com'
+      },
       'external': {
-      'wallets': ['paytm']
+        'wallets': ['paytm']
       }
     };
 
@@ -264,16 +299,12 @@ class _CourseVideosState extends State<CourseVideos> {
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) async {
     Firestore.instance
-    .collection('users')
-    .where('email', isEqualTo: _userEmail)
-    .getDocuments()
-    .then(
-      (element) => element.documents[0].reference.updateData(
-        {
-          'courses': FieldValue.arrayUnion([_course['code'].toString()])
-        }
-      )
-    );
+        .collection('users')
+        .where('email', isEqualTo: _userEmail)
+        .getDocuments()
+        .then((element) => element.documents[0].reference.updateData({
+              'courses': FieldValue.arrayUnion([_course['code'].toString()])
+            }));
     print("Success");
     Navigator.of(context).pushNamed('/home');
   }
