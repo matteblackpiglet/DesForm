@@ -41,7 +41,7 @@ class _CourseVideosState extends State<CourseVideos> {
       backgroundColor: Colors.grey[100],
       body: SingleChildScrollView(
         child: Container(
-          decoration: (BoxDecoration(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: FractionalOffset.topCenter,
               end: FractionalOffset.bottomCenter,
@@ -50,7 +50,7 @@ class _CourseVideosState extends State<CourseVideos> {
                 Theme.of(context).primaryColorLight
               ],
             ),
-          )),
+          ),
           child: ListView(
             primary: false,
             shrinkWrap: true,
@@ -65,10 +65,22 @@ class _CourseVideosState extends State<CourseVideos> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            IconButton(
-                              color: Colors.white,
-                              icon: Icon(Icons.chevron_left),
-                              onPressed: () => Navigator.pop(context),
+                            Row(
+                              children: <Widget>[
+                                IconButton(
+                                  color: Colors.white,
+                                  icon: Icon(Icons.chevron_left),
+                                  onPressed: () => Navigator.pop(context),
+                                ),
+                                SizedBox(
+                                  width: scaler.getWidth(11.0),
+                                  child: Heading(
+                                    text: widget.course['name'],
+                                    color: Colors.white,
+                                    weight: FontWeight.w700,
+                                  ),
+                                ),
+                              ],
                             ),
                             SizedBox(height: 10),
                             Container(
@@ -93,14 +105,6 @@ class _CourseVideosState extends State<CourseVideos> {
                                     ),
                                   ),
                                   SizedBox(height: scaler.getHeight(0.5)),
-                                  SizedBox(
-                                    width: scaler.getWidth(11.0),
-                                    child: Heading(
-                                      text: widget.course['name'],
-                                      color: Colors.white,
-                                      weight: FontWeight.w700,
-                                    ),
-                                  ),
                                   SizedBox(
                                     height: scaler.getHeight(0.5),
                                   ),
@@ -195,7 +199,8 @@ class _CourseVideosState extends State<CourseVideos> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Padding(
-                              padding: const EdgeInsets.fromLTRB(12.0, 8.0, 8.0, 4.0),
+                              padding: const EdgeInsets.fromLTRB(
+                                  12.0, 8.0, 8.0, 4.0),
                               child: Text(
                                 'Introduction to ${widget.course['name']}',
                                 style: TextStyle(
@@ -207,7 +212,8 @@ class _CourseVideosState extends State<CourseVideos> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.fromLTRB(12.0, 4.0, 8.0, 8.0),
+                              padding: const EdgeInsets.fromLTRB(
+                                  12.0, 4.0, 8.0, 8.0),
                               child: Text(
                                 widget.course['desc'],
                                 style: TextStyle(
