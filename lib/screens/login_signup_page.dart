@@ -6,6 +6,11 @@ import '../services/authentication.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 var h = 18.0;
+bool name = true;
+bool dob = true;
+bool phone = true;
+bool email = true;
+bool psw = true;
 
 class LoginSignupPage extends StatefulWidget {
   LoginSignupPage({this.auth, this.loginCallback});
@@ -99,10 +104,17 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
 
   void toggleFormMode() {
     resetForm();
-    setState(() {
-      _isLoginForm = !_isLoginForm;
-      h = (_isLoginForm) ? 18.0 : 27.0;
-    });
+    setState(
+      () {
+        _isLoginForm = !_isLoginForm;
+        h = (_isLoginForm) ? 18.0 : 27.0;
+        name = true;
+        dob = true;
+        phone = true;
+        email = true;
+        psw = true;
+      },
+    );
   }
 
   @override
@@ -190,7 +202,6 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                 showMobNoInput(),
                 showEmailInput(),
                 showPasswordInput(),
-                showErrorMessage(),
                 showPrimaryButton(),
                 showSecondaryButton(),
               ],
@@ -203,7 +214,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
 
   Widget showErrorMessage() {
     if (_errorMessage.length > 0 && _errorMessage != null) {
-      h += 4.0;
+      h += 8.0;
       return Container(
         alignment: Alignment.center,
         margin: EdgeInsets.only(top: 5.0),
@@ -283,10 +294,14 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                 color: Colors.grey,
               )),
           validator: (value) {
-            if (value.isEmpty) {
+            if (value.isEmpty && name) {
               h += 1.0;
+              name = false;
+              return 'Name can\'t be empty';
+            } else if (value.isEmpty) {
               return 'Name can\'t be empty';
             } else {
+              name = true;
               return null;
             }
           },
@@ -317,10 +332,14 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                 color: Colors.grey,
               )),
           validator: (value) {
-            if (value.isEmpty) {
+            if (value.isEmpty && dob) {
               h += 1.0;
+              dob = false;
+              return 'DOB can\'t be empty';
+            } else if (value.isEmpty) {
               return 'DOB can\'t be empty';
             } else {
+              dob = true;
               return null;
             }
           },
@@ -354,10 +373,14 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                 color: Colors.grey,
               )),
           validator: (value) {
-            if (value.isEmpty) {
+            if (value.isEmpty && phone) {
               h += 1.0;
-              return 'Mobile number can\'t be empty';
+              phone = false;
+              return 'Phone No. can\'t be empty';
+            } else if (value.isEmpty) {
+              return 'Phone No. can\'t be empty';
             } else {
+              phone = true;
               return null;
             }
           },
@@ -399,10 +422,14 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
               color: Colors.grey,
             )),
         validator: (value) {
-          if (value.isEmpty) {
+          if (value.isEmpty && email) {
             h += 1.0;
+            email = false;
+            return 'Email can\'t be empty';
+          } else if (value.isEmpty) {
             return 'Email can\'t be empty';
           } else {
+            email = true;
             return null;
           }
         },
@@ -428,10 +455,14 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
               color: Colors.grey,
             )),
         validator: (value) {
-          if (value.isEmpty) {
+          if (value.isEmpty && psw) {
             h += 1.0;
-            return 'Passwords can\'t be empty';
+            psw = false;
+            return 'Password can\'t be empty';
+          } else if (value.isEmpty) {
+            return 'Password can\'t be empty';
           } else {
+            psw = true;
             return null;
           }
         },
