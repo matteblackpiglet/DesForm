@@ -1,4 +1,5 @@
 import 'package:DesForm/screens/login_signup_page.dart';
+import 'package:DesForm/screens/noInternetPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
@@ -9,6 +10,11 @@ import '../smallButton.dart';
 import '../profilePhoto.dart';
 import '../courseCards.dart';
 import '../services/authentication.dart';
+import 'package:connectivity/connectivity.dart';
+import 'package:flutter/services.dart';
+import 'dart:async';
+
+final GlobalKey<NavigatorState> nav = GlobalKey<NavigatorState>();
 
 class Home extends StatelessWidget {
   @override
@@ -46,6 +52,43 @@ class _HomePageState extends State<HomePage> {
     userEmail = user.email;
   }
 
+  final Connectivity _connectivity = Connectivity();
+  StreamSubscription<ConnectivityResult> _connectivitySubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    initConnectivity();
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initConnectivity() async {
+    ConnectivityResult result;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      print(e.toString());
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
   @override
   Widget build(BuildContext context) {
     ScreenScaler scaler = new ScreenScaler();
@@ -68,7 +111,7 @@ class _HomePageState extends State<HomePage> {
       body: SingleChildScrollView(
         child: RefreshIndicator(
           // ignore: missing_return
-          onRefresh: (){},
+          onRefresh: () {},
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -112,7 +155,8 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 36.0),
+                            margin:
+                                const EdgeInsets.symmetric(horizontal: 36.0),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -182,7 +226,8 @@ class _HomePageState extends State<HomePage> {
                                               vertical: 10.0, horizontal: 40.0),
                                           child: Heading(
                                             text: 'Your Courses',
-                                            color: Theme.of(context).primaryColor,
+                                            color:
+                                                Theme.of(context).primaryColor,
                                             weight: FontWeight.w900,
                                           ),
                                         ),
@@ -224,10 +269,7 @@ class _HomePageState extends State<HomePage> {
                       weight: FontWeight.w900,
                     ),
                   ),
-                  SmallButton(
-                    text: 'See All',
-                    all: true
-                  ),
+                  SmallButton(text: 'See All', all: true),
                 ],
               ),
               CourseCards(all: true),
@@ -239,6 +281,14 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    if (result == ConnectivityResult.none) {
+      print('No Internet Biatch');
+    } else {
+      print('Connected');
+    }
   }
 }
 
