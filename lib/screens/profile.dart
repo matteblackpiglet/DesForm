@@ -180,7 +180,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           value: user['email'],
                                         ),
                                         Tag(
-                                          title: 'Email:',
+                                          title: 'Contact:',
                                           value: user['mobno'],
                                         ),
                                       ]),
