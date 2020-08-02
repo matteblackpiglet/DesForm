@@ -30,8 +30,9 @@ class _RootPageState extends State<RootPage> {
         if (user != null) {
           _userId = user?.uid;
         }
-        authStatus =
-            user?.uid == null ? AuthStatus.NOT_LOGGED_IN : AuthStatus.LOGGED_IN;
+        authStatus = (user?.isEmailVerified == true)
+            ? AuthStatus.LOGGED_IN
+            : AuthStatus.NOT_LOGGED_IN;
       });
     });
   }
@@ -41,9 +42,11 @@ class _RootPageState extends State<RootPage> {
       setState(() {
         _userId = user.uid.toString();
       });
-    });
-    setState(() {
-      authStatus = AuthStatus.LOGGED_IN;
+      if (user?.isEmailVerified == true) {
+        setState(() {
+          authStatus = AuthStatus.LOGGED_IN;
+        });
+      }
     });
   }
 
