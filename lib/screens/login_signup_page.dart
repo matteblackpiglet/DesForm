@@ -191,7 +191,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
       key: _formKey,
       child: Center(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
+          padding: const EdgeInsets.fromLTRB(30.0, 5.0, 40.0, 5.0),
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -240,7 +240,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
     return new Hero(
       tag: 'hero',
       child: Container(
-        margin: EdgeInsets.only(left: 10.0, bottom: 20.0),
+        margin: EdgeInsets.only(top: 10.0, left: 10.0),
         alignment: Alignment.centerLeft,
         padding: EdgeInsets.fromLTRB(0.0, 0, 0.0, 0.0),
         child: Column(
@@ -263,7 +263,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                 Text(
                   'Live to Create',
                   style: TextStyle(
-                    color: Color(0xffffffff),
+                    color: Theme.of(context).primaryColor,
                     fontSize: scaler.getTextSize(7.0),
                     fontFamily: 'Montserrat',
                     letterSpacing: -0.5,
