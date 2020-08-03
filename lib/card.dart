@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
@@ -119,13 +120,17 @@ class CCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(
-                        course['name'],
-                        style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontSize: scaler.getTextSize(8.4),
-                          fontWeight: FontWeight.w700,
-                          color: Theme.of(context).accentColor,
+                      SizedBox(
+                        width: scaler.getWidth(12.0),
+                        child: AutoSizeText(
+                          course['name'],
+                          maxLines: 1,
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: scaler.getTextSize(8.4),
+                            fontWeight: FontWeight.w700,
+                            color: Theme.of(context).accentColor,
+                          ),
                         ),
                       ),
                     ],
