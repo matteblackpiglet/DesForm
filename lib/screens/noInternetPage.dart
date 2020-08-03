@@ -19,7 +19,10 @@ class NoInternetPage extends StatelessWidget {
         ),
         automaticallyImplyLeading: false,
         backgroundColor: Colors.red[600],
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(15.0),
+                bottomRight: Radius.circular(15.0))),
       ),
       backgroundColor: Colors.white,
       body: WillPopScope(
