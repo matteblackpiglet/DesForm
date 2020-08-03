@@ -1,4 +1,5 @@
 import 'package:DesForm/dynBackground.dart';
+import 'package:DesForm/screens/forgotPassword.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
@@ -163,28 +164,28 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
     );
   }
 
- void _showVerifyEmailSentDialog() {
-   showDialog(
-     context: context,
-     builder: (BuildContext context) {
-       // return object of type Dialog
-       return AlertDialog(
-         title: new Text("Verify your account"),
-         content:
-             new Text("Link to verify account has been sent to your email"),
-         actions: <Widget>[
-           new FlatButton(
-             child: new Text("Dismiss"),
-             onPressed: () {
-               toggleFormMode();
-               Navigator.of(context).pop();
-             },
-           ),
-         ],
-       );
-     },
-   );
- }
+  void _showVerifyEmailSentDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Verify your account"),
+          content:
+              new Text("Link to verify account has been sent to your email"),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("Dismiss"),
+              onPressed: () {
+                toggleFormMode();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   Widget _showForm() {
     return new Form(
@@ -203,6 +204,13 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                 showEmailInput(),
                 showPasswordInput(),
                 showPrimaryButton(),
+                SizedBox(
+                  height: scaler.getHeight(0.5),
+                ),
+                if (_isLoginForm) showForgotPassword(context),
+                SizedBox(
+                  height: scaler.getHeight(0.5),
+                ),
                 showSecondaryButton(),
               ],
             ),
@@ -520,4 +528,19 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
       ),
     );
   }
+}
+
+Widget showForgotPassword(context) {
+  return GestureDetector(
+    child: Text(
+      'Forgot Password?',
+      style: TextStyle(
+        fontFamily: 'Montserrat',
+      ),
+    ),
+    onTap: () {
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => ForgotPasswordScreen()));
+    },
+  );
 }
