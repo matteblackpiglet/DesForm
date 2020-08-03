@@ -55,141 +55,130 @@ class _CourseVideosState extends State<CourseVideos> {
             primary: false,
             shrinkWrap: true,
             children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(left: 8.0),
-                    child: Column(
+              Padding(
+                padding: EdgeInsets.only(left: 8.0, top: 15.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Row(
                       children: <Widget>[
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Row(
-                              children: <Widget>[
-                                IconButton(
-                                  color: Colors.white,
-                                  icon: Icon(Icons.chevron_left),
-                                  onPressed: () => Navigator.pop(context),
-                                ),
-                                SizedBox(
-                                  width: scaler.getWidth(11.0),
-                                  child: Heading(
-                                    text: widget.course['name'],
-                                    color: Colors.white,
-                                    weight: FontWeight.w700,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 10),
-                            Container(
-                              padding: EdgeInsets.only(left: 20.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Container(
-                                    color: Color(0xfffccc86),
-                                    padding: EdgeInsets.only(
-                                        left: 10.0,
-                                        top: 5.0,
-                                        right: 10,
-                                        bottom: 5),
-                                    child: Text(
-                                      "DesForm".toUpperCase(),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontFamily: 'Montserrat',
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(height: scaler.getHeight(0.5)),
-                                  SizedBox(
-                                    height: scaler.getHeight(0.5),
-                                  ),
-                                  StreamBuilder(
-                                      stream: Firestore.instance
-                                          .collection('users')
-                                          .where('email', isEqualTo: _userEmail)
-                                          .getDocuments()
-                                          .asStream(),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.hasData) {
-                                          var user = widget.cUser =
-                                              snapshot.data.documents[0];
-
-                                          if (!user['courses'].contains(widget
-                                              .course['code']
-                                              .toString())) {
-                                            return RaisedButton(
-                                              onPressed: openCheckout,
-                                              color:
-                                                  Theme.of(context).accentColor,
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          6.0)),
-                                              padding: EdgeInsets.fromLTRB(
-                                                  10.0, 5.0, 10.0, 5.0),
-                                              child: Text(
-                                                "Enroll\nNow\n₹${widget.course['price']}"
-                                                    .toUpperCase(),
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontFamily: 'Montserrat',
-                                                  color: Theme.of(context)
-                                                      .primaryColor,
-                                                ),
-                                              ),
-                                            );
-                                          }
-                                          return RaisedButton(
-                                            onPressed: null,
-                                            disabledColor:
-                                                Theme.of(context).accentColor,
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        3.0)),
-                                            padding: EdgeInsets.fromLTRB(
-                                                10.0, 5.0, 10.0, 5.0),
-                                            child: Text(
-                                              "Enrolled"
-                                                  .toUpperCase(),
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                fontFamily: 'Montserrat',
-                                                color: Theme.of(context)
-                                                    .primaryColor,
-                                              ),
-                                            ),
-                                          );
-                                        }
-                                        return Container(
-                                            width: 0.0, height: 0.0);
-                                      }),
-                                ],
-                              ),
-                            ),
-                          ],
+                        IconButton(
+                          color: Colors.white,
+                          icon: Icon(Icons.chevron_left),
+                          onPressed: () => Navigator.pop(context),
                         ),
-                        SizedBox(
-                          height: scaler.getHeight(2),
+                        Heading(
+                          text: widget.course['name'],
+                          color: Colors.white,
+                          weight: FontWeight.w700,
                         ),
                       ],
                     ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(right: 10.0),
-                    child: Image.asset(
-                      'assets/images/coursePage.png',
-                      scale: scaler.getWidth(0.56),
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Container(
+                                color: Color(0xfffccc86),
+                                padding: EdgeInsets.only(
+                                    left: 10.0,
+                                    top: 5.0,
+                                    right: 10,
+                                    bottom: 5),
+                                child: Text(
+                                  "DesForm".toUpperCase(),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'Montserrat',
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: scaler.getHeight(0.5)),
+                              SizedBox(
+                                height: scaler.getHeight(0.5),
+                              ),
+                              StreamBuilder(
+                                  stream: Firestore.instance
+                                      .collection('users')
+                                      .where('email', isEqualTo: _userEmail)
+                                      .getDocuments()
+                                      .asStream(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      var user = widget.cUser =
+                                          snapshot.data.documents[0];
+
+                                      if (!user['courses'].contains(widget
+                                          .course['code']
+                                          .toString())) {
+                                        return RaisedButton(
+                                          onPressed: openCheckout,
+                                          color:
+                                              Theme.of(context).accentColor,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      6.0)),
+                                          padding: EdgeInsets.fromLTRB(
+                                              10.0, 5.0, 10.0, 5.0),
+                                          child: Text(
+                                            "Enroll\nNow\n₹${widget.course['price']}"
+                                                .toUpperCase(),
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontFamily: 'Montserrat',
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                      return RaisedButton(
+                                        onPressed: null,
+                                        disabledColor:
+                                            Theme.of(context).accentColor,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(
+                                                    3.0)),
+                                        padding: EdgeInsets.fromLTRB(
+                                            10.0, 5.0, 10.0, 5.0),
+                                        child: Text(
+                                          "Enrolled"
+                                              .toUpperCase(),
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontFamily: 'Montserrat',
+                                            color: Theme.of(context)
+                                                .primaryColor,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                    return Container(
+                                        width: 0.0, height: 0.0);
+                                  }),
+                            ],
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(right: 5.0),
+                            child: Image.asset(
+                              'assets/images/coursePage.png',
+                              scale: scaler.getWidth(0.56),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 20.0),
@@ -309,7 +298,7 @@ class _CourseVideosState extends State<CourseVideos> {
       'description': 'Enrollment fee for ${widget.course['name']} course',
       'prefill': {
         'contact': '${widget.cUser['mobno']}',
-        'email': 'test@razorpay.com'
+        'email': '${widget.cUser['email']}'
       },
       'external': {
         'wallets': ['paytm']

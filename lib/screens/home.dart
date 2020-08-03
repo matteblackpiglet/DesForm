@@ -1,5 +1,4 @@
 import 'package:DesForm/screens/login_signup_page.dart';
-import 'package:DesForm/screens/noInternetPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
@@ -10,9 +9,6 @@ import '../smallButton.dart';
 import '../profilePhoto.dart';
 import '../courseCards.dart';
 import '../services/authentication.dart';
-import 'package:connectivity/connectivity.dart';
-import 'package:flutter/services.dart';
-import 'dart:async';
 
 final GlobalKey<NavigatorState> nav = GlobalKey<NavigatorState>();
 
@@ -50,43 +46,6 @@ class _HomePageState extends State<HomePage> {
   _loadUser() async {
     user = await FirebaseAuth.instance.currentUser();
     userEmail = user.email;
-  }
-
-  final Connectivity _connectivity = Connectivity();
-  StreamSubscription<ConnectivityResult> _connectivitySubscription;
-
-  @override
-  void initState() {
-    super.initState();
-    initConnectivity();
-    _connectivitySubscription =
-        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
-  }
-
-  @override
-  void dispose() {
-    _connectivitySubscription.cancel();
-    super.dispose();
-  }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initConnectivity() async {
-    ConnectivityResult result;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      result = await _connectivity.checkConnectivity();
-    } on PlatformException catch (e) {
-      print(e.toString());
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) {
-      return Future.value(null);
-    }
-
-    return _updateConnectionStatus(result);
   }
 
   @override
@@ -281,14 +240,6 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
-  }
-
-  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
-    if (result == ConnectivityResult.none) {
-      print('No Internet Biatch');
-    } else {
-      print('Connected');
-    }
   }
 }
 

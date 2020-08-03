@@ -1,3 +1,4 @@
+import 'package:DesForm/screens/noInternetPage.dart';
 import 'package:flutter/material.dart';
 import 'package:splashscreen/splashscreen.dart';
 import 'services/authentication.dart';
@@ -17,6 +18,7 @@ void main() {
       home: MyApp(),
       routes: {
         '/home': (context) => new Home(),
+        '/noInternet': (context) => new NoInternetPage(),
       }));
 }
 
@@ -26,15 +28,14 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   @override
   Widget build(BuildContext context) {
     return SplashScreen(
-        seconds: 4,
-        navigateAfterSeconds: AfterSplash(),
-        image: new Image.asset('assets/images/logo.png'),
-        backgroundColor: Colors.white,
-        photoSize: 150.0);
+      seconds: 4,
+      navigateAfterSeconds: AfterSplash(),
+      image: new Image.asset('assets/images/logo.png'),
+      backgroundColor: Colors.white,
+      photoSize: 150.0);
   }
 }
 
