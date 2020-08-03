@@ -133,8 +133,8 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 20.0,
+                        color: Colors.black12,
+                        blurRadius: 10.0,
                         spreadRadius: 1.0,
                         offset: Offset(0.0, 8.0),
                       ),
@@ -291,7 +291,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
               hintStyle: TextStyle(fontFamily: 'Montserrat'),
               icon: new Icon(
                 Icons.face,
-                color: Colors.grey,
+                color: Colors.grey[400],
               )),
           validator: (value) {
             if (value.isEmpty && name) {
@@ -329,7 +329,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
               hintStyle: TextStyle(fontFamily: 'Montserrat'),
               icon: new Icon(
                 Icons.calendar_today,
-                color: Colors.grey,
+                color: Colors.grey[400],
               )),
           validator: (value) {
             if (value.isEmpty && dob) {
@@ -370,7 +370,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
               hintStyle: TextStyle(fontFamily: 'Montserrat'),
               icon: new Icon(
                 Icons.call,
-                color: Colors.grey,
+                color: Colors.grey[400],
               )),
           validator: (value) {
             if (value.isEmpty && phone) {
@@ -419,7 +419,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
             hintStyle: TextStyle(fontFamily: 'Montserrat'),
             icon: new Icon(
               Icons.mail,
-              color: Colors.grey,
+              color: Colors.grey[400],
             )),
         validator: (value) {
           if (value.isEmpty && email) {
@@ -452,7 +452,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
             hintStyle: TextStyle(fontFamily: 'Montserrat'),
             icon: new Icon(
               Icons.lock,
-              color: Colors.grey,
+              color: Colors.grey[400],
             )),
         validator: (value) {
           if (value.isEmpty && psw) {
@@ -501,7 +501,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
         child: SizedBox(
           width: scaler.getWidth(18.0),
           child: new RaisedButton(
-            elevation: 4.0,
+            elevation: 2.0,
             shape: new RoundedRectangleBorder(
               borderRadius: new BorderRadius.circular(10.0),
             ),
