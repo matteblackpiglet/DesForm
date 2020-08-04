@@ -27,7 +27,7 @@ class CCard extends StatelessWidget {
               height: scaler.getHeight(6.0),
               width: scaler.getWidth(18.0),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.0),
+                borderRadius: BorderRadius.circular(20.0),
                 color: Theme.of(context).accentColor,
               ),
               child: FlatButton(
