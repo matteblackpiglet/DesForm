@@ -201,7 +201,7 @@ class _CourseVideosState extends State<CourseVideos> {
                           width: double.infinity,
                           decoration: BoxDecoration(
                             color: Colors.white70,
-                            borderRadius: BorderRadius.circular(10.0),
+                            borderRadius: BorderRadius.circular(20.0),
                           ),
                         ),
                         Column(
@@ -209,11 +209,11 @@ class _CourseVideosState extends State<CourseVideos> {
                           children: <Widget>[
                             Padding(
                               padding: const EdgeInsets.fromLTRB(
-                                  12.0, 8.0, 8.0, 4.0),
+                                  12.0, 15.0, 8.0, 4.0),
                               child: Text(
                                 'Introduction to ${widget.course['name']}',
                                 style: TextStyle(
-                                  color: Colors.grey[900],
+                                  color: Theme.of(context).primaryColor,
                                   fontFamily: 'Montserrat',
                                   fontSize: scaler.getTextSize(8.0),
                                   fontWeight: FontWeight.w700,
@@ -222,13 +222,13 @@ class _CourseVideosState extends State<CourseVideos> {
                             ),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(
-                                  12.0, 4.0, 8.0, 8.0),
+                                  12.0, 4.0, 12.0, 8.0),
                               child: Text(
                                 widget.course['desc'],
                                 style: TextStyle(
                                   color: Colors.grey[900],
                                   fontFamily: 'Montserrat',
-                                  fontSize: scaler.getTextSize(7.5),
+                                  fontSize: scaler.getTextSize(7.4),
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -387,7 +387,7 @@ class _VideoBarState extends State<VideoBar>
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: Colors.white70,
-                    borderRadius: BorderRadius.circular(10.0),
+                    borderRadius: BorderRadius.circular(20.0),
                   ),
                 ),
                 Padding(
