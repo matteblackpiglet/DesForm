@@ -13,7 +13,7 @@ class ForgotPasswordScreen extends StatelessWidget {
       resizeToAvoidBottomPadding: false,
       backgroundColor: Color(0xff2f2ea6),
       body: SafeArea(
-        child: ListView(
+        child: Column(
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
@@ -37,57 +37,53 @@ class ForgotPasswordScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                  margin: EdgeInsets.only(top: 20.0),
-                  height: scaler.getHeight(32.16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20.0),
-                      topRight: Radius.circular(20.0),
-                    ),
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.only(top: 10.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20.0),
+                    topRight: Radius.circular(20.0),
                   ),
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-                        child: TextField(
-                          controller: editController,
-                          decoration: InputDecoration(
-                            icon: Icon(
-                              Icons.email,
-                              color: Colors.grey,
-                            ),
-                            hintText: 'Enter email',
-                            hintStyle: TextStyle(
-                              fontFamily: 'Montserrat',
-                            ),
+                ),
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+                      child: TextField(
+                        controller: editController,
+                        decoration: InputDecoration(
+                          icon: Icon(
+                            Icons.email,
+                            color: Colors.grey,
+                          ),
+                          hintText: 'Enter email',
+                          hintStyle: TextStyle(
+                            fontFamily: 'Montserrat',
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: scaler.getHeight(1.0),
-                      ),
-                      RaisedButton(
-                          shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(10.0),
-                          ),
-                          child: Text(
-                            'Reset password',
-                            style: TextStyle(
-                                fontFamily: 'Montserrat', color: Colors.white),
-                          ),
-                          color: Theme.of(context).primaryColorLight,
-                          onPressed: () {
-                            resetPassword(context);
-                          }),
-                    ],
-                  ),
+                    ),
+                    SizedBox(
+                      height: scaler.getHeight(1.0),
+                    ),
+                    RaisedButton(
+                        shape: new RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(10.0),
+                        ),
+                        child: Text(
+                          'Reset password',
+                          style: TextStyle(
+                              fontFamily: 'Montserrat', color: Colors.white),
+                        ),
+                        color: Theme.of(context).primaryColorLight,
+                        onPressed: () {
+                          resetPassword(context);
+                        }),
+                  ],
                 ),
-              ],
+              ),
             ),
           ],
         ),
@@ -98,7 +94,7 @@ class ForgotPasswordScreen extends StatelessWidget {
   void resetPassword(BuildContext context) async {
     if (editController.text.length == 0 || !editController.text.contains("@")) {
       Fluttertoast.showToast(
-        msg: "Enter valid email",
+        msg: "Enter valid email!",
       );
       return;
     }
