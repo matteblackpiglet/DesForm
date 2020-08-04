@@ -99,63 +99,75 @@ class _CourseVideosState extends State<CourseVideos> {
                               SizedBox(
                                 height: scaler.getHeight(0.5),
                               ),
-                              StreamBuilder(
-                                  stream: Firestore.instance
-                                      .collection('users')
-                                      .where('email', isEqualTo: _userEmail)
-                                      .getDocuments()
-                                      .asStream(),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.hasData) {
-                                      var user = widget.cUser =
-                                          snapshot.data.documents[0];
+                              FutureBuilder(
+                                future: Firestore.instance
+                                        .collection('users')
+                                        .where('email', isEqualTo: _userEmail)
+                                        .getDocuments(),
+                                builder: (context, snap) {
+                                  if(snap.hasData){
+                                    return StreamBuilder(
+                                      stream: Firestore.instance
+                                          .collection('users')
+                                          .where('email', isEqualTo: _userEmail)
+                                          .getDocuments()
+                                          .asStream(),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData) {
+                                          var user = widget.cUser =
+                                              snapshot.data.documents[0];
 
-                                      if (!user['courses'].contains(
-                                          widget.course['code'].toString())) {
-                                        return RaisedButton(
-                                          onPressed: openCheckout,
-                                          color: Theme.of(context).accentColor,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(6.0)),
-                                          padding: EdgeInsets.fromLTRB(
-                                              10.0, 5.0, 10.0, 5.0),
-                                          child: Text(
-                                            "Enroll\nNow\n₹${widget.course['price']}"
-                                                .toUpperCase(),
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              fontFamily: 'Montserrat',
-                                              color: Theme.of(context)
-                                                  .primaryColor,
+                                          if (!user['courses'].contains(
+                                              widget.course['code'].toString())) {
+                                            return RaisedButton(
+                                              onPressed: openCheckout,
+                                              color: Theme.of(context).accentColor,
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(6.0)),
+                                              padding: EdgeInsets.fromLTRB(
+                                                  10.0, 5.0, 10.0, 5.0),
+                                              child: Text(
+                                                "Enroll\nNow\n₹${widget.course['price']}"
+                                                    .toUpperCase(),
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontFamily: 'Montserrat',
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                          return RaisedButton(
+                                            onPressed: null,
+                                            disabledColor:
+                                                Theme.of(context).accentColor,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(3.0)),
+                                            padding: EdgeInsets.fromLTRB(
+                                                10.0, 5.0, 10.0, 5.0),
+                                            child: Text(
+                                              "Enrolled".toUpperCase(),
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontFamily: 'Montserrat',
+                                                color:
+                                                    Theme.of(context).primaryColor,
+                                              ),
                                             ),
-                                          ),
-                                        );
+                                          );
+                                        }
+                                        return Container(width: 0.0, height: 0.0);
                                       }
-                                      return RaisedButton(
-                                        onPressed: null,
-                                        disabledColor:
-                                            Theme.of(context).accentColor,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(3.0)),
-                                        padding: EdgeInsets.fromLTRB(
-                                            10.0, 5.0, 10.0, 5.0),
-                                        child: Text(
-                                          "Enrolled".toUpperCase(),
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontFamily: 'Montserrat',
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                    return Container(width: 0.0, height: 0.0);
-                                  }),
+                                    );
+                                  }
+                                  return Container(width: 0.0, height: 0.0);
+                                }
+                              )
                             ],
                           ),
                           Container(

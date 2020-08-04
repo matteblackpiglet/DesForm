@@ -84,7 +84,6 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
         setState(() {
           _isLoading = false;
           _errorMessage = e.message;
-          _formKey.currentState.reset();
         });
       }
     }
@@ -100,7 +99,6 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
 
   void resetForm() {
     _formKey.currentState.reset();
-    _errorMessage = "";
   }
 
   void toggleFormMode() {
@@ -203,6 +201,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                 showMobNoInput(),
                 showEmailInput(),
                 showPasswordInput(),
+                showErrorMessage(),
                 showPrimaryButton(),
                 SizedBox(
                   height: scaler.getHeight(0.5),
@@ -221,8 +220,15 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
   }
 
   Widget showErrorMessage() {
+    
     if (_errorMessage.length > 0 && _errorMessage != null) {
-      h += 8.0;
+      if(_errorMessage == "The password is invalid or the user does not have a password.")
+        _errorMessage = "The email/password combination does not exist.";
+
+      h = 22.0;
+
+      resetForm();
+
       return Container(
         alignment: Alignment.center,
         margin: EdgeInsets.only(top: 5.0),
