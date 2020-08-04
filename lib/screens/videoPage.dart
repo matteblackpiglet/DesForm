@@ -3,12 +3,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
+import 'package:DesForm/heading.dart';
+import 'package:DesForm/screens/courseVideos.dart';
 
 // ignore: must_be_immutable
 class VideoPage extends StatelessWidget {
-  VideoPage({this.video});
+  VideoPage({this.video, this.course});
 
-  DocumentSnapshot video;
+  DocumentSnapshot video, course;
 
   @override
   Widget build(BuildContext context) {
@@ -69,9 +71,8 @@ class VideoPage extends StatelessWidget {
                             );
                           }
                           return Container(
-                            margin: EdgeInsets.only(top: 30.0),
-                            child: CircularProgressIndicator()
-                          );
+                              margin: EdgeInsets.only(top: 30.0),
+                              child: CircularProgressIndicator());
                         },
                       ),
                     ),
@@ -121,10 +122,80 @@ class VideoPage extends StatelessWidget {
                 ),
               ),
             ),
+            //upcomin course
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25.0),
+                    topRight: Radius.circular(25.0)),
+                color: Colors.grey[100],
+              ),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.only(top: 10.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(
+                          height: scaler.getHeight(0.5),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Heading(
+                              text: 'Upcoming Videos',
+                              color: Theme.of(context).primaryColor,
+                              weight: FontWeight.w900,
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  StreamBuilder(
+                    stream: course.reference
+                        .collection('videos')
+                        .orderBy('lesson')
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      // stream to access course vids directory.
+                      if (!snapshot.hasData) return const Text('');
+                      int count = 0;
+                      return ListView.builder(
+                        primary: false,
+                        shrinkWrap: true,
+                        itemCount: snapshot.data.documents.length,
+                        // ignore: missing_return
+                        itemBuilder: (context, index) {
+                          var videO = snapshot.data.documents[index];
+                          if (videO['lesson'] > video['lesson'] && count <= 4) {
+                            count++;
+                            return Stack(children: <Widget>[
+                              VideoBar(
+                                video: videO,
+                                course: course,
+                              ),
+                            ]);
+                          } else {
+                            return Container(
+                              width: 0.0,
+                              height: 0.0,
+                            );
+                          }
+                        },
+                      );
+                    },
+                  ),
+                  SizedBox(height: scaler.getHeight(1.0))
+                ],
+              ),
+            ),
           ],
         ),
       ),
-          
     );
   }
 }

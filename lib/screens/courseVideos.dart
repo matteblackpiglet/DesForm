@@ -85,10 +85,7 @@ class _CourseVideosState extends State<CourseVideos> {
                               Container(
                                 color: Color(0xfffccc86),
                                 padding: EdgeInsets.only(
-                                    left: 10.0,
-                                    top: 5.0,
-                                    right: 10,
-                                    bottom: 5),
+                                    left: 10.0, top: 5.0, right: 10, bottom: 5),
                                 child: Text(
                                   "DesForm".toUpperCase(),
                                   style: TextStyle(
@@ -113,17 +110,14 @@ class _CourseVideosState extends State<CourseVideos> {
                                       var user = widget.cUser =
                                           snapshot.data.documents[0];
 
-                                      if (!user['courses'].contains(widget
-                                          .course['code']
-                                          .toString())) {
+                                      if (!user['courses'].contains(
+                                          widget.course['code'].toString())) {
                                         return RaisedButton(
                                           onPressed: openCheckout,
-                                          color:
-                                              Theme.of(context).accentColor,
+                                          color: Theme.of(context).accentColor,
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(
-                                                      6.0)),
+                                                  BorderRadius.circular(6.0)),
                                           padding: EdgeInsets.fromLTRB(
                                               10.0, 5.0, 10.0, 5.0),
                                           child: Text(
@@ -145,25 +139,22 @@ class _CourseVideosState extends State<CourseVideos> {
                                             Theme.of(context).accentColor,
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadius.circular(
-                                                    3.0)),
+                                                BorderRadius.circular(3.0)),
                                         padding: EdgeInsets.fromLTRB(
                                             10.0, 5.0, 10.0, 5.0),
                                         child: Text(
-                                          "Enrolled"
-                                              .toUpperCase(),
+                                          "Enrolled".toUpperCase(),
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontFamily: 'Montserrat',
-                                            color: Theme.of(context)
-                                                .primaryColor,
+                                            color:
+                                                Theme.of(context).primaryColor,
                                           ),
                                         ),
                                       );
                                     }
-                                    return Container(
-                                        width: 0.0, height: 0.0);
+                                    return Container(width: 0.0, height: 0.0);
                                   }),
                             ],
                           ),
@@ -418,8 +409,9 @@ class _VideoBarState extends State<VideoBar>
                                   onPressed: (widget.video['lesson'] == 0 ||
                                           user['courses'].contains(
                                               widget.course['code'].toString()))
-                                      ? () => Navigator.of(context)
-                                          .push(_createRoute(widget.video))
+                                      ? () => Navigator.of(context).push(
+                                          _createRoute(
+                                              widget.video, widget.course))
                                       : null,
                                   padding: EdgeInsets.all(0.0),
                                   splashColor: Color(0xffe6e5f5),
@@ -492,10 +484,10 @@ class _VideoBarState extends State<VideoBar>
   }
 }
 
-Route _createRoute(DocumentSnapshot vid) {
+Route _createRoute(DocumentSnapshot vid, DocumentSnapshot cou) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) =>
-        VideoPage(video: vid),
+        VideoPage(video: vid, course: cou),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(0.0, 1.0);
       var end = Offset.zero;
