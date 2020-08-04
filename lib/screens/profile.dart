@@ -1,6 +1,8 @@
+import 'package:DesForm/screens/forgotPassword.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../heading.dart';
 import '../profilePhotoPlain.dart';
 import '../statusCard.dart';
@@ -165,26 +167,34 @@ class _ProfilePageState extends State<ProfilePage> {
                                       fontSize: scaler.getTextSize(7.0),
                                     ),
                                   ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Text(
-                                        'Change password',
-                                        style: TextStyle(
-                                          color: Theme.of(context).primaryColor,
-                                          fontFamily: 'Montserrat',
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: scaler.getTextSize(7.5),
+                                  InkWell(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text(
+                                          'Change password',
+                                          style: TextStyle(
+                                            color: Theme.of(context).primaryColor,
+                                            fontFamily: 'Montserrat',
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: scaler.getTextSize(7.5),
+                                          ),
                                         ),
-                                      ),
-                                      IconButton(
-                                        icon: Icon(Icons.chevron_right),
-                                        onPressed: () {},
-                                        iconSize: 25.0,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                    ],
+                                        IconButton(
+                                          icon: Icon(Icons.chevron_right),
+                                          onPressed: () {
+                                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => ForgotPasswordScreen()));
+                                          },
+                                          iconSize: 25.0,
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                      ],
+                                    ),
+                                    splashColor: Colors.black,
+                                    onTap: () {
+                                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => ForgotPasswordScreen()));
+                                    },
                                   ),
                                   Row(
                                     mainAxisAlignment:
@@ -219,47 +229,63 @@ class _ProfilePageState extends State<ProfilePage> {
                                       fontSize: scaler.getTextSize(7.0),
                                     ),
                                   ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Text(
-                                        'About DesForm',
-                                        style: TextStyle(
-                                          color: Theme.of(context).primaryColor,
-                                          fontFamily: 'Montserrat',
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: scaler.getTextSize(7.5),
+                                  InkWell(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text(
+                                          'About DesForm',
+                                          style: TextStyle(
+                                            color: Theme.of(context).primaryColor,
+                                            fontFamily: 'Montserrat',
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: scaler.getTextSize(7.5),
+                                          ),
                                         ),
-                                      ),
-                                      IconButton(
-                                        icon: Icon(Icons.chevron_right),
-                                        onPressed: () {},
-                                        iconSize: 25.0,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                    ],
+                                        IconButton(
+                                          icon: Icon(Icons.chevron_right),
+                                          onPressed: () {
+                                            _about();
+                                          },
+                                          iconSize: 25.0,
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                      ],
+                                    ),
+                                    splashColor: Colors.black,
+                                    onTap: () {
+                                      _about();
+                                    },
                                   ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Text(
-                                        'Contact Us',
-                                        style: TextStyle(
-                                          color: Theme.of(context).primaryColor,
-                                          fontFamily: 'Montserrat',
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: scaler.getTextSize(7.5),
+                                  InkWell(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text(
+                                          'Contact Us',
+                                          style: TextStyle(
+                                            color: Theme.of(context).primaryColor,
+                                            fontFamily: 'Montserrat',
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: scaler.getTextSize(7.5),
+                                          ),
                                         ),
-                                      ),
-                                      IconButton(
-                                        icon: Icon(Icons.chevron_right),
-                                        onPressed: () {},
-                                        iconSize: 25.0,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                    ],
+                                        IconButton(
+                                          icon: Icon(Icons.chevron_right),
+                                          onPressed: () {
+                                            _contact();
+                                          },
+                                          iconSize: 25.0,
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                      ],
+                                    ),
+                                    splashColor: Colors.black,
+                                    onTap: () {
+                                      _contact();
+                                    },
                                   ),
                                 ],
                               ),
@@ -306,44 +332,22 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
-}
 
-class Tag extends StatelessWidget {
-  const Tag({this.title, this.value});
+  _about() async {
+    const url = 'https://www.des-form.com/about-us';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
-  final String title, value;
-
-  @override
-  Widget build(BuildContext context) {
-    ScreenScaler scaler = ScreenScaler();
-
-    return Container(
-      margin: EdgeInsets.only(top: 20.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          SizedBox(
-            width: scaler.getWidth(8.0),
-            child: Heading(
-              text: title,
-              color: Colors.grey[700],
-            ),
-          ),
-          SizedBox(
-            width: scaler.getWidth(19.0),
-            child: Text(
-              value,
-              textAlign: TextAlign.end,
-              style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.w900,
-                  fontSize: scaler.getTextSize(8.0)),
-            ),
-          ),
-        ],
-      ),
-    );
+  _contact() async {
+    const url = 'https://www.des-form.com/';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
