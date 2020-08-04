@@ -220,9 +220,9 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
   }
 
   Widget showErrorMessage() {
-    
     if (_errorMessage.length > 0 && _errorMessage != null) {
-      if(_errorMessage == "The password is invalid or the user does not have a password.")
+      if (_errorMessage ==
+          "The password is invalid or the user does not have a password.")
         _errorMessage = "The email/password combination does not exist.";
 
       h = 22.0;
