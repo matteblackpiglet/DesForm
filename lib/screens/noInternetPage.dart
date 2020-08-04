@@ -14,7 +14,7 @@ class NoInternetPage extends StatelessWidget {
             color: Colors.white,
             fontSize: scaler.getTextSize(9.0),
             fontFamily: 'Montserrat',
-            fontWeight: FontWeight.w800,
+            fontWeight: FontWeight.w900,
           ),
         ),
         automaticallyImplyLeading: false,
