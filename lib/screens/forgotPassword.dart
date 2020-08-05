@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 // ignore: must_be_immutable
 class ForgotPasswordScreen extends StatelessWidget {
   TextEditingController editController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final _formKey = new GlobalKey<FormState>();
     ScreenScaler scaler = ScreenScaler();
     return Scaffold(
       resizeToAvoidBottomPadding: false,
@@ -101,22 +99,39 @@ class ForgotPasswordScreen extends StatelessWidget {
       return;
     }
 
-    await FirebaseAuth.instance
-        .sendPasswordResetEmail(email: editController.text);
-    showAlertDialog(context);
+    try{
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: editController.text);
+      showAlertDialog(context, 'Reset password link has been sent to your email');
+    }catch(e){
+      showAlertDialog(context, 'There is no user record corresponding to this email!');
+    }
   }
 
-  void showAlertDialog(context) {
+  void showAlertDialog(context, msg) {
+    ScreenScaler scaler = ScreenScaler();
+
     showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
             title: new Text(
-              'Reset password',
+              'Reset Password',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: scaler.getTextSize(8.0),
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.w800,
+              ),
             ),
             content: new Text(
-              'Reset password link has been sent to your email',
+              msg,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: scaler.getTextSize(7.0),
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.w500,
+              ),
             ),
             actions: <Widget>[
               new FlatButton(
@@ -126,6 +141,12 @@ class ForgotPasswordScreen extends StatelessWidget {
                 },
                 child: Text(
                   'Dismiss',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: scaler.getTextSize(7.5),
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               )
             ],
