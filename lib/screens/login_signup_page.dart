@@ -105,6 +105,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
     resetForm();
     setState(
       () {
+        _errorMessage = "";
         _isLoginForm = !_isLoginForm;
         h = (_isLoginForm) ? 18.0 : 27.0;
         name = true;
