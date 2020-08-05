@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 // ignore: must_be_immutable
 class ForgotPasswordScreen extends StatelessWidget {
   TextEditingController editController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final _formKey = new GlobalKey<FormState>();
     ScreenScaler scaler = ScreenScaler();
     return Scaffold(
       resizeToAvoidBottomPadding: false,
@@ -52,13 +53,16 @@ class ForgotPasswordScreen extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
                       child: TextField(
+                        keyboardType: TextInputType.emailAddress,
+                        autofocus: false,
+                        style: TextStyle(fontFamily: 'Montserrat'),
                         controller: editController,
                         decoration: InputDecoration(
                           icon: Icon(
                             Icons.email,
                             color: Colors.grey,
                           ),
-                          hintText: 'Enter email',
+                          hintText: 'Enter email to reset password',
                           hintStyle: TextStyle(
                             fontFamily: 'Montserrat',
                           ),
@@ -93,16 +97,59 @@ class ForgotPasswordScreen extends StatelessWidget {
 
   void resetPassword(BuildContext context) async {
     if (editController.text.length == 0 || !editController.text.contains("@")) {
-      Fluttertoast.showToast(
-        msg: "Enter valid email!",
-      );
+      _showAlertDialog(context);
       return;
     }
 
     await FirebaseAuth.instance
         .sendPasswordResetEmail(email: editController.text);
-    Fluttertoast.showToast(
-        msg: "Reset password link has been sent to your mail.");
-    Navigator.pop(context);
+    showAlertDialog(context);
+  }
+
+  void showAlertDialog(context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: new Text(
+              'Reset password',
+            ),
+            content: new Text(
+              'Reset password link has been sent to your email',
+            ),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () {
+                  int count = 0;
+                  Navigator.of(context).popUntil((_) => count++ >= 2);
+                },
+                child: Text(
+                  'Dismiss',
+                ),
+              )
+            ],
+          );
+        });
+  }
+
+  void _showAlertDialog(context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: new Text('Reset password'),
+            content: new Text('Invalid email'),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Dismiss'),
+              )
+            ],
+          );
+        });
   }
 }
