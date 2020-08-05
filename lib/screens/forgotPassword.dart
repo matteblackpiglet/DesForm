@@ -99,11 +99,14 @@ class ForgotPasswordScreen extends StatelessWidget {
       return;
     }
 
-    try{
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: editController.text);
-      showAlertDialog(context, 'Reset password link has been sent to your email');
-    }catch(e){
-      showAlertDialog(context, 'There is no user record corresponding to this email!');
+    try {
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: editController.text);
+      showAlertDialog(
+          context, 'Reset password link has been sent to your email');
+    } catch (e) {
+      showAlertDialog(
+          context, 'There is no user record corresponding to this email!');
     }
   }
 
@@ -155,19 +158,44 @@ class ForgotPasswordScreen extends StatelessWidget {
   }
 
   void _showAlertDialog(context) {
+    ScreenScaler scaler = ScreenScaler();
     showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: new Text('Reset password'),
-            content: new Text('Invalid email'),
+            title: new Text(
+              'Reset password',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: scaler.getTextSize(8.0),
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            content: new Text(
+              'Invalid email',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: scaler.getTextSize(7.0),
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.w500,
+              ),
+            ),
             actions: <Widget>[
               new FlatButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text('Dismiss'),
+                child: Text(
+                  'Dismiss',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: scaler.getTextSize(7.5),
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               )
             ],
           );
