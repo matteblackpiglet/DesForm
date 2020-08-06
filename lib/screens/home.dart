@@ -1,5 +1,4 @@
 import 'package:DesForm/screens/login_signup_page.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,8 +8,6 @@ import '../smallButton.dart';
 import '../profilePhoto.dart';
 import '../courseCards.dart';
 import '../services/authentication.dart';
-
-final GlobalKey<NavigatorState> nav = GlobalKey<NavigatorState>();
 
 class Home extends StatelessWidget {
   @override
@@ -68,135 +65,126 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Color(0xffffffff),
       body: SingleChildScrollView(
-        child: RefreshIndicator(
-          // ignore: missing_return
-          onRefresh: () {},
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.only(bottom: 15.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(mainCurve),
-                    bottomRight: Radius.circular(mainCurve),
-                  ),
-                  gradient: LinearGradient(
-                    begin: FractionalOffset.topCenter,
-                    end: FractionalOffset.bottomCenter,
-                    colors: [
-                      Theme.of(context).primaryColorLight,
-                      Theme.of(context).primaryColor
-                    ],
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey[400],
-                      blurRadius: 10.0,
-                      spreadRadius: 1.0,
-                    ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.only(bottom: 15.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(mainCurve),
+                  bottomRight: Radius.circular(mainCurve),
+                ),
+                gradient: LinearGradient(
+                  begin: FractionalOffset.topCenter,
+                  end: FractionalOffset.bottomCenter,
+                  colors: [
+                    Theme.of(context).primaryColorLight,
+                    Theme.of(context).primaryColor
                   ],
                 ),
-                child: SafeArea(
-                  child: SizedBox(
-                    height: scaler.getHeight(9.0),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 22.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: <Widget>[
-                          Container(
-                            margin: EdgeInsets.only(right: 10.0),
-                            child: ProfilePhoto(
-                              signOut: signOut,
-                            ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey[400],
+                    blurRadius: 10.0,
+                    spreadRadius: 1.0,
+                  ),
+                ],
+              ),
+              child: SafeArea(
+                child: SizedBox(
+                  height: scaler.getHeight(9.0),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 22.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.only(right: 10.0),
+                          child: ProfilePhoto(
+                            signOut: signOut,
                           ),
-                          Container(
-                            margin:
-                                const EdgeInsets.symmetric(horizontal: 36.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  'DesForm',
-                                  style: TextStyle(
-                                    color: Color(0xffffffff),
-                                    fontSize: scaler.getTextSize(10.6),
-                                    fontFamily: 'Montserrat',
-                                    fontWeight: FontWeight.w900,
+                        ),
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 36.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                'DesForm',
+                                style: TextStyle(
+                                  color: Color(0xffffffff),
+                                  fontSize: scaler.getTextSize(10.6),
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  SizedBox(
+                                    width: 2.0,
                                   ),
-                                ),
-                                Row(
-                                  children: <Widget>[
-                                    SizedBox(
-                                      width: 2.0,
+                                  Text(
+                                    'Live to Create',
+                                    style: TextStyle(
+                                      color: Color(0xffffffff),
+                                      fontSize: scaler.getTextSize(7.0),
+                                      fontFamily: 'Montserrat',
+                                      letterSpacing: -0.5,
                                     ),
-                                    Text(
-                                      'Live to Create',
-                                      style: TextStyle(
-                                        color: Color(0xffffffff),
-                                        fontSize: scaler.getTextSize(7.0),
-                                        fontFamily: 'Montserrat',
-                                        letterSpacing: -0.5,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: scaler.getHeight(0.2)),
-                              ],
-                            ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: scaler.getHeight(0.2)),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ),
-              FutureBuilder(
-                  future: Firestore.instance
-                      .collection('users')
-                      .where('email', isEqualTo: userEmail)
-                      .getDocuments(),
-                  builder: (context, snapshOT) {
-                    if (snapshOT.hasData) {
-                      return StreamBuilder(
-                          stream: Firestore.instance
-                              .collection('users')
-                              .where('email', isEqualTo: userEmail)
-                              .getDocuments()
-                              .asStream(),
-                          // ignore: missing_return
-                          builder: (context, snapshoT) {
-                            if (snapshoT.hasData) {
-                              var user = snapshoT.data.documents[0];
+            ),
+            FutureBuilder(
+                future: Firestore.instance
+                    .collection('users')
+                    .where('email', isEqualTo: userEmail)
+                    .getDocuments(),
+                builder: (context, snapshOT) {
+                  if (snapshOT.hasData) {
+                    return StreamBuilder(
+                        stream: Firestore.instance
+                            .collection('users')
+                            .where('email', isEqualTo: userEmail)
+                            .getDocuments()
+                            .asStream(),
+                        // ignore: missing_return
+                        builder: (context, snapshoT) {
+                          if (snapshoT.hasData) {
+                            var user = snapshoT.data.documents[0];
 
-                              if (user['courses'].length != 0) {
-                                return Column(
-                                  children: <Widget>[
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Container(
-                                          margin: const EdgeInsets.symmetric(
-                                              vertical: 10.0, horizontal: 40.0),
-                                          child: Heading(
-                                            text: 'Your Courses',
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                            weight: FontWeight.w900,
-                                          ),
+                            if (user['courses'].length != 0) {
+                              return Column(
+                                children: <Widget>[
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Container(
+                                        margin: const EdgeInsets.symmetric(
+                                            vertical: 10.0, horizontal: 40.0),
+                                        child: Heading(
+                                          text: 'Your Courses',
+                                          color: Theme.of(context).primaryColor,
+                                          weight: FontWeight.w900,
                                         ),
-                                        SmallButton(
-                                          text: 'See All',
-                                          all: false,
-                                        ),
+                                      )
                                       ],
                                     ),
-                                    CourseCards(all: false),
+                                    CourseCards(all: false, feat: false),
                                   ],
                                 );
                               }
@@ -216,6 +204,22 @@ class _HomePageState extends State<HomePage> {
                       width: 0.0,
                     );
                   }),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 10.0, horizontal: 40.0),
+                    child: Heading(
+                      text: 'Featured Courses',
+                      color:
+                          Theme.of(context).primaryColor,
+                      weight: FontWeight.w900,
+                    ),
+                  ),
+                  CourseCards(all: false, feat: true),
+                ],
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -231,15 +235,14 @@ class _HomePageState extends State<HomePage> {
                   SmallButton(text: 'See All', all: true),
                 ],
               ),
-              CourseCards(all: true),
+              CourseCards(all: true,feat: false),
               SizedBox(
                 height: 50.0,
               )
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 }
 

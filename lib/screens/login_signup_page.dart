@@ -379,6 +379,9 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
               builder: (BuildContext context, Widget child) {
                 return Theme(
                   data: ThemeData.light().copyWith(
+                      buttonTheme: ButtonThemeData(
+                        textTheme: ButtonTextTheme.primary
+                      ),
                       colorScheme: ColorScheme.light(
                         primary: Color(0xff2f2ea6),
                       ),

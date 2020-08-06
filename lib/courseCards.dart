@@ -7,8 +7,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 // ignore: must_be_immutable
 class CourseCards extends StatelessWidget {
   final bool all;
+  bool feat;
 
-  CourseCards({this.all});
+  CourseCards({this.all, this.feat});
 
   var count = 0;
   final int limit = 3;
@@ -26,50 +27,65 @@ class CourseCards extends StatelessWidget {
     _loadUser();
 
     return Container(
+      alignment: Alignment.centerLeft,
       height: scaler.getHeight(15.0),
       child: StreamBuilder(
         stream: Firestore.instance.collection('courses').orderBy('code').snapshots(),
         // ignore: missing_return
         builder: (context, snapshot){ // stream containing course details.
           try{
-          if(!snapshot.hasData)
-            return Container(height: 0.0, width: 0.0,);
-          
-          return StreamBuilder(
-            stream: Firestore.instance.collection('users').where('email', isEqualTo: user.email).snapshots(),
-            // ignore: missing_return
-            builder: (context, snapshoT){ // stream containing user details.
-              if(snapshoT.hasData){
-                var user = snapshoT.data.documents[0];
-                return  ListView.builder(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: snapshot.data.documents.length,
-                  // ignore: missing_return
-                  itemBuilder: (context, index) {
-                    var course = snapshot.data.documents[index];
-                    try{
-                      if(all == true && count<limit){
-                        count++;
-                        return CCard(course: course);
-                      }
-                      // return only cards containing courses the user has subscribed to.
-                      else if(user['courses'].contains(course['code'].toString()) && count<limit){ 
-                        count++;
-                        return CCard(course: course);
-                      }
-                      else{
-                        return Container(width: 0, height: 0);
-                      }
-                    }catch(e){
-                      return Container(height: 0.0, width: 0.0,);
-                    }
-                  },
-                );
-              }
+            if(!snapshot.hasData)
               return Container(height: 0.0, width: 0.0,);
-            },
-          );
+            
+            return StreamBuilder(
+              stream: Firestore.instance.collection('featured').snapshots(),
+              builder: (context, snap){
+                if(snap.hasData){
+                  var fc =  snap.data.documents[0];
+                  return StreamBuilder(
+                    stream: Firestore.instance.collection('users').where('email', isEqualTo: userEmail).snapshots(),
+                    // ignore: missing_return
+                    builder: (context, snapshoT){
+                      // stream containing user details.
+                      if(snapshoT.hasData){
+                        var user = snapshoT.data.documents[0];
+                        return  ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: snapshot.data.documents.length,
+                          // ignore: missing_return
+                          itemBuilder: (context, index) {
+                            var course = snapshot.data.documents[index];
+                            try{
+                              if(feat == true && fc['list'].contains(course['code']) && count<limit){
+                                count++;
+                                return CCard(course: course);
+                              }
+                              else if(all == true && count<limit){
+                                count++;
+                                return CCard(course: course);
+                              }
+                              // return only cards containing courses the user has subscribed to.
+                              else if(user['courses'].contains(course['code'].toString()) && count<limit){ 
+                                count++;
+                                return CCard(course: course);
+                              }
+                              else{
+                                return Container(width: 0, height: 0);
+                              }
+                            }catch(e){
+                              return Container(height: 0.0, width: 0.0,);
+                            }
+                          },
+                        );
+                      }
+                      return Container(height: 0.0, width: 0.0,);
+                    },
+                  );
+                }
+                return Container(height: 0.0, width: 0.0,);
+              }
+            );
           } catch(e){
             return Container(height: 0.0, width: 0.0,);
           }
