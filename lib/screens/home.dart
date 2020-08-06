@@ -1,4 +1,5 @@
 import 'package:DesForm/screens/login_signup_page.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -190,8 +191,39 @@ class _HomePageState extends State<HomePage> {
                                 );
                               }
                               return Container(
-                                height: 0.0,
-                                width: 0.0,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12.0),
+                                  gradient: LinearGradient(
+                                      begin: FractionalOffset.topCenter,
+                                      end: FractionalOffset.bottomCenter,
+                                      colors: [
+                                        Theme.of(context).primaryColorLight,
+                                        Theme.of(context).primaryColor
+                                      ]),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black26,
+                                      offset: Offset(0.0, 8.0),
+                                      blurRadius: 12.0,
+                                    ),
+                                  ],
+                                ),
+                                padding: EdgeInsets.all(30.0),
+                                margin: EdgeInsets.all(20.0),
+                                child: SizedBox(
+                                  width: scaler.getWidth(1.0),
+                                  height: scaler.getHeight(4.0),
+                                  child: AutoSizeText(
+                                    'Take your first step in learning.\nSubscribe to a course.',
+                                    maxLines: 3,
+                                    style: TextStyle(
+                                      color: Theme.of(context).accentColor,
+                                      fontSize: scaler.getTextSize(8.5),
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
                               );
                             }
                             return Container(
