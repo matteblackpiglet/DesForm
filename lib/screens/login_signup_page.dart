@@ -376,9 +376,20 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
               firstDate: DateTime(1900),
               initialDate: currentValue ?? DateTime.now(),
               lastDate: DateTime(2100),
+              builder: (BuildContext context, Widget child) {
+                return Theme(
+                  data: ThemeData.light().copyWith(
+                      colorScheme: ColorScheme.light(
+                        primary: Color(0xff2f2ea6),
+                      ),
+                      dialogBackgroundColor: Colors.white),
+                  child: child,
+                );
+              },
             );
           },
-          onSaved: (value) => _dob = '${value.day}/${value.month}/${value.year}',
+          onSaved: (value) =>
+              _dob = '${value.day}/${value.month}/${value.year}',
         ),
       );
     } else {
