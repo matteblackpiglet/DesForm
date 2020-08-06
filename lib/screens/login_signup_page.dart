@@ -1,10 +1,19 @@
 import 'package:DesForm/dynBackground.dart';
+import 'package:DesForm/screens/forgotPassword.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import '../services/authentication.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
-var h = 15.0;
+var h = 18.0;
+bool name = true;
+bool dob = true;
+bool phone = true;
+bool email = true;
+bool psw = true;
 
 class LoginSignupPage extends StatefulWidget {
   LoginSignupPage({this.auth, this.loginCallback});
@@ -17,12 +26,14 @@ class LoginSignupPage extends StatefulWidget {
 
 class _LoginSignupPageState extends State<LoginSignupPage> {
   final _formKey = new GlobalKey<FormState>();
+  ScreenScaler scaler = ScreenScaler();
 
   String _email;
   String _password;
   String _errorMessage;
   String _name;
   String _dob;
+  String _mobNo;
 
   bool _isLoginForm;
   bool _isLoading;
@@ -51,15 +62,16 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
           print('Signed in: $userId');
         } else {
           userId = await widget.auth.signUp(_email, _password);
-          //widget.auth.sendEmailVerification();
-          //_showVerifyEmailSentDialog();
+          widget.auth.sendEmailVerification();
+          _showVerifyEmailSentDialog();
           print('Signed up user: $userId');
-          
+
           Firestore.instance.collection('users').document().setData({
             'name': _name,
             'dob': _dob,
             'email': _email,
-            'courses':[],
+            'courses': [],
+            'mobno': _mobNo,
           });
         }
         setState(() {
@@ -74,7 +86,6 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
         setState(() {
           _isLoading = false;
           _errorMessage = e.message;
-          _formKey.currentState.reset();
         });
       }
     }
@@ -90,27 +101,56 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
 
   void resetForm() {
     _formKey.currentState.reset();
-    _errorMessage = "";
   }
 
   void toggleFormMode() {
     resetForm();
-    setState(() {
-      _isLoginForm = !_isLoginForm;
-      h = (_isLoginForm)? 15.0 : 20.0;
-    });
+    setState(
+      () {
+        _errorMessage = "";
+        _isLoginForm = !_isLoginForm;
+        h = (_isLoginForm) ? 18.0 : 27.0;
+        name = true;
+        dob = true;
+        phone = true;
+        email = true;
+        psw = true;
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: <Widget>[
-          Positioned.fill(child: AnimatedBackground()),
-          _showForm(),
-          _showCircularProgress(),
-        ],
+    return SafeArea(
+      child: new Scaffold(
+        body: Stack(
+          children: <Widget>[
+            Positioned.fill(child: AnimatedBackground()),
+            Align(
+              alignment: Alignment.center,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+                child: Container(
+                  height: scaler.getHeight(h),
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 10.0,
+                        spreadRadius: 1.0,
+                        offset: Offset(0.0, 8.0),
+                      ),
+                    ],
+                    borderRadius: BorderRadius.circular(20.0),
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            _showForm(),
+            _showCircularProgress()
+          ],
+        ),
       ),
     );
   }
@@ -125,87 +165,96 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
     );
   }
 
-//  void _showVerifyEmailSentDialog() {
-//    showDialog(
-//      context: context,
-//      builder: (BuildContext context) {
-//        // return object of type Dialog
-//        return AlertDialog(
-//          title: new Text("Verify your account"),
-//          content:
-//              new Text("Link to verify account has been sent to your email"),
-//          actions: <Widget>[
-//            new FlatButton(
-//              child: new Text("Dismiss"),
-//              onPressed: () {
-//                toggleFormMode();
-//                Navigator.of(context).pop();
-//              },
-//            ),
-//          ],
-//        );
-//      },
-//    );
-//  }
-
-  Widget _showForm() {
-    ScreenScaler scaler = ScreenScaler();
-
-    return new Container(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            showLogo(),
-            new Form(
-              key: _formKey,
-              child: Stack(
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                      height: scaler.getHeight(h),
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 20.0,
-                            spreadRadius: 1.0,
-                            offset: Offset(0.0, 8.0),
-                          ),
-                        ],
-                        borderRadius: BorderRadius.circular(20.0),
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
-                      child: ListView(
-                        shrinkWrap: true,
-                        children: <Widget>[
-                          showNameInput(),
-                          showDobInput(),
-                          showEmailInput(),
-                          showPasswordInput(),
-                          showErrorMessage(),
-                          showPrimaryButton(),
-                          showSecondaryButton(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+  void _showVerifyEmailSentDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text(
+            "Verify your account",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: scaler.getTextSize(8.0),
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          content: new Text(
+            "Link to verify account has been sent to your email",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: scaler.getTextSize(7.0),
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text(
+                "Dismiss",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: scaler.getTextSize(7.5),
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.w700,
+                ),
               ),
+              onPressed: () {
+                toggleFormMode();
+                Navigator.of(context).pop();
+              },
             ),
           ],
-        ));
+        );
+      },
+    );
+  }
+
+  Widget _showForm() {
+    return new Form(
+      key: _formKey,
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(30.0, 5.0, 40.0, 5.0),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                showLogo(),
+                showNameInput(),
+                showDobInput(),
+                showMobNoInput(),
+                showEmailInput(),
+                showPasswordInput(),
+                showErrorMessage(),
+                showPrimaryButton(),
+                SizedBox(
+                  height: scaler.getHeight(0.5),
+                ),
+                if (_isLoginForm) showForgotPassword(context),
+                SizedBox(
+                  height: scaler.getHeight(0.5),
+                ),
+                showSecondaryButton(),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget showErrorMessage() {
     if (_errorMessage.length > 0 && _errorMessage != null) {
-      h += 4.0;
+      if (_errorMessage ==
+          "The password is invalid or the user does not have a password.")
+        _errorMessage = "The email/password combination does not exist.";
+
+      h = 22.0;
+
+      resetForm();
+
       return Container(
         alignment: Alignment.center,
         margin: EdgeInsets.only(top: 5.0),
@@ -231,7 +280,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
     return new Hero(
       tag: 'hero',
       child: Container(
-        margin: EdgeInsets.only(left: 10.0, bottom: 20.0),
+        margin: EdgeInsets.only(top: 10.0, left: 10.0),
         alignment: Alignment.centerLeft,
         padding: EdgeInsets.fromLTRB(0.0, 0, 0.0, 0.0),
         child: Column(
@@ -240,7 +289,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
             Text(
               'DesForm',
               style: TextStyle(
-                color: Color(0xffffffff),
+                color: Theme.of(context).primaryColor,
                 fontSize: scaler.getTextSize(10.6),
                 fontFamily: 'Montserrat',
                 fontWeight: FontWeight.w900,
@@ -254,7 +303,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                 Text(
                   'Live to Create',
                   style: TextStyle(
-                    color: Color(0xffffffff),
+                    color: Theme.of(context).primaryColor,
                     fontSize: scaler.getTextSize(7.0),
                     fontFamily: 'Montserrat',
                     letterSpacing: -0.5,
@@ -282,13 +331,17 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
               hintStyle: TextStyle(fontFamily: 'Montserrat'),
               icon: new Icon(
                 Icons.face,
-                color: Colors.grey,
+                color: Colors.grey[400],
               )),
           validator: (value) {
-            if (value.isEmpty) {
+            if (value.isEmpty && name) {
               h += 1.0;
+              name = false;
+              return 'Name can\'t be empty';
+            } else if (value.isEmpty) {
               return 'Name can\'t be empty';
             } else {
+              name = true;
               return null;
             }
           },
@@ -303,30 +356,70 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
   }
 
   Widget showDobInput() {
+    final format = DateFormat("dd-MM-yyyy");
+    if (!_isLoginForm) {
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+        child: DateTimeField(
+          format: format,
+          style: TextStyle(fontFamily: 'Montserrat'),
+          decoration: InputDecoration(
+            hintText: 'dd/mm/yyyy',
+            icon: Icon(
+              Icons.calendar_today,
+              color: Colors.grey[400],
+            ),
+          ),
+          onShowPicker: (context, currentValue) {
+            return showDatePicker(
+              context: context,
+              firstDate: DateTime(1900),
+              initialDate: currentValue ?? DateTime.now(),
+              lastDate: DateTime(2100),
+            );
+          },
+          onSaved: (value) => _dob = '${value.day}/${value.month}/${value.year}',
+        ),
+      );
+    } else {
+      return new Container(
+        height: 0.0,
+      );
+    }
+  }
+
+  Widget showMobNoInput() {
     if (!_isLoginForm) {
       return Padding(
         padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
         child: new TextFormField(
           maxLines: 1,
-          keyboardType: TextInputType.datetime,
+          keyboardType: TextInputType.phone,
           autofocus: false,
           style: TextStyle(fontFamily: 'Montserrat'),
+          inputFormatters: [
+            LengthLimitingTextInputFormatter(10),
+          ],
           decoration: new InputDecoration(
-              hintText: 'dd/mm/yyyy',
+              hintText: 'Mobile Number',
               hintStyle: TextStyle(fontFamily: 'Montserrat'),
               icon: new Icon(
-                Icons.calendar_today,
-                color: Colors.grey,
+                Icons.call,
+                color: Colors.grey[400],
               )),
           validator: (value) {
-            if (value.isEmpty) {
+            if (value.isEmpty && phone) {
               h += 1.0;
-              return 'DOB can\'t be empty';
+              phone = false;
+              return 'Phone No. can\'t be empty';
+            } else if (value.isEmpty) {
+              return 'Phone No. can\'t be empty';
             } else {
+              phone = true;
               return null;
             }
           },
-          onSaved: (value) => _dob = value,
+          onSaved: (value) => _mobNo = value,
         ),
       );
     } else {
@@ -361,13 +454,17 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
             hintStyle: TextStyle(fontFamily: 'Montserrat'),
             icon: new Icon(
               Icons.mail,
-              color: Colors.grey,
+              color: Colors.grey[400],
             )),
         validator: (value) {
-          if (value.isEmpty) {
+          if (value.isEmpty && email) {
             h += 1.0;
+            email = false;
+            return 'Email can\'t be empty';
+          } else if (value.isEmpty) {
             return 'Email can\'t be empty';
           } else {
+            email = true;
             return null;
           }
         },
@@ -390,13 +487,17 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
             hintStyle: TextStyle(fontFamily: 'Montserrat'),
             icon: new Icon(
               Icons.lock,
-              color: Colors.grey,
+              color: Colors.grey[400],
             )),
         validator: (value) {
-          if (value.isEmpty) {
+          if (value.isEmpty && psw) {
             h += 1.0;
-            return 'Passwords can\'t be empty';
+            psw = false;
+            return 'Password can\'t be empty';
+          } else if (value.isEmpty) {
+            return 'Password can\'t be empty';
           } else {
+            psw = true;
             return null;
           }
         },
@@ -435,7 +536,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
         child: SizedBox(
           width: scaler.getWidth(18.0),
           child: new RaisedButton(
-            elevation: 4.0,
+            elevation: 2.0,
             shape: new RoundedRectangleBorder(
               borderRadius: new BorderRadius.circular(10.0),
             ),
@@ -454,4 +555,19 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
       ),
     );
   }
+}
+
+Widget showForgotPassword(context) {
+  return GestureDetector(
+    child: Text(
+      'Forgot Password?',
+      style: TextStyle(
+        fontFamily: 'Montserrat',
+      ),
+    ),
+    onTap: () {
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => ForgotPasswordScreen()));
+    },
+  );
 }

@@ -5,98 +5,183 @@ import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:DesForm/heading.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
+
+FirebaseUser _user;
+String _userEmail;
+DocumentSnapshot _course;
 
 // ignore: must_be_immutable
-class CourseVideos extends StatelessWidget {
+class CourseVideos extends StatefulWidget {
   CourseVideos({this.course});
 
   DocumentSnapshot course;
-  
+  var cUser;
+
+  @override
+  _CourseVideosState createState() => _CourseVideosState();
+}
+
+class _CourseVideosState extends State<CourseVideos> {
+  Razorpay _razorpay;
+  FirebaseUser user;
+
+  _loadUserAndCourse() async {
+    _user = await FirebaseAuth.instance.currentUser();
+    _userEmail = _user.email;
+    _course = widget.course;
+  }
 
   @override
   Widget build(BuildContext context) {
     ScreenScaler scaler = new ScreenScaler();
+    _loadUserAndCourse();
 
     return Scaffold(
       backgroundColor: Colors.grey[100],
       body: SingleChildScrollView(
         child: Container(
-          decoration: (BoxDecoration(gradient: LinearGradient(
-            begin: FractionalOffset.topCenter,
-            end: FractionalOffset.bottomCenter,
-            colors: [
-              Theme.of(context).primaryColor,
-              Theme.of(context).primaryColorLight
-            ],
-          ),)),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: FractionalOffset.topCenter,
+              end: FractionalOffset.bottomCenter,
+              colors: [
+                Theme.of(context).primaryColor,
+                Theme.of(context).primaryColorLight
+              ],
+            ),
+          ),
           child: ListView(
             primary: false,
             shrinkWrap: true,
             children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(left: 8.0),
-                    child: Column(
+              Padding(
+                padding: EdgeInsets.only(left: 8.0, top: 15.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Row(
                       children: <Widget>[
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            IconButton(
-                              color: Colors.white,
-                              icon: Icon(Icons.chevron_left),
-                              onPressed: () => Navigator.pop(context),
-                            ),
-                            SizedBox(height: 10),
-                            Container(
-                              padding: EdgeInsets.only(left: 20.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Container(
-                                      color: Color(0xfffccc86),
-                                      padding: EdgeInsets.only(
-                                          left: 10.0,
-                                          top: 5.0,
-                                          right: 10,
-                                          bottom: 5),
-                                      child: Text(
-                                        "DesForm".toUpperCase(),
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontFamily: 'Montserrat',
-                                          color: Theme.of(context).primaryColor,
-                                        ),
-                                      )),
-                                  SizedBox(height: scaler.getHeight(0.5)),
-                                  Heading(
-                                    text: course['name'],
-                                    color: Colors.white,
-                                    weight: FontWeight.w700,
-                                  ),
-                                  SizedBox(
-                                    height: scaler.getHeight(0.5),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                        IconButton(
+                          color: Colors.white,
+                          icon: Icon(Icons.chevron_left),
+                          onPressed: () => Navigator.pop(context),
                         ),
-                        SizedBox(
-                          height: scaler.getHeight(2),
+                        Heading(
+                          text: widget.course['name'],
+                          color: Colors.white,
+                          weight: FontWeight.w700,
                         ),
                       ],
                     ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(right: 10.0),
-                    child: Image.asset(
-                      'assets/images/coursePage.png',
-                      scale: scaler.getWidth(0.56),
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Container(
+                                color: Color(0xfffccc86),
+                                padding: EdgeInsets.only(
+                                    left: 10.0, top: 5.0, right: 10, bottom: 5),
+                                child: Text(
+                                  "DesForm".toUpperCase(),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'Montserrat',
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: scaler.getHeight(0.5)),
+                              SizedBox(
+                                height: scaler.getHeight(0.5),
+                              ),
+                              FutureBuilder(
+                                future: Firestore.instance
+                                        .collection('users')
+                                        .where('email', isEqualTo: _userEmail)
+                                        .getDocuments(),
+                                builder: (context, snap) {
+                                  if(snap.hasData){
+                                    return StreamBuilder(
+                                      stream: Firestore.instance
+                                          .collection('users')
+                                          .where('email', isEqualTo: _userEmail)
+                                          .getDocuments()
+                                          .asStream(),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData) {
+                                          var user = widget.cUser =
+                                              snapshot.data.documents[0];
+
+                                          if (!user['courses'].contains(
+                                              widget.course['code'].toString())) {
+                                            return RaisedButton(
+                                              onPressed: openCheckout,
+                                              color: Theme.of(context).accentColor,
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(6.0)),
+                                              padding: EdgeInsets.fromLTRB(
+                                                  10.0, 5.0, 10.0, 5.0),
+                                              child: Text(
+                                                "Enroll\nNow\n₹${widget.course['price']}"
+                                                    .toUpperCase(),
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontFamily: 'Montserrat',
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                          return RaisedButton(
+                                            onPressed: null,
+                                            disabledColor:
+                                                Theme.of(context).accentColor,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(3.0)),
+                                            padding: EdgeInsets.fromLTRB(
+                                                10.0, 5.0, 10.0, 5.0),
+                                            child: Text(
+                                              "Enrolled".toUpperCase(),
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontFamily: 'Montserrat',
+                                                color:
+                                                    Theme.of(context).primaryColor,
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                        return Container(width: 0.0, height: 0.0);
+                                      }
+                                    );
+                                  }
+                                  return Container(width: 0.0, height: 0.0);
+                                }
+                              )
+                            ],
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(right: 5.0),
+                            child: Image.asset(
+                              'assets/images/coursePage.png',
+                              scale: scaler.getWidth(0.56),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 20.0),
@@ -108,30 +193,55 @@ class CourseVideos extends StatelessWidget {
                 ),
                 child: Column(
                   children: <Widget>[
-                    Container(
-                      padding: EdgeInsets.only(top: 10.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          SizedBox(
-                            height: scaler.getHeight(0.5),
+                    SizedBox(
+                      height: scaler.getHeight(0.5),
+                    ),
+                    Stack(
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                          height: scaler.getHeight(6.0),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white70,
+                            borderRadius: BorderRadius.circular(20.0),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Heading(
-                                text: 'Course Videos',
-                                color: Theme.of(context).primaryColor,
-                                weight: FontWeight.w900,
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  12.0, 15.0, 8.0, 4.0),
+                              child: Text(
+                                'Introduction to ${widget.course['name']}',
+                                style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                  fontFamily: 'Montserrat',
+                                  fontSize: scaler.getTextSize(8.0),
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  12.0, 4.0, 12.0, 8.0),
+                              child: Text(
+                                widget.course['desc'],
+                                style: TextStyle(
+                                  color: Colors.grey[900],
+                                  fontFamily: 'Montserrat',
+                                  fontSize: scaler.getTextSize(7.4),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                     StreamBuilder(
-                      stream: course.reference
+                      stream: widget.course.reference
                           .collection('videos')
                           .orderBy('lesson')
                           .snapshots(),
@@ -150,7 +260,7 @@ class CourseVideos extends StatelessWidget {
                             return Stack(children: <Widget>[
                               VideoBar(
                                 video: video,
-                                course: course,
+                                course: widget.course,
                               ),
                             ]);
                           },
@@ -166,6 +276,65 @@ class CourseVideos extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _razorpay = Razorpay();
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _razorpay.clear();
+  }
+
+  void openCheckout() async {
+    var options = {
+      'key': 'rzp_test_qwqu1Y5ZI4Ogby',
+      'amount': widget.course['price'] * 100,
+      'name': 'DesForm',
+      'description': 'Enrollment fee for ${widget.course['name']} course',
+      'prefill': {
+        'contact': '${widget.cUser['mobno']}',
+        'email': '${widget.cUser['email']}'
+      },
+      'external': {
+        'wallets': ['paytm']
+      }
+    };
+
+    try {
+      _razorpay.open(options);
+    } catch (e) {
+      debugPrint(e);
+    }
+  }
+
+  void _handlePaymentSuccess(PaymentSuccessResponse response) async {
+    Firestore.instance
+        .collection('users')
+        .where('email', isEqualTo: _userEmail)
+        .getDocuments()
+        .then((element) => element.documents[0].reference.updateData({
+              'courses': FieldValue.arrayUnion([_course['code'].toString()])
+            }));
+    print("Success");
+    Navigator.of(context).pushNamed('/home');
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    print("Error");
+    print(response.message);
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    print("External Wallet");
+    print(response.walletName);
   }
 }
 
@@ -184,13 +353,6 @@ class _VideoBarState extends State<VideoBar>
     with SingleTickerProviderStateMixin {
   Animation animation;
   AnimationController animationController;
-  FirebaseUser user;
-  String userEmail;
-
-  _loadUser() async{
-    user = await FirebaseAuth.instance.currentUser();
-    userEmail = user.email;
-  }
 
   @override
   void initState() {
@@ -213,7 +375,6 @@ class _VideoBarState extends State<VideoBar>
   Widget build(BuildContext context) {
     ScreenScaler scaler = ScreenScaler();
     final double width = MediaQuery.of(context).size.width;
-    _loadUser();
 
     return AnimatedBuilder(
         animation: animationController,
@@ -229,7 +390,7 @@ class _VideoBarState extends State<VideoBar>
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: Colors.white70,
-                    borderRadius: BorderRadius.circular(10.0),
+                    borderRadius: BorderRadius.circular(20.0),
                   ),
                 ),
                 Padding(
@@ -245,34 +406,40 @@ class _VideoBarState extends State<VideoBar>
                           minWidth: 40,
                         ),
                         child: StreamBuilder(
-                          stream: Firestore.instance
-                            .collection('users')
-                            .where('email', isEqualTo: userEmail)
-                            .getDocuments()
-                            .asStream(),
-                          builder: (context, snapshot) {
-                            if(snapshot.hasData){
-                              var user = snapshot.data.documents[0];
+                            stream: Firestore.instance
+                                .collection('users')
+                                .where('email', isEqualTo: _userEmail)
+                                .getDocuments()
+                                .asStream(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                var user = snapshot.data.documents[0];
 
-                              return RaisedButton(
-                                color: Colors.grey[200],
-                                disabledColor: Colors.grey[400],
-                                onPressed: (widget.video['lesson']==0||user['courses'].contains(widget.course['code'].toString()))?()=>Navigator.of(context).push(_createRoute(widget.video)):null,
-                                padding: EdgeInsets.all(0.0),
-                                splashColor: Color(0xffe6e5f5),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                animationDuration: Duration(milliseconds: 200),
-                                child: Icon(
-                                  Icons.play_arrow,
-                                  color: Colors.grey[600],
-                                ),
-                              );
-                            }
-                            return Container(height: 0.0, width: 0.0);
-                          }
-                        ),
+                                return RaisedButton(
+                                  color: Colors.grey[200],
+                                  disabledColor: Colors.grey[400],
+                                  onPressed: (widget.video['lesson'] == 0 ||
+                                          user['courses'].contains(
+                                              widget.course['code'].toString()))
+                                      ? () => Navigator.of(context).push(
+                                          _createRoute(
+                                              widget.video, widget.course))
+                                      : null,
+                                  padding: EdgeInsets.all(0.0),
+                                  splashColor: Color(0xffe6e5f5),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  animationDuration:
+                                      Duration(milliseconds: 200),
+                                  child: Icon(
+                                    Icons.play_arrow,
+                                    color: Colors.grey[600],
+                                  ),
+                                );
+                              }
+                              return Container(height: 0.0, width: 0.0);
+                            }),
                       ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -329,9 +496,10 @@ class _VideoBarState extends State<VideoBar>
   }
 }
 
-Route _createRoute(DocumentSnapshot vid) {
+Route _createRoute(DocumentSnapshot vid, DocumentSnapshot cou) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => VideoPage(video: vid),
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        VideoPage(video: vid, course: cou),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(0.0, 1.0);
       var end = Offset.zero;

@@ -1,17 +1,17 @@
+import 'package:DesForm/screens/forgotPassword.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../heading.dart';
 import '../profilePhotoPlain.dart';
 import '../statusCard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 class Profile extends StatelessWidget {
   Profile({this.so});
 
   final Function so;
-
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class _ProfilePageState extends State<ProfilePage> {
   FirebaseUser user;
   String userEmail;
 
-  _loadUser() async{
+  _loadUser() async {
     user = await FirebaseAuth.instance.currentUser();
     userEmail = user.email;
   }
@@ -55,10 +55,12 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       body: FutureBuilder(
-        future: Firestore.instance.collection('users').where('email', isEqualTo: userEmail).getDocuments(),
-        builder: (context, snapshot){
-          if(!snapshot.hasData)
-            return const Text('');
+        future: Firestore.instance
+            .collection('users')
+            .where('email', isEqualTo: userEmail)
+            .getDocuments(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return const Text('');
 
           return StreamBuilder(
             stream: Firestore.instance
@@ -70,7 +72,7 @@ class _ProfilePageState extends State<ProfilePage> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 var user = snapshot.data.documents[0];
-                
+
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -136,52 +138,157 @@ class _ProfilePageState extends State<ProfilePage> {
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(mainCurve),
-                                topRight: Radius.circular(mainCurve)),
-                            color: Color(0xffffffff),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 25.0,
-                                spreadRadius: 1.0,
-                              ),
-                            ]),
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(mainCurve),
+                              topRight: Radius.circular(mainCurve)),
+                          color: Color(0xffffffff),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 25.0,
+                              spreadRadius: 1.0,
+                            ),
+                          ],
+                        ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Container(
-                              margin: EdgeInsets.only(top: 20.0),
+                              margin: EdgeInsets.fromLTRB(20, 25, 20, 0.0),
                               child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      'ABOUT',
-                                      style: TextStyle(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    'Account Settings',
+                                    style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: scaler.getTextSize(7.0),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text(
+                                          'Change password',
+                                          style: TextStyle(
+                                            color: Theme.of(context).primaryColor,
+                                            fontFamily: 'Montserrat',
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: scaler.getTextSize(7.5),
+                                          ),
+                                        ),
+                                        IconButton(
+                                          icon: Icon(Icons.chevron_right),
+                                          onPressed: () {
+                                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => ForgotPasswordScreen()));
+                                          },
+                                          iconSize: 25.0,
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                      ],
+                                    ),
+                                    splashColor: Colors.black,
+                                    onTap: () {
+                                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => ForgotPasswordScreen()));
+                                    },
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                        'Change Mobile Number',
+                                        style: TextStyle(
                                           color: Theme.of(context).primaryColor,
                                           fontFamily: 'Montserrat',
                                           fontWeight: FontWeight.w600,
-                                          fontSize: scaler.getTextSize(8.0)),
+                                          fontSize: scaler.getTextSize(7.5),
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: Icon(Icons.chevron_right),
+                                        onPressed: () {},
+                                        iconSize: 25.0,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: scaler.getHeight(1.5),
+                                  ),
+                                  Text(
+                                    'Support',
+                                    style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: scaler.getTextSize(7.0),
                                     ),
-                                    Container(
-                                      margin:
-                                          EdgeInsets.symmetric(horizontal: 30.0),
-                                      child: Column(children: <Widget>[
-                                        Tag(
-                                          title: 'Name:',
-                                          value: user['name'],
+                                  ),
+                                  InkWell(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text(
+                                          'About DesForm',
+                                          style: TextStyle(
+                                            color: Theme.of(context).primaryColor,
+                                            fontFamily: 'Montserrat',
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: scaler.getTextSize(7.5),
+                                          ),
                                         ),
-                                        Tag(
-                                          title: 'DOB:',
-                                          value: user['dob'],
+                                        IconButton(
+                                          icon: Icon(Icons.chevron_right),
+                                          onPressed: () {
+                                            _about();
+                                          },
+                                          iconSize: 25.0,
+                                          color: Theme.of(context).primaryColor,
                                         ),
-                                        Tag(
-                                          title: 'Email:',
-                                          value: user['email'],
-                                        ),
-                                      ]),
+                                      ],
                                     ),
-                                  ]),
+                                    splashColor: Colors.black,
+                                    onTap: () {
+                                      _about();
+                                    },
+                                  ),
+                                  InkWell(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text(
+                                          'Contact Us',
+                                          style: TextStyle(
+                                            color: Theme.of(context).primaryColor,
+                                            fontFamily: 'Montserrat',
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: scaler.getTextSize(7.5),
+                                          ),
+                                        ),
+                                        IconButton(
+                                          icon: Icon(Icons.chevron_right),
+                                          onPressed: () {
+                                            _contact();
+                                          },
+                                          iconSize: 25.0,
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                      ],
+                                    ),
+                                    splashColor: Colors.black,
+                                    onTap: () {
+                                      _contact();
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
                             GestureDetector(
                               onTap: signOut,
@@ -194,7 +301,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                     IconButton(
                                       icon: Icon(Icons.exit_to_app),
                                       iconSize: 40.0,
-                                      color: Theme.of(context).primaryColorLight,
+                                      color:
+                                          Theme.of(context).primaryColorLight,
                                       onPressed: signOut,
                                     ),
                                     Text(
@@ -224,44 +332,22 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
-}
 
-class Tag extends StatelessWidget {
-  const Tag({this.title, this.value});
+  _about() async {
+    const url = 'https://www.des-form.com/about-us';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
-  final String title, value;
-
-  @override
-  Widget build(BuildContext context) {
-    ScreenScaler scaler = ScreenScaler();
-
-    return Container(
-      margin: EdgeInsets.only(top: 20.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          SizedBox(
-            width: scaler.getWidth(8.0),
-            child: Heading(
-              text: title,
-              color: Colors.grey[700],
-            ),
-          ),
-          SizedBox(
-            width: scaler.getWidth(19.0),
-            child: Text(
-              value,
-              textAlign: TextAlign.end,
-              style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.w900,
-                  fontSize: scaler.getTextSize(8.0)),
-            ),
-          ),
-        ],
-      ),
-    );
+  _contact() async {
+    const url = 'https://www.des-form.com/';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
