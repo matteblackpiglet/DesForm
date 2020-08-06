@@ -181,7 +181,8 @@ class _HomePageState extends State<HomePage> {
                                           color: Theme.of(context).primaryColor,
                                           weight: FontWeight.w900,
                                         ),
-                                      )
+                                      ),
+                                      SmallButton(text: 'See All', all: false),
                                       ],
                                     ),
                                     CourseCards(all: false, feat: false),
