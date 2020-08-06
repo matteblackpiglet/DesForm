@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import '../services/authentication.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 var h = 18.0;
 bool name = true;
@@ -354,34 +356,29 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
   }
 
   Widget showDobInput() {
+    final format = DateFormat("dd-MM-yyyy");
     if (!_isLoginForm) {
       return Padding(
         padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-        child: new TextFormField(
-          maxLines: 1,
-          keyboardType: TextInputType.datetime,
-          autofocus: false,
+        child: DateTimeField(
+          format: format,
           style: TextStyle(fontFamily: 'Montserrat'),
-          decoration: new InputDecoration(
-              hintText: 'dd/mm/yyyy',
-              hintStyle: TextStyle(fontFamily: 'Montserrat'),
-              icon: new Icon(
-                Icons.calendar_today,
-                color: Colors.grey[400],
-              )),
-          validator: (value) {
-            if (value.isEmpty && dob) {
-              h += 1.0;
-              dob = false;
-              return 'DOB can\'t be empty';
-            } else if (value.isEmpty) {
-              return 'DOB can\'t be empty';
-            } else {
-              dob = true;
-              return null;
-            }
+          decoration: InputDecoration(
+            hintText: 'dd/mm/yyyy',
+            icon: Icon(
+              Icons.calendar_today,
+              color: Colors.grey[400],
+            ),
+          ),
+          onShowPicker: (context, currentValue) {
+            return showDatePicker(
+              context: context,
+              firstDate: DateTime(1900),
+              initialDate: currentValue ?? DateTime.now(),
+              lastDate: DateTime(2100),
+            );
           },
-          onSaved: (value) => _dob = value,
+          onSaved: (value) => _dob = '${value.day}/${value.month}/${value.year}',
         ),
       );
     } else {
