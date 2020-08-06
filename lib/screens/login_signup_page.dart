@@ -169,12 +169,35 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text("Verify your account"),
-          content:
-              new Text("Link to verify account has been sent to your email"),
+          title: new Text(
+            "Verify your account",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: scaler.getTextSize(8.0),
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          content: new Text(
+            "Link to verify account has been sent to your email",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: scaler.getTextSize(7.0),
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w500,
+            ),
+          ),
           actions: <Widget>[
             new FlatButton(
-              child: new Text("Dismiss"),
+              child: new Text(
+                "Dismiss",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: scaler.getTextSize(7.5),
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
               onPressed: () {
                 toggleFormMode();
                 Navigator.of(context).pop();
