@@ -19,7 +19,7 @@ class SmallButton extends StatelessWidget {
     final double fontSize = scaler.getTextSize(6.5);
 
     return Container(
-      margin: const EdgeInsets.fromLTRB(0.0, 10.0, 40.0, 10.0),
+      margin: const EdgeInsets.fromLTRB(0.0, 10.0, 30.0, 10.0),
       child: ButtonTheme(
         buttonColor: Colors.grey[300],
         height: height,
