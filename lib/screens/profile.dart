@@ -196,27 +196,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => ForgotPasswordScreen()));
                                     },
                                   ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Text(
-                                        'Change Mobile Number',
-                                        style: TextStyle(
-                                          color: Theme.of(context).primaryColor,
-                                          fontFamily: 'Montserrat',
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: scaler.getTextSize(7.5),
-                                        ),
-                                      ),
-                                      IconButton(
-                                        icon: Icon(Icons.chevron_right),
-                                        onPressed: () {},
-                                        iconSize: 25.0,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                    ],
-                                  ),
                                   SizedBox(
                                     height: scaler.getHeight(1.5),
                                   ),
