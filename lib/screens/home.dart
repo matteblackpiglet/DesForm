@@ -25,8 +25,6 @@ class HomePage extends StatefulWidget {
   final BaseAuth auth;
   final VoidCallback logoutCallback;
   final String userId;
-  Stream _user;
-  Future _fUser;
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -45,8 +43,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     _loadUser();
-    widget._user = Firestore.instance.collection('users').where('email', isEqualTo: userEmail).getDocuments().asStream();
-    widget._fUser = Firestore.instance.collection('users').where('email', isEqualTo: userEmail).getDocuments();
     super.initState();
   }
 
@@ -159,87 +155,87 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              StreamBuilder(
-                  stream: widget._user,
-                  builder: (context, snapshOT) {
-                    if (snapshOT.hasData && snapshOT.connectionState != ConnectionState.waiting) {
-                      return FutureBuilder(
-                          future: widget._fUser,
-                          // ignore: missing_return
-                          builder: (context, snapshoT) {
-                            if (snapshoT.hasData && snapshoT.connectionState != ConnectionState.waiting) {
-                              var user = snapshoT.data.documents[0];
+              FutureBuilder(
+                future: Firestore.instance.collection('users').where('email', isEqualTo: userEmail).getDocuments(),
+                builder: (context, snapshoT) {
+                  if (snapshoT.hasData && snapshoT.connectionState != ConnectionState.waiting) {
+                    return StreamBuilder(
+                      stream: Firestore.instance.collection('users').where('email', isEqualTo: userEmail).getDocuments().asStream(),
+                      builder: (context, snapshOT) {
+                        if (snapshOT.hasData && snapshOT.connectionState != ConnectionState.waiting) {
+                          var user = snapshOT.data.documents[0];
 
-                              if (user['courses'].length != 0) {
-                                return Column(
+                          if (user['courses'].length != 0) {
+                            return Column(
+                              children: <Widget>[
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Container(
-                                          margin: const EdgeInsets.symmetric(
-                                              vertical: 10.0, horizontal: 40.0),
-                                          child: Heading(
-                                            text: 'Your Courses',
-                                            color: Theme.of(context).primaryColor,
-                                            weight: FontWeight.w900,
-                                          ),
-                                        ),
-                                        SmallButton(text: 'See All', all: false),
-                                        ],
-                                      ),
-                                      CourseCards(all: false, feat: false),
-                                    ],
-                                  );
-                                }
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12.0),
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.topCenter,
-                                        end: FractionalOffset.bottomCenter,
-                                        colors: [
-                                          Theme.of(context).primaryColorLight,
-                                          Theme.of(context).primaryColor
-                                        ]),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black26,
-                                        offset: Offset(0.0, 8.0),
-                                        blurRadius: 12.0,
-                                      ),
-                                    ],
-                                  ),
-                                  padding: EdgeInsets.all(30.0),
-                                  margin: EdgeInsets.all(20.0),
-                                  child: SizedBox(
-                                    width: scaler.getWidth(1.0),
-                                    height: scaler.getHeight(4.0),
-                                    child: AutoSizeText(
-                                      'Take your first step in learning.\nSubscribe to a course.',
-                                      maxLines: 3,
-                                      style: TextStyle(
-                                        color: Theme.of(context).accentColor,
-                                        fontSize: scaler.getTextSize(8.5),
-                                        fontFamily: 'Montserrat',
-                                        fontWeight: FontWeight.w600,
+                                    Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 10.0, horizontal: 40.0),
+                                      child: Heading(
+                                        text: 'Your Courses',
+                                        color: Theme.of(context).primaryColor,
+                                        weight: FontWeight.w900,
                                       ),
                                     ),
+                                    SmallButton(text: 'See All', all: false),
+                                    ],
                                   ),
-                                );
-                              }
-                              return Container(
-                                height: 0.0,
-                                width: 0.0,
+                                  CourseCards(all: false, feat: false),
+                                ],
                               );
-                            });
+                            }
+                            return Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12.0),
+                                gradient: LinearGradient(
+                                    begin: FractionalOffset.topCenter,
+                                    end: FractionalOffset.bottomCenter,
+                                    colors: [
+                                      Theme.of(context).primaryColorLight,
+                                      Theme.of(context).primaryColor
+                                    ]),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black26,
+                                    offset: Offset(0.0, 8.0),
+                                    blurRadius: 12.0,
+                                  ),
+                                ],
+                              ),
+                              padding: EdgeInsets.all(30.0),
+                              margin: EdgeInsets.all(20.0),
+                              child: SizedBox(
+                                width: scaler.getWidth(1.0),
+                                height: scaler.getHeight(4.0),
+                                child: AutoSizeText(
+                                  'Take your first step in learning.\nSubscribe to a course.',
+                                  maxLines: 3,
+                                  style: TextStyle(
+                                    color: Theme.of(context).accentColor,
+                                    fontSize: scaler.getTextSize(8.5),
+                                    fontFamily: 'Montserrat',
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                          return Container(
+                            height: 0.0,
+                            width: 0.0,
+                          );
+                        });
                       }
-                      return Container(
-                        height: 0.0,
-                        width: 0.0,
-                      );
-                    }),
+                    return Container(
+                      height: 0.0,
+                      width: 0.0,
+                    );
+                  }
+                ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
