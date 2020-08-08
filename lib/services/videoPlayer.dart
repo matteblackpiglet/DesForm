@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-import 'package:flick_video_player/flick_video_player.dart';
+import 'package:chewie/chewie.dart';
 
 // video player widget
 class VidPlayer extends StatefulWidget {
@@ -13,24 +13,44 @@ class VidPlayer extends StatefulWidget {
 }
 
 class _VidPlayerState extends State<VidPlayer> {
-  FlickManager flickManager;
+  ChewieController _chewieController;
+  VideoPlayerController _videoPlayerController;
 
   void initState() {
     super.initState();
-    flickManager = FlickManager(
-      videoPlayerController: VideoPlayerController.network(widget.url),
+
+    _videoPlayerController = VideoPlayerController.network(widget.url);
+    _chewieController = ChewieController(
+      videoPlayerController: _videoPlayerController,
+      aspectRatio: 16 / 9,
+      autoPlay: true,
+
+      // showControls: false,
+      materialProgressColors: ChewieProgressColors(
+        playedColor: Colors.red,
+        handleColor: Colors.blue,
+        backgroundColor: Colors.grey,
+        bufferedColor: Colors.lightGreen,
+      ),
+      // placeholder: Container(
+      //   color: Colors.grey,
+      // ),
+      autoInitialize: true,
     );
   }
 
   @override
   void dispose() {
-    flickManager.dispose();
+    _videoPlayerController.dispose();
+    _chewieController.dispose();
     super.dispose();
   }
 
   Widget build(BuildContext context) {
     return Container(
-      child: FlickVideoPlayer(flickManager: flickManager),
+      child: Chewie(
+        controller: _chewieController,
+      ),
     );
   }
 }
