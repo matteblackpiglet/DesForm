@@ -269,33 +269,46 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ],
                               ),
                             ),
-                            GestureDetector(
-                              onTap: signOut,
-                              child: Container(
-                                margin: EdgeInsets.only(bottom: 30.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    IconButton(
-                                      icon: Icon(Icons.exit_to_app),
-                                      iconSize: 40.0,
-                                      color:
-                                          Theme.of(context).primaryColorLight,
-                                      onPressed: signOut,
-                                    ),
-                                    Text(
-                                      'Sign Out',
-                                      style: TextStyle(
-                                          color: Colors.grey[700],
-                                          fontFamily: 'Montserrat',
-                                          fontWeight: FontWeight.w600,
-                                          letterSpacing: -1.0,
-                                          fontSize: scaler.getTextSize(8.0)),
-                                    ),
-                                  ],
+                            Column(
+                              children: [
+                                Text(
+                                  'Version 1.0.0',
+                                  style: TextStyle(
+                                    color: Colors.grey[400],
+                                    fontFamily: 'Montserrat',
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: scaler.getTextSize(7.0),
+                                  ),
                                 ),
-                              ),
+                                GestureDetector(
+                                  onTap: signOut,
+                                  child: Container(
+                                    margin: EdgeInsets.only(bottom: 30.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: <Widget>[
+                                        IconButton(
+                                          icon: Icon(Icons.exit_to_app),
+                                          iconSize: 40.0,
+                                          color:
+                                              Theme.of(context).primaryColorLight,
+                                          onPressed: signOut,
+                                        ),
+                                        Text(
+                                          'Sign Out',
+                                          style: TextStyle(
+                                              color: Colors.grey[700],
+                                              fontFamily: 'Montserrat',
+                                              fontWeight: FontWeight.w600,
+                                              letterSpacing: -1.0,
+                                              fontSize: scaler.getTextSize(8.0)),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),

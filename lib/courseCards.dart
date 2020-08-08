@@ -57,7 +57,7 @@ class CourseCards extends StatelessWidget {
                           itemBuilder: (context, index) {
                             var course = snapshot.data.documents[index];
                             try{
-                              if(feat == true && fc['list'].contains(course['code']) && count<limit){
+                              if(feat == true && fc['list'].contains(course['code']) && count<=limit){
                                 count++;
                                 return CCard(course: course);
                               }

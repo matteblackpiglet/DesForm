@@ -1,4 +1,5 @@
 import 'package:DesForm/screens/videoPage.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -80,25 +81,28 @@ class _CourseVideosState extends State<CourseVideos> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Container(
                                 color: Color(0xfffccc86),
                                 padding: EdgeInsets.only(
                                     left: 10.0, top: 5.0, right: 10, bottom: 5),
-                                child: Text(
-                                  "DesForm".toUpperCase(),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: 'Montserrat',
-                                    color: Theme.of(context).primaryColor,
+                                child: SizedBox(
+                                  width: scaler.getWidth(10.0),
+                                  child: AutoSizeText(
+                                    "${widget.course['instructor']}".toUpperCase(),
+                                    maxLines: 2,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Montserrat',
+                                      color: Theme.of(context).primaryColor,
+                                    ),
                                   ),
                                 ),
                               ),
-                              SizedBox(height: scaler.getHeight(0.5)),
-                              SizedBox(
-                                height: scaler.getHeight(0.5),
-                              ),
+                              SizedBox(height: scaler.getHeight(1.0)),
                               FutureBuilder(
                                 future: Firestore.instance
                                         .collection('users')
@@ -196,47 +200,46 @@ class _CourseVideosState extends State<CourseVideos> {
                     SizedBox(
                       height: scaler.getHeight(0.5),
                     ),
-                    Stack(
+                    Column(
                       children: <Widget>[
                         Container(
                           margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
-                          height: scaler.getHeight(6.0),
                           width: double.infinity,
                           decoration: BoxDecoration(
                             color: Colors.white70,
                             borderRadius: BorderRadius.circular(20.0),
                           ),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                  12.0, 15.0, 8.0, 4.0),
-                              child: Text(
-                                'Introduction to ${widget.course['name']}',
-                                style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontFamily: 'Montserrat',
-                                  fontSize: scaler.getTextSize(8.0),
-                                  fontWeight: FontWeight.w700,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                    12.0, 15.0, 8.0, 4.0),
+                                child: Text(
+                                  'Introduction to ${widget.course['name']}',
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                    fontFamily: 'Montserrat',
+                                    fontSize: scaler.getTextSize(8.0),
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                  12.0, 4.0, 12.0, 8.0),
-                              child: Text(
-                                widget.course['desc'],
-                                style: TextStyle(
-                                  color: Colors.grey[900],
-                                  fontFamily: 'Montserrat',
-                                  fontSize: scaler.getTextSize(7.4),
-                                  fontWeight: FontWeight.w500,
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                    12.0, 4.0, 12.0, 14.0),
+                                child: Text(
+                                  widget.course['desc'],
+                                  style: TextStyle(
+                                    color: Colors.grey[900],
+                                    fontFamily: 'Montserrat',
+                                    fontSize: scaler.getTextSize(7.4),
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ],
                     ),
