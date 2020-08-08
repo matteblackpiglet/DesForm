@@ -250,7 +250,7 @@ class _CourseVideosState extends State<CourseVideos> {
                           .snapshots(),
                       builder: (context, snapshot) {
                         // stream to access course vids directory.
-                        if (!snapshot.hasData) return const Text('');
+                        if (!snapshot.hasData && snapshot.connectionState == ConnectionState.waiting) return const Text('');
 
                         return ListView.builder(
                           primary: false,
@@ -415,7 +415,7 @@ class _VideoBarState extends State<VideoBar>
                                 .getDocuments()
                                 .asStream(),
                             builder: (context, snapshot) {
-                              if (snapshot.hasData) {
+                              if (snapshot.hasData && snapshot.connectionState != ConnectionState.waiting) {
                                 var user = snapshot.data.documents[0];
 
                                 return RaisedButton(

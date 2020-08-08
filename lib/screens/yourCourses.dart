@@ -74,7 +74,7 @@ class YourCourses extends StatelessWidget {
                 stream: Firestore.instance.collection('courses').orderBy('code').snapshots(),
                 // ignore: missing_return
                 builder: (context, snapshot){
-                  if(!snapshot.hasData)
+                  if(!snapshot.hasData && snapshot.connectionState == ConnectionState.waiting)
                     return Text('');
                   
                   return StreamBuilder(

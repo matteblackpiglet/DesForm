@@ -36,18 +36,17 @@ class CourseCards extends StatelessWidget {
           try{
             if(!snapshot.hasData)
               return Container(height: 0.0, width: 0.0,);
-            
             return StreamBuilder(
               stream: Firestore.instance.collection('featured').snapshots(),
               builder: (context, snap){
-                if(snap.hasData){
+                if(snap.hasData && snap.connectionState != ConnectionState.waiting){
                   var fc =  snap.data.documents[0];
                   return StreamBuilder(
                     stream: Firestore.instance.collection('users').where('email', isEqualTo: userEmail).snapshots(),
                     // ignore: missing_return
                     builder: (context, snapshoT){
                       // stream containing user details.
-                      if(snapshoT.hasData){
+                      if(snapshoT.hasData && snapshoT.connectionState != ConnectionState.waiting){
                         var user = snapshoT.data.documents[0];
                         return  ListView.builder(
                           shrinkWrap: true,

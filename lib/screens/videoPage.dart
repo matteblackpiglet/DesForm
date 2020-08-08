@@ -162,7 +162,7 @@ class VideoPage extends StatelessWidget {
                         .snapshots(),
                     builder: (context, snapshot) {
                       // stream to access course vids directory.
-                      if (!snapshot.hasData) return const Text('');
+                      if (!snapshot.hasData && snapshot.connectionState == ConnectionState.waiting) return const Text('');
                       int count = 0;
                       return ListView.builder(
                         primary: false,

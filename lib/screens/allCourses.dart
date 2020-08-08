@@ -60,7 +60,7 @@ class AllCourses extends StatelessWidget {
               child: StreamBuilder(
                 stream: Firestore.instance.collection('courses').snapshots(),
                 builder: (context, snapshot){
-                  if(!snapshot.hasData)
+                  if(!snapshot.hasData && snapshot.connectionState == ConnectionState.waiting)
                     return const Text('');
 
                   return GridView.builder(
