@@ -27,10 +27,10 @@ class _VidPlayerState extends State<VidPlayer> {
 
       // showControls: false,
       materialProgressColors: ChewieProgressColors(
-        playedColor: Colors.red,
-        handleColor: Colors.blue,
-        backgroundColor: Colors.grey,
-        bufferedColor: Colors.lightGreen,
+        playedColor: Color(0xff4241a6),
+        handleColor: Color(0xff2f2ea6),
+        bufferedColor: Colors.grey[500],
+        backgroundColor: Color(0xffe6e5f5),
       ),
       // placeholder: Container(
       //   color: Colors.grey,
