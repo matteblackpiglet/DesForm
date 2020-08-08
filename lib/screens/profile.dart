@@ -60,7 +60,7 @@ class _ProfilePageState extends State<ProfilePage> {
             .where('email', isEqualTo: userEmail)
             .getDocuments(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) return const Text('');
+          if (!snapshot.hasData && snapshot.connectionState == ConnectionState.waiting) return const Text('');
 
           return StreamBuilder(
             stream: Firestore.instance
@@ -70,7 +70,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 .asStream(),
             // ignore: missing_return
             builder: (context, snapshot) {
-              if (snapshot.hasData) {
+              if (snapshot.hasData && snapshot.connectionState != ConnectionState.waiting) {
                 var user = snapshot.data.documents[0];
 
                 return Column(
