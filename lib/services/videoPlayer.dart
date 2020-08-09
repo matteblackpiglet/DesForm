@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-import 'package:chewie/chewie.dart';
+import 'package:DesForm/customisedPlugins/flick_video_player-custom/lib/flick_video_player.dart';
 
 // video player widget
 class VidPlayer extends StatefulWidget {
@@ -13,43 +13,44 @@ class VidPlayer extends StatefulWidget {
 }
 
 class _VidPlayerState extends State<VidPlayer> {
-  ChewieController _chewieController;
-  VideoPlayerController _videoPlayerController;
+  FlickManager flickManager;
 
   void initState() {
     super.initState();
-
-    _videoPlayerController = VideoPlayerController.network(widget.url);
-    _chewieController = ChewieController(
-      videoPlayerController: _videoPlayerController,
-      aspectRatio: 16 / 9,
-      autoPlay: true,
-
-      // showControls: false,
-      materialProgressColors: ChewieProgressColors(
-        playedColor: Color(0xff4241a6),
-        handleColor: Color(0xff2f2ea6),
-        bufferedColor: Colors.grey[500],
-        backgroundColor: Color(0xffe6e5f5),
-      ),
-      // placeholder: Container(
-      //   color: Colors.grey,
-      // ),
-      autoInitialize: true,
+    flickManager = FlickManager(
+      videoPlayerController: VideoPlayerController.network(widget.url),
     );
   }
 
   @override
   void dispose() {
-    _videoPlayerController.dispose();
-    _chewieController.dispose();
+    flickManager.dispose();
     super.dispose();
   }
 
   Widget build(BuildContext context) {
     return Container(
-      child: Chewie(
-        controller: _chewieController,
+      child: FlickVideoPlayer(
+        flickManager: flickManager,
+        flickVideoWithControls: new FlickVideoWithControls(
+          controls: FlickPortraitControls(
+            progressBarSettings: FlickProgressBarSettings(
+              playedColor: Color(0xff2f2ea6),
+              bufferedColor: Colors.grey[400],
+              handleColor: Color(0xff4241a6),
+              backgroundColor: Color(0xffe6e5f5),
+              handleRadius: 4.0
+            ),
+          ),
+          playerErrorFallback: Center(child: Icon(Icons.error, color: Colors.black),),
+          textStyle: TextStyle(
+            color: Color(0xff2f2ea6),
+          ),
+          iconThemeData: IconThemeData(
+            color: Color(0xff2f2ea6)
+          ),
+          backgroundColor: Colors.white,
+        ),
       ),
     );
   }

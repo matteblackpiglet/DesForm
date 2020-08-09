@@ -123,64 +123,63 @@ class VideoPage extends StatelessWidget {
               ),
             ),
             //upcomin course
-            Expanded(
-              child: StreamBuilder(
-                stream: course.reference
-                    .collection('videos')
-                    .orderBy('lesson')
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  // stream to access course vids directory.
-                  if (!snapshot.hasData && snapshot.connectionState == ConnectionState.waiting) return const Text('');
-                  int count = 0;
-                  if(video['lesson']<snapshot.data.documents.length-1){
-                    return Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(25.0),
-                            topRight: Radius.circular(25.0)),
-                      ),
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                            padding: EdgeInsets.only(top: 20.0),
-                            child: Heading(
-                              text: 'Upcoming Videos',
-                              color: Theme.of(context).primaryColor,
-                              weight: FontWeight.w900,
-                            ),
-                          ),
-                          ListView.builder(
-                            primary: false,
-                            shrinkWrap: true,
-                            itemCount: snapshot.data.documents.length,
-                            // ignore: missing_return
-                            itemBuilder: (context, index) {
-                              var videO = snapshot.data.documents[index];
-                              if (videO['lesson'] > video['lesson'] && count <= 4) {
-                                count++;
-                                return Stack(children: <Widget>[
-                                  VideoBar(
-                                    video: videO,
-                                    course: course,
-                                  ),
-                                  ]);
-                                  } else {
-                                    return Container(
-                                      width: 0.0,
-                                      height: 0.0,
-                                    );
-                                  }
-                                },
-                              ),
-                            ],
-                          )
-                        );
-                        }
-                        return Container(height: 0.0, width: 0.0,);
-                      },
+            StreamBuilder(
+              stream: course.reference
+                  .collection('videos')
+                  .orderBy('lesson')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                // stream to access course vids directory.
+                if (!snapshot.hasData && snapshot.connectionState == ConnectionState.waiting) return const Text('');
+                int count = 0;
+                if(video['lesson']<snapshot.data.documents.length-1){
+                  return Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(25.0),
+                          topRight: Radius.circular(25.0)),
                     ),
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.only(top: 20.0),
+                          child: Heading(
+                            text: 'Upcoming Videos',
+                            color: Theme.of(context).primaryColor,
+                            weight: FontWeight.w900,
+                          ),
+                        ),
+                        ListView.builder(
+                          primary: false,
+                          shrinkWrap: true,
+                          itemCount: snapshot.data.documents.length,
+                          // ignore: missing_return
+                          itemBuilder: (context, index) {
+                            var videO = snapshot.data.documents[index];
+                            if (videO['lesson'] > video['lesson'] && count <= 4) {
+                              count++;
+                              return Stack(children: <Widget>[
+                                VideoBar(
+                                  video: videO,
+                                  course: course,
+                                ),
+                                ]);
+                                } else {
+                                  return Container(
+                                    width: 0.0,
+                                    height: 0.0,
+                                  );
+                                }
+                              },
+                            ),
+                          ],
+                        )
+                      );
+                      }
+                      return Container(height: 0.0, width: 0.0,);
+                    },
                   )
                 ],
               ),
