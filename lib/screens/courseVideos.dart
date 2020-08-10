@@ -441,7 +441,22 @@ class _VideoBarState extends State<VideoBar>
                                   ),
                                 );
                               }
-                              return Container(height: 0.0, width: 0.0);
+                              return RaisedButton(
+                                color: Colors.grey[200],
+                                disabledColor: Colors.grey[400],
+                                onPressed: (){},
+                                padding: EdgeInsets.all(0.0),
+                                splashColor: Color(0xffe6e5f5),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                animationDuration:
+                                    Duration(milliseconds: 200),
+                                child: Icon(
+                                  Icons.play_arrow,
+                                  color: Colors.grey[600],
+                                ),
+                              );
                             }),
                       ),
                       Column(
