@@ -84,6 +84,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
       } catch (e) {
         print('Error: $e');
         setState(() {
+          if(h<22.0){h=22.0;}
           _isLoading = false;
           _errorMessage = e.message;
         });
@@ -250,8 +251,6 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
       if (_errorMessage ==
           "The password is invalid or the user does not have a password.")
         _errorMessage = "The email/password combination does not exist.";
-
-      h = 22.0;
 
       resetForm();
 

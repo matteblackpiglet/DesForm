@@ -65,7 +65,7 @@ class CourseCards extends StatelessWidget {
                                 return CCard(course: course);
                               }
                               // return only cards containing courses the user has subscribed to.
-                              else if(user['courses'].contains(course['code'].toString()) && count<limit){ 
+                              else if(feat == false && user['courses'].contains(course['code'].toString()) && count<limit){ 
                                 count++;
                                 return CCard(course: course);
                               }
