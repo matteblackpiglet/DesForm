@@ -49,7 +49,8 @@ class CourseCards extends StatelessWidget {
                       if(snapshoT.hasData && snapshoT.connectionState != ConnectionState.waiting){
                         var user = snapshoT.data.documents[0];
                         return  ListView.builder(
-                          shrinkWrap: true,
+                          shrinkWrap: false,
+                          cacheExtent: 2000.0,
                           scrollDirection: Axis.horizontal,
                           itemCount: snapshot.data.documents.length,
                           // ignore: missing_return

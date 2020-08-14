@@ -66,7 +66,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
           _showVerifyEmailSentDialog();
           print('Signed up user: $userId');
 
-          Firestore.instance.collection('users').document().setData({
+          Firestore.instance.collection('users').document(userId).setData({
             'name': _name,
             'dob': _dob,
             'email': _email,
