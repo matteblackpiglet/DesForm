@@ -9,6 +9,7 @@ import '../smallButton.dart';
 import '../profilePhoto.dart';
 import '../courseCards.dart';
 import '../services/authentication.dart';
+import 'package:DesForm/cloud_firestore_search.dart';
 
 class Home extends StatelessWidget {
   @override
@@ -61,9 +62,8 @@ class _HomePageState extends State<HomePage> {
       }
     }
 
-    Future<Null> _refresh() async{
-      setState(() {
-      });
+    Future<Null> _refresh() async {
+      setState(() {});
       return null;
     }
 
@@ -103,7 +103,7 @@ class _HomePageState extends State<HomePage> {
                   child: SizedBox(
                     height: scaler.getHeight(9.0),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 22.0),
+                      padding: const EdgeInsets.only(top: 22.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.end,
@@ -114,40 +114,59 @@ class _HomePageState extends State<HomePage> {
                               signOut: signOut,
                             ),
                           ),
-                          Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 36.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  'DesForm',
-                                  style: TextStyle(
-                                    color: Color(0xffffffff),
-                                    fontSize: scaler.getTextSize(10.6),
-                                    fontFamily: 'Montserrat',
-                                    fontWeight: FontWeight.w900,
-                                  ),
-                                ),
-                                Row(
+                          Row(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 36.0),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    SizedBox(
-                                      width: 2.0,
-                                    ),
                                     Text(
-                                      'Live to Create',
+                                      'DesForm',
                                       style: TextStyle(
                                         color: Color(0xffffffff),
-                                        fontSize: scaler.getTextSize(7.0),
+                                        fontSize: scaler.getTextSize(10.6),
                                         fontFamily: 'Montserrat',
-                                        letterSpacing: -0.5,
+                                        fontWeight: FontWeight.w900,
                                       ),
                                     ),
+                                    Row(
+                                      children: <Widget>[
+                                        SizedBox(
+                                          width: 2.0,
+                                        ),
+                                        Text(
+                                          'Live to Create',
+                                          style: TextStyle(
+                                            color: Color(0xffffffff),
+                                            fontSize: scaler.getTextSize(7.0),
+                                            fontFamily: 'Montserrat',
+                                            letterSpacing: -0.5,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: scaler.getHeight(0.2)),
                                   ],
                                 ),
-                                SizedBox(height: scaler.getHeight(0.2)),
-                              ],
-                            ),
+                              ),
+                              SizedBox(
+                                width: scaler.getWidth(6.5),
+                              ),
+                              IconButton(
+                                color: Colors.white,
+                                icon: Icon(Icons.search),
+                                onPressed: () {
+                                  Navigator.of(context)
+                                      .push(MaterialPageRoute(builder: (_) {
+                                    return CloudFirestoreSearch();
+                                  }));
+                                },
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -156,126 +175,136 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               FutureBuilder(
-                future: Firestore.instance.collection('users').where('email', isEqualTo: userEmail).getDocuments(),
-                builder: (context, snapshoT) {
-                  if (snapshoT.hasData && snapshoT.connectionState != ConnectionState.waiting) {
-                    return StreamBuilder(
-                      stream: Firestore.instance.collection('users').where('email', isEqualTo: userEmail).getDocuments().asStream(),
-                      builder: (context, snapshOT) {
-                        if (snapshOT.hasData && snapshOT.connectionState != ConnectionState.waiting) {
-                          var user = snapshOT.data.documents[0];
+                  future: Firestore.instance
+                      .collection('users')
+                      .where('email', isEqualTo: userEmail)
+                      .getDocuments(),
+                  builder: (context, snapshoT) {
+                    if (snapshoT.hasData &&
+                        snapshoT.connectionState != ConnectionState.waiting) {
+                      return StreamBuilder(
+                          stream: Firestore.instance
+                              .collection('users')
+                              .where('email', isEqualTo: userEmail)
+                              .getDocuments()
+                              .asStream(),
+                          builder: (context, snapshOT) {
+                            if (snapshOT.hasData &&
+                                snapshOT.connectionState !=
+                                    ConnectionState.waiting) {
+                              var user = snapshOT.data.documents[0];
 
-                          if (user['courses'].length != 0) {
-                            return Column(
-                              children: <Widget>[
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                              if (user['courses'].length != 0) {
+                                return Column(
                                   children: <Widget>[
-                                    Container(
-                                      margin: const EdgeInsets.symmetric(
-                                          vertical: 10.0, horizontal: 40.0),
-                                      child: Heading(
-                                        text: 'Your Courses',
-                                        color: Theme.of(context).primaryColor,
-                                        weight: FontWeight.w900,
-                                      ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Container(
+                                          margin: const EdgeInsets.symmetric(
+                                              vertical: 10.0, horizontal: 40.0),
+                                          child: Heading(
+                                            text: 'Your Courses',
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            weight: FontWeight.w900,
+                                          ),
+                                        ),
+                                        SmallButton(
+                                            text: 'See All', all: false),
+                                      ],
                                     ),
-                                    SmallButton(text: 'See All', all: false),
-                                    ],
+                                    CourseCards(all: false, feat: false),
+                                  ],
+                                );
+                              }
+                              return Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12.0),
+                                  gradient: LinearGradient(
+                                      begin: FractionalOffset.topCenter,
+                                      end: FractionalOffset.bottomCenter,
+                                      colors: [
+                                        Theme.of(context).primaryColorLight,
+                                        Theme.of(context).primaryColor
+                                      ]),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black26,
+                                      offset: Offset(0.0, 8.0),
+                                      blurRadius: 12.0,
+                                    ),
+                                  ],
+                                ),
+                                padding: EdgeInsets.all(30.0),
+                                margin: EdgeInsets.all(20.0),
+                                child: SizedBox(
+                                  width: scaler.getWidth(1.0),
+                                  height: scaler.getHeight(4.0),
+                                  child: AutoSizeText(
+                                    'Take your first step in learning.\nSubscribe to a course.',
+                                    maxLines: 3,
+                                    style: TextStyle(
+                                      color: Theme.of(context).accentColor,
+                                      fontSize: scaler.getTextSize(8.5),
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                  CourseCards(all: false, feat: false),
-                                ],
+                                ),
                               );
                             }
                             return Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12.0),
-                                gradient: LinearGradient(
-                                    begin: FractionalOffset.topCenter,
-                                    end: FractionalOffset.bottomCenter,
-                                    colors: [
-                                      Theme.of(context).primaryColorLight,
-                                      Theme.of(context).primaryColor
-                                    ]),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black26,
-                                    offset: Offset(0.0, 8.0),
-                                    blurRadius: 12.0,
-                                  ),
-                                ],
-                              ),
-                              padding: EdgeInsets.all(30.0),
-                              margin: EdgeInsets.all(20.0),
-                              child: SizedBox(
-                                width: scaler.getWidth(1.0),
-                                height: scaler.getHeight(4.0),
-                                child: AutoSizeText(
-                                  'Take your first step in learning.\nSubscribe to a course.',
-                                  maxLines: 3,
-                                  style: TextStyle(
-                                    color: Theme.of(context).accentColor,
-                                    fontSize: scaler.getTextSize(8.5),
-                                    fontFamily: 'Montserrat',
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
+                              height: 0.0,
+                              width: 0.0,
                             );
-                          }
-                          return Container(
-                            height: 0.0,
-                            width: 0.0,
-                          );
-                        });
-                      }
+                          });
+                    }
                     return Container(
                       height: 0.0,
                       width: 0.0,
                     );
-                  }
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 40.0),
-                      child: Heading(
-                        text: 'Featured Courses',
-                        color:
-                            Theme.of(context).primaryColor,
-                        weight: FontWeight.w900,
-                      ),
+                  }),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 10.0, horizontal: 40.0),
+                    child: Heading(
+                      text: 'Featured Courses',
+                      color: Theme.of(context).primaryColor,
+                      weight: FontWeight.w900,
                     ),
-                    CourseCards(all: false, feat: true),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Container(
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 40.0),
-                      child: Heading(
-                        text: 'All Courses',
-                        color: Theme.of(context).primaryColor,
-                        weight: FontWeight.w900,
-                      ),
+                  ),
+                  CourseCards(all: false, feat: true),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 10.0, horizontal: 40.0),
+                    child: Heading(
+                      text: 'All Courses',
+                      color: Theme.of(context).primaryColor,
+                      weight: FontWeight.w900,
                     ),
-                    SmallButton(text: 'See All', all: true),
-                  ],
-                ),
-                CourseCards(all: true,feat: false),
-                SizedBox(
-                  height: 50.0,
-                )
-              ],
-            ),
+                  ),
+                  SmallButton(text: 'See All', all: true),
+                ],
+              ),
+              CourseCards(all: true, feat: false),
+              SizedBox(
+                height: 50.0,
+              )
+            ],
           ),
+        ),
       ),
-      );
+    );
   }
 }
 
